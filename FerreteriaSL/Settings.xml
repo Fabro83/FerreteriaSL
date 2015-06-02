@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+	<MySQL>
+		<Server>localhost</Server>
+		<Database>ferreteria_sl</Database>
+		<Uid>pitu</Uid>
+		<Pwd>fresa</Pwd>
+	</MySQL>
+
+	<OfficeString>
+		<Provider>Microsoft.Jet.OLEDB.4.0</Provider>
+		<ExtendedProperties>Excel 8.0;HDR=NO;IMEX=1</ExtendedProperties>
+	</OfficeString>
+</Settings>
