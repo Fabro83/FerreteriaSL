@@ -14,11 +14,12 @@ namespace FerreteriaSL
         static afldbg()
         {
 #if DEBUG
-            string filename  = @"C:\Wamp\www\csTrace\afliw.log";
+            const string filename = @"C:\Wamp\www\csTrace\afliw.log";
             File.WriteAllText(filename, String.Empty);
             Trace.Listeners.Add(new TextWriterTraceListener(filename));
             Trace.AutoFlush = true;
             Trace.Indent();
+            //asd
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 #endif
         }
