@@ -54,7 +54,7 @@ namespace FerreteriaSL
                 int newPage = value;
                 if (newPage >= 0 && (newPage < totalPages))
                 {
-                    afldbg.log(this, "currentPage Value Change");
+                    //afldbg.log(this, "currentPage Value Change");
                     currentPage = value;
                     StartSearch(lastQuery);
                 }
@@ -70,7 +70,7 @@ namespace FerreteriaSL
         public int ItemsPerPage
         {
           get { return itemsPerPage; }
-            set { itemsPerPage = value; afldbg.log(this, "ItemsPerPage Value Change"); ; StartSearch(lastQuery); }
+            set { itemsPerPage = value;  StartSearch(lastQuery); }
         }
         public bool IsSearchInProgress
         {
@@ -111,8 +111,8 @@ namespace FerreteriaSL
 
         public void StartSearch(string query)
         {
-            afldbg.log(this,"StartSearch()");
-            afldbg.log(this, "query = " + query,"blue");
+            ////afldbg.log(this,"StartSearch()");
+            ////afldbg.log(this, "query = " + query,"blue");
             if (query == null)
                 return;
 
@@ -134,18 +134,18 @@ namespace FerreteriaSL
         void bgw_search_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             isSearchInProgress = false;
-            afldbg.log(this, "bgw_search_RunWorkerCompleted()");
+            //afldbg.log(this, "bgw_search_RunWorkerCompleted()");
             if (newSearch != String.Empty)
             {
-                afldbg.log(this, "bgw_search_RunWorkerCompleted > IF");
-                afldbg.log(this, "newSearch = "+newSearch,"blue");
+                //afldbg.log(this, "bgw_search_RunWorkerCompleted > IF");
+                //afldbg.log(this, "newSearch = "+newSearch,"blue");
                 string ns = newSearch;
                 newSearch = String.Empty;
                 StartSearch(ns);
             }
             else
             {
-                afldbg.log(this, "bgw_search_RunWorkerCompleted > ELSE");
+                //afldbg.log(this, "bgw_search_RunWorkerCompleted > ELSE");
                 lastSearchResult = e.Result as DataTable;                
                 OnSearchEnded(lastSearchResult);
             }
@@ -153,17 +153,17 @@ namespace FerreteriaSL
 
         void bgw_search_DoWork(object sender, DoWorkEventArgs e)
         {
-            afldbg.log(this, "bgw_search_DoWork()");
-            afldbg.log(this, "query = " + e.Argument.ToString(), "blue");
+            //afldbg.log(this, "bgw_search_DoWork()");
+            //afldbg.log(this, "query = " + e.Argument.ToString(), "blue");
             if (bgw_search.CancellationPending)
             {
-                afldbg.log(this, "bgw_search_DoWork > IF");
+                //afldbg.log(this, "bgw_search_DoWork > IF");
                 e.Cancel = true;
                 return;
             }
             else
             {
-                afldbg.log(this, "bgw_search_DoWork > ELSE");
+                //afldbg.log(this, "bgw_search_DoWork > ELSE");
                 string query = e.Argument as string;             
                 totalPages = getPageCount(query);
                 DataTable Result = DBCon.Read(applyLimitToQuery(query));
@@ -203,7 +203,7 @@ namespace FerreteriaSL
 
         public void CancelSearch()
         {
-            afldbg.log(this, "CancelSearch()","red");              
+            //afldbg.log(this, "CancelSearch()","red");              
             bgw_search.CancelAsync();
         }
 

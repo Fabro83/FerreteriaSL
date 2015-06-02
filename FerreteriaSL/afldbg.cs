@@ -27,9 +27,9 @@ namespace FerreteriaSL
         public static void log(object sender, string msg, string color = "black")
         {
 #if DEBUG
-            string Class = sender.GetType().Name;
-            string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            Trace.WriteLine("|" + color + "?" + timeStamp + " (" + Class + ") " + msg);
+            //string Class = sender.GetType().Name;
+            //string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            //Trace.WriteLine("|" + color + "?" + timeStamp + " (" + Class + ") " + msg);
 #endif
         }
 

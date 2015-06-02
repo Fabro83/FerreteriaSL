@@ -78,13 +78,13 @@ namespace FerreteriaSL
             result.Load(reader);
             reader.Close();
             bdConection.Close();
-            afldbg.log(this, query, "gray");
+            //afldbg.log(this, query, "gray");
             return result;
         }
 
         public int Write(string query)
         {
-            afldbg.log(this, query, "gray");
+            //afldbg.log(this, query, "gray");
             if (bdConection.State != ConnectionState.Open)
                 OpenConnection();
             MySqlCommand cmd = new MySqlCommand(query, bdConection);

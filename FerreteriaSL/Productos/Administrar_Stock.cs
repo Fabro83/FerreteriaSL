@@ -234,19 +234,19 @@ namespace FerreteriaSL
         {
             if (!e.Cancelled)
             {
-                afldbg.log(this, "WaitFilter passed without interruption, running query.","green");
+                //afldbg.log(this, "WaitFilter passed without interruption, running query.","green");
                 runQuery(true, false);
             }
             else
             {
-                afldbg.log(this, "WaitFilter cancelled, waiting for new query.");
+                //afldbg.log(this, "WaitFilter cancelled, waiting for new query.");
                 bgw_waitFilter.RunWorkerAsync();
             }
         }
 
         void bgw_waitFilter_DoWork(object sender, DoWorkEventArgs e)
         {
-            afldbg.log(this, "Wait Filter triggered");
+            //afldbg.log(this, "Wait Filter triggered");
             Thread.Sleep(500);
             e.Cancel = (sender as BackgroundWorker).CancellationPending;
         }
@@ -568,12 +568,12 @@ namespace FerreteriaSL
             //runQuery(true);
             if (bgw_waitFilter.IsBusy)
             {
-                afldbg.log(this, "filterTrigger Called. Cancelling Wait Filter. Caller: [" + sender.ToString()+"]");
+                ////afldbg.log(this, "filterTrigger Called. Cancelling Wait Filter. Caller: [" + sender.ToString()+"]");
                 bgw_waitFilter.CancelAsync();
             }
             else
             {
-                afldbg.log(this, "filterTrigger Called. Starting Wait Filter. Caller: ["+sender.ToString()+"]");
+                ////afldbg.log(this, "filterTrigger Called. Starting Wait Filter. Caller: ["+sender.ToString()+"]");
                 bgw_waitFilter.RunWorkerAsync();
             }
         }
@@ -1014,18 +1014,18 @@ namespace FerreteriaSL
                     //{
                     //    try
                     //    {
-                    //        afldbg.log(this, "Trying to connecto to database", "green");
+                    //        //afldbg.log(this, "Trying to connecto to database", "green");
                             result = int.Parse(DBCon.Read(query).Rows[0][0].ToString());
                     //    }
                     //    catch
                     //    {
-                    //        afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
+                    //        //afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
                     //        bgw_transferToDB.ReportProgress(0, 1);
                     //        Thread.Sleep(3000);
-                    //        afldbg.log(this, "3 seconds passed, retrying...", "red");
+                    //        //afldbg.log(this, "3 seconds passed, retrying...", "red");
                     //        if (bgw_transferToDB.CancellationPending)
                     //        {
-                    //            afldbg.log(this, "Transfer Cancelled", "orange");
+                    //            //afldbg.log(this, "Transfer Cancelled", "orange");
                     //            e.Cancel = true;
                     //            return;
                     //        }

@@ -163,7 +163,6 @@ namespace FerreteriaSL
         private void MainWindow_Load(object sender, EventArgs e)
         {
 
-            this.reportViewer1.RefreshReport();
         }
     }
 }

@@ -94,7 +94,7 @@
             // btn_nextPage
             // 
             this.btn_nextPage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_nextPage.BackgroundImage = global::FerreteriaSL.Properties.Resources.Arrow_Right;
+            this.btn_nextPage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_nextPage.BackgroundImage")));
             this.btn_nextPage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btn_nextPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_nextPage.Enabled = false;
@@ -110,7 +110,7 @@
             // btn_prevPage
             // 
             this.btn_prevPage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_prevPage.BackgroundImage = global::FerreteriaSL.Properties.Resources.Arrow_Left;
+            this.btn_prevPage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_prevPage.BackgroundImage")));
             this.btn_prevPage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btn_prevPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_prevPage.Enabled = false;

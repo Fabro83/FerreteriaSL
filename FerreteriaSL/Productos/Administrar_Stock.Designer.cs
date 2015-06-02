@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            FerreteriaSL.Settings settings1 = new FerreteriaSL.Settings();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Administrar_Stock));
+            FerreteriaSL.Settings settings1 = new FerreteriaSL.Settings();
             this.btn_cerrarVentana = new System.Windows.Forms.Button();
             this.tb_listarProductos = new System.Windows.Forms.TabPage();
             this.tlp_productProgressInfo = new System.Windows.Forms.TableLayoutPanel();
@@ -252,7 +252,7 @@
             // btn_prevPage
             // 
             this.btn_prevPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_prevPage.BackgroundImage = global::FerreteriaSL.Properties.Resources.Arrow_Left;
+            this.btn_prevPage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_prevPage.BackgroundImage")));
             this.btn_prevPage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btn_prevPage.CausesValidation = false;
             this.btn_prevPage.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -299,7 +299,7 @@
             // 
             this.btn_nextPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_nextPage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_nextPage.BackgroundImage = global::FerreteriaSL.Properties.Resources.Arrow_Right;
+            this.btn_nextPage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_nextPage.BackgroundImage")));
             this.btn_nextPage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btn_nextPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_nextPage.FlatAppearance.BorderSize = 0;
@@ -707,7 +707,7 @@
             this.tsmi_eliminar});
             this.cms_menuProductos.Name = "cms_menuProductos";
             this.cms_menuProductos.ShowImageMargin = false;
-            this.cms_menuProductos.Size = new System.Drawing.Size(190, 248);
+            this.cms_menuProductos.Size = new System.Drawing.Size(200, 248);
             this.cms_menuProductos.Text = "Hola";
             this.cms_menuProductos.Opening += new System.ComponentModel.CancelEventHandler(this.cms_menuProductos_Opening);
             // 
@@ -715,18 +715,18 @@
             // 
             this.tsmi_filasSeleccionadas.Enabled = false;
             this.tsmi_filasSeleccionadas.Name = "tsmi_filasSeleccionadas";
-            this.tsmi_filasSeleccionadas.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_filasSeleccionadas.Size = new System.Drawing.Size(199, 22);
             this.tsmi_filasSeleccionadas.Text = "X fila/s seleccionada/s";
             // 
             // tss_menuProductoSeparador
             // 
             this.tss_menuProductoSeparador.Name = "tss_menuProductoSeparador";
-            this.tss_menuProductoSeparador.Size = new System.Drawing.Size(186, 6);
+            this.tss_menuProductoSeparador.Size = new System.Drawing.Size(196, 6);
             // 
             // tsmi_seleccionarTodo
             // 
             this.tsmi_seleccionarTodo.Name = "tsmi_seleccionarTodo";
-            this.tsmi_seleccionarTodo.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_seleccionarTodo.Size = new System.Drawing.Size(199, 22);
             this.tsmi_seleccionarTodo.Text = "Seleccionar Todo";
             this.tsmi_seleccionarTodo.Click += new System.EventHandler(this.tsmi_seleccionarTodo_Click);
             // 
@@ -737,14 +737,14 @@
             this.tsmi_marcarOculto,
             this.tsmi_marcarVisible});
             this.tsmi_mostrar.Name = "tsmi_mostrar";
-            this.tsmi_mostrar.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_mostrar.Size = new System.Drawing.Size(199, 22);
             this.tsmi_mostrar.Text = "Marcar como";
             // 
             // tsmi_marcarOculto
             // 
             this.tsmi_marcarOculto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsmi_marcarOculto.Name = "tsmi_marcarOculto";
-            this.tsmi_marcarOculto.Size = new System.Drawing.Size(146, 22);
+            this.tsmi_marcarOculto.Size = new System.Drawing.Size(155, 22);
             this.tsmi_marcarOculto.Text = "Articulo Oculto";
             this.tsmi_marcarOculto.Click += new System.EventHandler(this.tsmi_marcar_Click);
             // 
@@ -752,41 +752,41 @@
             // 
             this.tsmi_marcarVisible.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsmi_marcarVisible.Name = "tsmi_marcarVisible";
-            this.tsmi_marcarVisible.Size = new System.Drawing.Size(146, 22);
+            this.tsmi_marcarVisible.Size = new System.Drawing.Size(155, 22);
             this.tsmi_marcarVisible.Text = "Articulo Visible";
             this.tsmi_marcarVisible.Click += new System.EventHandler(this.tsmi_marcar_Click);
             // 
             // tsmi_aplicarPorcentaje
             // 
             this.tsmi_aplicarPorcentaje.Name = "tsmi_aplicarPorcentaje";
-            this.tsmi_aplicarPorcentaje.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_aplicarPorcentaje.Size = new System.Drawing.Size(199, 22);
             this.tsmi_aplicarPorcentaje.Text = "Aplicar Porcentaje...";
             this.tsmi_aplicarPorcentaje.Click += new System.EventHandler(this.tsmi_Porcentaje_Click);
             // 
             // tsmi_sumarPorcentaje
             // 
             this.tsmi_sumarPorcentaje.Name = "tsmi_sumarPorcentaje";
-            this.tsmi_sumarPorcentaje.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_sumarPorcentaje.Size = new System.Drawing.Size(199, 22);
             this.tsmi_sumarPorcentaje.Text = "Sumar Porcentaje...";
             this.tsmi_sumarPorcentaje.Click += new System.EventHandler(this.tsmi_Porcentaje_Click);
             // 
             // tsmi_aplicarPorcentajeAPrecio
             // 
             this.tsmi_aplicarPorcentajeAPrecio.Name = "tsmi_aplicarPorcentajeAPrecio";
-            this.tsmi_aplicarPorcentajeAPrecio.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_aplicarPorcentajeAPrecio.Size = new System.Drawing.Size(199, 22);
             this.tsmi_aplicarPorcentajeAPrecio.Text = "Aplicar Porcentaje a Precio...";
             this.tsmi_aplicarPorcentajeAPrecio.Click += new System.EventHandler(this.tsmi_Porcentaje_Click);
             // 
             // tss_locationSeparator
             // 
             this.tss_locationSeparator.Name = "tss_locationSeparator";
-            this.tss_locationSeparator.Size = new System.Drawing.Size(186, 6);
+            this.tss_locationSeparator.Size = new System.Drawing.Size(196, 6);
             this.tss_locationSeparator.Visible = false;
             // 
             // tsmi_addToLocation
             // 
             this.tsmi_addToLocation.Name = "tsmi_addToLocation";
-            this.tsmi_addToLocation.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_addToLocation.Size = new System.Drawing.Size(199, 22);
             this.tsmi_addToLocation.Text = "Agregar a Ubicación";
             this.tsmi_addToLocation.Visible = false;
             this.tsmi_addToLocation.Click += new System.EventHandler(this.tsmi_addToLocation_Click);
@@ -795,31 +795,31 @@
             // 
             this.tsmi_locationName.Enabled = false;
             this.tsmi_locationName.Name = "tsmi_locationName";
-            this.tsmi_locationName.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_locationName.Size = new System.Drawing.Size(199, 22);
             this.tsmi_locationName.Text = "\\\\UBICACION";
             this.tsmi_locationName.Visible = false;
             // 
             // tss_columnsSeparator
             // 
             this.tss_columnsSeparator.Name = "tss_columnsSeparator";
-            this.tss_columnsSeparator.Size = new System.Drawing.Size(186, 6);
+            this.tss_columnsSeparator.Size = new System.Drawing.Size(196, 6);
             // 
             // tsmi_chooseColumns
             // 
             this.tsmi_chooseColumns.Name = "tsmi_chooseColumns";
-            this.tsmi_chooseColumns.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_chooseColumns.Size = new System.Drawing.Size(199, 22);
             this.tsmi_chooseColumns.Text = "Elegir Columnas...";
             this.tsmi_chooseColumns.Click += new System.EventHandler(this.tsmi_chooseColumns_Click);
             // 
             // tss_deleteSeparator
             // 
             this.tss_deleteSeparator.Name = "tss_deleteSeparator";
-            this.tss_deleteSeparator.Size = new System.Drawing.Size(186, 6);
+            this.tss_deleteSeparator.Size = new System.Drawing.Size(196, 6);
             // 
             // tsmi_eliminar
             // 
             this.tsmi_eliminar.Name = "tsmi_eliminar";
-            this.tsmi_eliminar.Size = new System.Drawing.Size(189, 22);
+            this.tsmi_eliminar.Size = new System.Drawing.Size(199, 22);
             this.tsmi_eliminar.Text = "Eliminar Selección";
             this.tsmi_eliminar.Click += new System.EventHandler(this.tsmi_eliminar_Click);
             // 
