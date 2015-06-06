@@ -346,10 +346,10 @@
             // 
             this.dtp_filtrosFechaModificacionAntes.CustomFormat = "dd/MM/yyyy H:mm";
             this.dtp_filtrosFechaModificacionAntes.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(76, 36);
+            this.dtp_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(72, 36);
             this.dtp_filtrosFechaModificacionAntes.Name = "dtp_filtrosFechaModificacionAntes";
             this.dtp_filtrosFechaModificacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(127, 20);
+            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(136, 20);
             this.dtp_filtrosFechaModificacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaModificacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaModificacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -358,10 +358,10 @@
             // 
             this.dtp_filtrosFechaModificacionDespues.CustomFormat = "dd/MM/yyyy H:mm";
             this.dtp_filtrosFechaModificacionDespues.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(76, 13);
+            this.dtp_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(72, 13);
             this.dtp_filtrosFechaModificacionDespues.Name = "dtp_filtrosFechaModificacionDespues";
             this.dtp_filtrosFechaModificacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(127, 20);
+            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(136, 20);
             this.dtp_filtrosFechaModificacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaModificacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaModificacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -369,7 +369,7 @@
             // lbl_filtrosFechaModificacionAntes
             // 
             this.lbl_filtrosFechaModificacionAntes.AutoSize = true;
-            this.lbl_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(22, 40);
+            this.lbl_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(20, 40);
             this.lbl_filtrosFechaModificacionAntes.Name = "lbl_filtrosFechaModificacionAntes";
             this.lbl_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(52, 13);
             this.lbl_filtrosFechaModificacionAntes.TabIndex = 1;
@@ -378,7 +378,7 @@
             // lbl_filtrosFechaModificacionDespues
             // 
             this.lbl_filtrosFechaModificacionDespues.AutoSize = true;
-            this.lbl_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(7, 17);
+            this.lbl_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(5, 17);
             this.lbl_filtrosFechaModificacionDespues.Name = "lbl_filtrosFechaModificacionDespues";
             this.lbl_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(67, 13);
             this.lbl_filtrosFechaModificacionDespues.TabIndex = 0;
@@ -401,10 +401,10 @@
             // 
             this.dtp_filtrosFechaCreacionAntes.CustomFormat = "dd/MM/yyyy H:mm";
             this.dtp_filtrosFechaCreacionAntes.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(76, 36);
+            this.dtp_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(70, 36);
             this.dtp_filtrosFechaCreacionAntes.Name = "dtp_filtrosFechaCreacionAntes";
             this.dtp_filtrosFechaCreacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(128, 20);
+            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(138, 20);
             this.dtp_filtrosFechaCreacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaCreacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaCreacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -413,10 +413,10 @@
             // 
             this.dtp_filtrosFechaCreacionDespues.CustomFormat = "dd/MM/yyyy H:mm";
             this.dtp_filtrosFechaCreacionDespues.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(76, 13);
+            this.dtp_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(70, 13);
             this.dtp_filtrosFechaCreacionDespues.Name = "dtp_filtrosFechaCreacionDespues";
             this.dtp_filtrosFechaCreacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(128, 20);
+            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(138, 20);
             this.dtp_filtrosFechaCreacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaCreacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaCreacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -424,7 +424,7 @@
             // lbl_filtrosFechaCreacionAntes
             // 
             this.lbl_filtrosFechaCreacionAntes.AutoSize = true;
-            this.lbl_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(22, 40);
+            this.lbl_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(19, 40);
             this.lbl_filtrosFechaCreacionAntes.Name = "lbl_filtrosFechaCreacionAntes";
             this.lbl_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(52, 13);
             this.lbl_filtrosFechaCreacionAntes.TabIndex = 1;
@@ -433,7 +433,7 @@
             // lbl_filtrosFechaCreacionDespues
             // 
             this.lbl_filtrosFechaCreacionDespues.AutoSize = true;
-            this.lbl_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(7, 17);
+            this.lbl_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(5, 17);
             this.lbl_filtrosFechaCreacionDespues.Name = "lbl_filtrosFechaCreacionDespues";
             this.lbl_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(67, 13);
             this.lbl_filtrosFechaCreacionDespues.TabIndex = 0;

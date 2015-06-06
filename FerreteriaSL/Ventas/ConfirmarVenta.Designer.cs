@@ -115,6 +115,7 @@
             this.btn_finalizar.TabIndex = 6;
             this.btn_finalizar.Text = "Finalizar Venta";
             this.btn_finalizar.UseVisualStyleBackColor = false;
+            this.btn_finalizar.Click += new System.EventHandler(this.btn_finalizar_Click);
             // 
             // btn_cancelar
             // 
@@ -144,7 +145,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.ClientSize = new System.Drawing.Size(670, 268);
+            this.ClientSize = new System.Drawing.Size(679, 286);
             this.ControlBox = false;
             this.Controls.Add(this.btn_otherForms);
             this.Controls.Add(this.btn_cancelar);

@@ -89,6 +89,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="afldbg.cs" />
+    <Compile Include="Clases Genericas\Impresion.cs" />
+    <Compile Include="Ventas\FacturaA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ventas\FacturaA.Designer.cs">
+      <DependentUpon>FacturaA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ventas\FormaDePago.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -303,6 +310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Empleados\RegistrarPago.resx">
       <DependentUpon>RegistrarPago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ventas\FacturaA.resx">
+      <DependentUpon>FacturaA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ventas\FormaDePago.resx">
       <DependentUpon>FormaDePago.cs</DependentUpon>

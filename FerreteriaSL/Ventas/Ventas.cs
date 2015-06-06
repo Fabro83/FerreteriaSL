@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,8 +15,8 @@ namespace FerreteriaSL
 {
     public partial class Ventas : Form
     {
-        int currentProduct = 0;
-        double quantity = 1;
+        int _currentProduct = 0;
+        double _quantity = 1;
 
         public Ventas()
         {
@@ -31,21 +32,21 @@ namespace FerreteriaSL
 
         private void comboGrid1_SelectionMade(object sender, int id_producto)
         {
-            currentProduct = id_producto;
+            _currentProduct = id_producto;
             nud_cantidad.Enabled = true;
             nud_cantidad.Focus();
         }
 
-        private void addItemToCart()
+        private void AddItemToCart()
         {
             BD BDCon = new BD();
-            DataRow result = BDCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + currentProduct).Rows[0];
+            DataRow result = BDCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + _currentProduct).Rows[0];
 
             string codigo = result["Codigo"].ToString();
             string descripcion = result["Descripcion"].ToString();
             double precio = double.Parse(result["precio"].ToString());
             string proveedor = result["Proveedor"].ToString();
-            int proveedor_id = int.Parse(result["ProveedorID"].ToString());
+            int proveedorId = int.Parse(result["ProveedorID"].ToString());
 
             int alreadyExist = -1;
 
@@ -56,12 +57,12 @@ namespace FerreteriaSL
 
             if (alreadyExist != -1)
             {
-                dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + quantity;
+                dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
                 calculateTotal();
             }
             else
             {
-                dgv_productosIngresados.Rows.Add(codigo, descripcion, quantity, precio, Convert.ToDouble(Math.Round(precio * quantity, 2)),currentProduct,proveedor,proveedor_id);
+                dgv_productosIngresados.Rows.Add(codigo, descripcion, _quantity, precio, Convert.ToDouble(Math.Round(precio * _quantity, 2)),_currentProduct,proveedor,proveedorId);
             }           
             cg_busqueda.clearTextBox();
         }
@@ -89,8 +90,8 @@ namespace FerreteriaSL
 
             if (e.KeyChar == acceptedChars[0])
             {
-                quantity = Convert.ToDouble(nud_cantidad.Value);      
-                addItemToCart();
+                _quantity = Convert.ToDouble(nud_cantidad.Value);      
+                AddItemToCart();
                 cg_busqueda.Focus();
             }
             if (e.KeyChar == acceptedChars[3])
@@ -148,7 +149,27 @@ namespace FerreteriaSL
 
         private void btn_imprimirTicket_Click(object sender, EventArgs e)
         {
-            ConfirmacionVenta CF = new ConfirmacionVenta(double.Parse(lbl_totalMonto.Text));
+            DataTable productosIngresados = new DataTable();
+
+            foreach (DataGridViewColumn dataGridViewColumn in dgv_productosIngresados.Columns)
+            {
+                if (dataGridViewColumn.Visible) productosIngresados.Columns.Add(dataGridViewColumn.Name);
+            }
+
+            foreach (DataGridViewRow dataGridViewRow in dgv_productosIngresados.Rows)
+            {
+                DataRow dataRow = productosIngresados.NewRow();
+                for (int i = 0; i < productosIngresados.Columns.Count; i++)
+                {
+                    if (dataGridViewRow.Cells[i].Visible)
+                        dataRow[i] = dataGridViewRow.Cells[i].Value;
+                    else
+                        i--;
+                }
+                productosIngresados.Rows.Add(dataRow);
+            }
+
+            ConfirmacionVenta CF = new ConfirmacionVenta(double.Parse(lbl_totalMonto.Text), productosIngresados);
 
             DialogResult CFDR = CF.ShowDialog(this);
 
@@ -278,9 +299,9 @@ namespace FerreteriaSL
 
         public void addItemToCartFromSearchWindow(int producto_id,double cantidad)
         {
-            currentProduct = producto_id;
-            quantity = cantidad;
-            addItemToCart();
+            _currentProduct = producto_id;
+            _quantity = cantidad;
+            AddItemToCart();
         }
 
         private void Ventas_FormClosing(object sender, FormClosingEventArgs e)

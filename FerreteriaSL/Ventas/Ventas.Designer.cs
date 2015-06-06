@@ -200,9 +200,9 @@
             this.lbl_total.AutoSize = true;
             this.lbl_total.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_total.ForeColor = System.Drawing.Color.Red;
-            this.lbl_total.Location = new System.Drawing.Point(28, 0);
+            this.lbl_total.Location = new System.Drawing.Point(33, 0);
             this.lbl_total.Name = "lbl_total";
-            this.lbl_total.Size = new System.Drawing.Size(158, 32);
+            this.lbl_total.Size = new System.Drawing.Size(153, 32);
             this.lbl_total.TabIndex = 7;
             this.lbl_total.Text = "TOTAL  $";
             this.lbl_total.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -566,7 +566,6 @@
         #endregion
 
         private System.Windows.Forms.Button btn_cerrar;
-        private System.Windows.Forms.DataGridView dgv_productosIngresados;
         private System.Windows.Forms.Label lbl_totalMonto;
         private System.Windows.Forms.Label lbl_total;
         private System.Windows.Forms.Button btn_imprimirTicket;
@@ -601,5 +600,6 @@
         private System.Windows.Forms.Label lbl_pesosSymbol;
         private System.Windows.Forms.Button btn_help;
         private System.Windows.Forms.ToolTip tt_help;
+        public System.Windows.Forms.DataGridView dgv_productosIngresados;
     }
 }
