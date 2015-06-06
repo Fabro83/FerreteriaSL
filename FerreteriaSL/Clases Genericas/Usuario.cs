@@ -1,6 +1,9 @@
-﻿using System;
+﻿using FerreteriaSL.Properties;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace FerreteriaSL
@@ -13,15 +16,6 @@ namespace FerreteriaSL
         public static event UserChangedHandler UserChanged = delegate { };
         private static bool[] permissions = new bool[9];
         public static event EventHandler UserLogedOut;
-
-        public static Settings userSettings = new Settings();
-        //private static bool testing = true;
-
-        //public static bool Testing
-        //{
-        //    get { return Usuario.testing; }
-        //    set { Usuario.testing = value; }
-        //}
         
         private static void UserLogedOutHandler()
         {
@@ -83,40 +77,6 @@ namespace FerreteriaSL
             name = null;
             Array.Clear(permissions, 0, permissions.Length);
             UserLogedOutHandler();
-        }
-
-    }
-    
-    public class Settings
-    {
-        private bool test;
-
-        public bool Test
-        {
-            get { return test; }
-            set { test = value; }
-        }
-
-        public Settings()
-        {
-            this.test = false;
-        }
-    
-    }
-
-    public class PrintOptions
-    {
-        private int testVariable;
-
-        public int TestVariable
-        {
-            get { return testVariable; }
-            set { testVariable = value; }
-        }
-
-        public PrintOptions()
-        {
-            this.testVariable = 1;
         }
 
     }

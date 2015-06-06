@@ -44,7 +44,6 @@
             this.tsmi_mantenimientoSecciones = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_cambiarUsuario = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_ventas = new System.Windows.Forms.ToolStripMenuItem();
-            this.testPrintToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ss_mainStatusBar = new System.Windows.Forms.StatusStrip();
             this.ms_mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -55,8 +54,7 @@
             this.tsmi_archivo,
             this.tsmi_mantenimiento,
             this.tsmi_cambiarUsuario,
-            this.tsmi_ventas,
-            this.testPrintToolStripMenuItem});
+            this.tsmi_ventas});
             this.ms_mainMenu.Location = new System.Drawing.Point(0, 0);
             this.ms_mainMenu.Name = "ms_mainMenu";
             this.ms_mainMenu.Size = new System.Drawing.Size(895, 24);
@@ -76,7 +74,7 @@
             // 
             this.tsmi_archivoSalir.Image = ((System.Drawing.Image)(resources.GetObject("tsmi_archivoSalir.Image")));
             this.tsmi_archivoSalir.Name = "tsmi_archivoSalir";
-            this.tsmi_archivoSalir.Size = new System.Drawing.Size(96, 22);
+            this.tsmi_archivoSalir.Size = new System.Drawing.Size(152, 22);
             this.tsmi_archivoSalir.Text = "Salir";
             this.tsmi_archivoSalir.Click += new System.EventHandler(this.tsmi_archivoSalir_Click);
             // 
@@ -191,13 +189,6 @@
             this.tsmi_ventas.Text = "Ventas";
             this.tsmi_ventas.Click += new System.EventHandler(this.tsmi_ventas_Click);
             // 
-            // testPrintToolStripMenuItem
-            // 
-            this.testPrintToolStripMenuItem.Name = "testPrintToolStripMenuItem";
-            this.testPrintToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
-            this.testPrintToolStripMenuItem.Text = "Test Print";
-            this.testPrintToolStripMenuItem.Click += new System.EventHandler(this.testPrintToolStripMenuItem_Click);
-            // 
             // ss_mainStatusBar
             // 
             this.ss_mainStatusBar.Location = new System.Drawing.Point(0, 561);
@@ -250,6 +241,5 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoEmpleados;
         private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoCajaDiaria;
         private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoSecciones;
-        private System.Windows.Forms.ToolStripMenuItem testPrintToolStripMenuItem;
     }
 }

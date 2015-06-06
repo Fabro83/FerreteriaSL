@@ -304,8 +304,6 @@
     <EmbeddedResource Include="Empleados\RegistrarPago.resx">
       <DependentUpon>RegistrarPago.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Report1.rdlc" />
-    <EmbeddedResource Include="Reportes\Report1.rdlc" />
     <EmbeddedResource Include="Ventas\FormaDePago.resx">
       <DependentUpon>FormaDePago.cs</DependentUpon>
     </EmbeddedResource>
@@ -399,10 +397,6 @@
     </Compile>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
-    <None Include="Properties\DataSources\MySql.Data.MySqlClient.MySqlClientPermission.datasource" />
-    <None Include="Properties\DataSources\PrintOptions.datasource" />
-    <None Include="Properties\DataSources\Settings.datasource" />
-    <None Include="Properties\DataSources\Usuario.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

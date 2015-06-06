@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Administrar_Stock));
-            FerreteriaSL.Settings settings1 = new FerreteriaSL.Settings();
             this.btn_cerrarVentana = new System.Windows.Forms.Button();
             this.tb_listarProductos = new System.Windows.Forms.TabPage();
             this.tlp_productProgressInfo = new System.Windows.Forms.TableLayoutPanel();
@@ -113,7 +112,6 @@
             this.tp_importarProductos = new System.Windows.Forms.TabPage();
             this.cb_includeZeroPriced = new System.Windows.Forms.CheckBox();
             this.cb_updateDescription = new System.Windows.Forms.CheckBox();
-            this.settingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lbl_importedFileName = new System.Windows.Forms.Label();
             this.lbl_impArticleCount = new System.Windows.Forms.Label();
             this.lbl_proveedorInfo = new System.Windows.Forms.Label();
@@ -127,7 +125,10 @@
             this.btn_seleccionarArchivo = new System.Windows.Forms.Button();
             this.pb_transferProgress = new System.Windows.Forms.ProgressBar();
             this.dgv_listadoExcel = new System.Windows.Forms.DataGridView();
+            this.settingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.administrarStockSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.userSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tb_listarProductos.SuspendLayout();
             this.tlp_productProgressInfo.SuspendLayout();
             this.gb_filtrosFechaModificacion.SuspendLayout();
@@ -150,9 +151,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_ap_stock)).BeginInit();
             this.tc_productos.SuspendLayout();
             this.tp_importarProductos.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_importPercentage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_listadoExcel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.administrarStockSettingsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.userSettingsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_cerrarVentana
@@ -346,7 +349,7 @@
             this.dtp_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(76, 36);
             this.dtp_filtrosFechaModificacionAntes.Name = "dtp_filtrosFechaModificacionAntes";
             this.dtp_filtrosFechaModificacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(125, 20);
+            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(127, 20);
             this.dtp_filtrosFechaModificacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaModificacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaModificacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -358,7 +361,7 @@
             this.dtp_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(76, 13);
             this.dtp_filtrosFechaModificacionDespues.Name = "dtp_filtrosFechaModificacionDespues";
             this.dtp_filtrosFechaModificacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(125, 20);
+            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(127, 20);
             this.dtp_filtrosFechaModificacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaModificacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaModificacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -401,7 +404,7 @@
             this.dtp_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(76, 36);
             this.dtp_filtrosFechaCreacionAntes.Name = "dtp_filtrosFechaCreacionAntes";
             this.dtp_filtrosFechaCreacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(125, 20);
+            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(128, 20);
             this.dtp_filtrosFechaCreacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaCreacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaCreacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -413,7 +416,7 @@
             this.dtp_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(76, 13);
             this.dtp_filtrosFechaCreacionDespues.Name = "dtp_filtrosFechaCreacionDespues";
             this.dtp_filtrosFechaCreacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(125, 20);
+            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(128, 20);
             this.dtp_filtrosFechaCreacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaCreacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
             this.dtp_filtrosFechaCreacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
@@ -1073,8 +1076,6 @@
             // cb_includeZeroPriced
             // 
             this.cb_includeZeroPriced.AutoSize = true;
-            settings1.Test = false;
-            this.cb_includeZeroPriced.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings1, "Test", true));
             this.cb_includeZeroPriced.Location = new System.Drawing.Point(582, 338);
             this.cb_includeZeroPriced.Name = "cb_includeZeroPriced";
             this.cb_includeZeroPriced.Size = new System.Drawing.Size(255, 17);
@@ -1085,17 +1086,12 @@
             // cb_updateDescription
             // 
             this.cb_updateDescription.AutoSize = true;
-            this.cb_updateDescription.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.settingsBindingSource, "Test", true));
             this.cb_updateDescription.Location = new System.Drawing.Point(326, 338);
             this.cb_updateDescription.Name = "cb_updateDescription";
             this.cb_updateDescription.Size = new System.Drawing.Size(250, 17);
             this.cb_updateDescription.TabIndex = 16;
             this.cb_updateDescription.Text = "Actualizar descripciones de articulos existentes.";
             this.cb_updateDescription.UseVisualStyleBackColor = true;
-            // 
-            // settingsBindingSource
-            // 
-            this.settingsBindingSource.DataSource = typeof(FerreteriaSL.Settings);
             // 
             // lbl_importedFileName
             // 
@@ -1295,9 +1291,11 @@
             this.tc_productos.ResumeLayout(false);
             this.tp_importarProductos.ResumeLayout(false);
             this.tp_importarProductos.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_importPercentage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_listadoExcel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.administrarStockSettingsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.userSettingsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1401,5 +1399,7 @@
         private System.Windows.Forms.CheckBox cb_includeZeroPriced;
         private System.Windows.Forms.CheckBox cb_updateDescription;
         private System.Windows.Forms.BindingSource settingsBindingSource;
+        private System.Windows.Forms.BindingSource userSettingsBindingSource;
+        private System.Windows.Forms.BindingSource administrarStockSettingsBindingSource;
     }
 }

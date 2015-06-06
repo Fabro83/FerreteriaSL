@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Collections;
-using System.Data.OleDb;
-using System.Xml;
-using MySql.Data.MySqlClient;
 using System.Globalization;
-using System.Diagnostics;
 using System.Threading;
-
+using System.Windows.Forms;
 
 namespace FerreteriaSL
 {
@@ -129,7 +120,7 @@ namespace FerreteriaSL
         {
             winLastState = this.WindowState != FormWindowState.Normal ? this.WindowState : winLastState;
             this.WindowState = FormWindowState.Normal;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             winLastWidth = this.Width != 1200 ? this.Width : winLastWidth;
             winLastHeight = this.Height != 450 ? this.Height : winLastHeight;
             this.Size = new Size(575, 425);
@@ -226,7 +217,7 @@ namespace FerreteriaSL
             this.WindowState = winLastState;
             this.Size = new Size(winLastWidth, winLastHeight);
             this.MaximizeBox = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
             
         }
 
@@ -885,7 +876,7 @@ namespace FerreteriaSL
             loadProviderComboBox("Seleccione un proveedor", "1", cb_listaProveedores);
             this.WindowState = winLastState;
             this.Size = new Size(winLastWidth, winLastHeight);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
             this.MaximizeBox = true;
         }
 
