@@ -22,10 +22,11 @@ namespace FerreteriaSL
             XMLDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "Settings.xml");
             XmlNode mySqlSettings = XMLDoc["Settings"]["MySQL"];
             string[] servers = mySqlSettings["Server"].InnerText.Split(',');
+            string port = mySqlSettings["port"].InnerText;
             string dataBase = mySqlSettings["Database"].InnerText;
             string uid = mySqlSettings["Uid"].InnerText;
-            string pwd = mySqlSettings["Pwd"].InnerText;
-            string connectionString = "Database="+dataBase+";Uid="+uid+";Pwd="+pwd;
+            string pwd = mySqlSettings["Pwd"].InnerText;            
+            string connectionString = "Port="+port+";Database="+dataBase+";Uid="+uid+";Pwd="+pwd;
 
             while (Program.workingServer == "")
             {

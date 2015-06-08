@@ -2,6 +2,7 @@
 <Settings>
 	<MySQL>
 		<Server>localhost</Server>
+    <port>3306</port>
 		<Database>ferreteria_sl</Database>
 		<Uid>pitu</Uid>
 		<Pwd>fresa</Pwd>

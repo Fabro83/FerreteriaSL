@@ -14,7 +14,7 @@ namespace FerreteriaSL
         private Dictionary<string, object> _printingFieldsDictionary;
         private List<Dictionary<string, object>> _printingGridList; 
         private int _totalPages,_currentPage;
-        private readonly ModelPage _pageModel;
+        private ModelPage _pageModel;
 
         public Impresion(Dictionary<string, object> printingFields,List<Dictionary<string,object>> printingGrid ,string documentType)
         {
@@ -35,6 +35,19 @@ namespace FerreteriaSL
 
         private void OnPrint(object sender, PrintPageEventArgs e)
         {
+            _pageModel = new ModelPage("facturaA");
+
+            PrinterResolution printerResolution = new PrinterResolution
+            {
+                X = 600,
+                Y = 600,
+                Kind = PrinterResolutionKind.Custom
+            };
+            e.PageSettings.PrinterResolution = printerResolution;
+
+
+            var pageSize = new PointF(e.PageSettings.PrintableArea.Width - e.MarginBounds.X, e.PageSettings.PrintableArea.Height - e.MarginBounds.Y);
+            _pageModel.TranslateRectangles(pageSize);
             foreach (KeyValuePair<string, object> fieldValue in _printingFieldsDictionary)
             {
                 using (PrintField fieldParameters = _pageModel.Fields[fieldValue.Key])
