@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Usuarios
 {
     partial class Usuarios
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -334,30 +337,30 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox lb_users;
-        private System.Windows.Forms.GroupBox gb_userData;
-        private System.Windows.Forms.Label lbl_employePositionValue;
-        private System.Windows.Forms.Label lbl_employePhoneValue;
-        private System.Windows.Forms.Label lbl_employeAddressValue;
-        private System.Windows.Forms.Label lbl_employeDNIValue;
-        private System.Windows.Forms.Label lbl_employeNameValue;
-        private System.Windows.Forms.Button btn_save;
-        private System.Windows.Forms.Label lbl_employePosition;
-        private System.Windows.Forms.Label lbl_dni;
-        private System.Windows.Forms.Label lbl_employePhone;
-        private System.Windows.Forms.Label lbl_employeAddress;
-        private System.Windows.Forms.Label lbl_employeName;
-        private System.Windows.Forms.ComboBox cb_employe;
-        private System.Windows.Forms.Label lbl_employe;
-        private System.Windows.Forms.Button btn_togglePassword;
-        private System.Windows.Forms.TextBox tb_password;
-        private System.Windows.Forms.TextBox tb_userName;
-        private System.Windows.Forms.Label lbl_permissions;
-        private System.Windows.Forms.Label lbl_password;
-        private System.Windows.Forms.Label lbl_userName;
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.Button btn_deleteUser;
-        private System.Windows.Forms.Button btn_addNewUSer;
-        private System.Windows.Forms.CheckedListBox clb_permissions;
+        private ListBox lb_users;
+        private GroupBox gb_userData;
+        private Label lbl_employePositionValue;
+        private Label lbl_employePhoneValue;
+        private Label lbl_employeAddressValue;
+        private Label lbl_employeDNIValue;
+        private Label lbl_employeNameValue;
+        private Button btn_save;
+        private Label lbl_employePosition;
+        private Label lbl_dni;
+        private Label lbl_employePhone;
+        private Label lbl_employeAddress;
+        private Label lbl_employeName;
+        private ComboBox cb_employe;
+        private Label lbl_employe;
+        private Button btn_togglePassword;
+        private TextBox tb_password;
+        private TextBox tb_userName;
+        private Label lbl_permissions;
+        private Label lbl_password;
+        private Label lbl_userName;
+        private Button btn_close;
+        private Button btn_deleteUser;
+        private Button btn_addNewUSer;
+        private CheckedListBox clb_permissions;
     }
 }

@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
     public partial class NombrarFuncion : Form
     {
-        private string nombre;
+        private string _nombre;
 
         public string Nombre
         {
-            get { return nombre; }
+            get { return _nombre; }
         }
 
         public NombrarFuncion()
@@ -25,7 +19,7 @@ namespace FerreteriaSL
 
         private void btn_cancelar_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void tb_nombre_TextChanged(object sender, EventArgs e)
@@ -35,8 +29,8 @@ namespace FerreteriaSL
 
         private void btn_guardar_Click(object sender, EventArgs e)
         {
-            this.nombre = tb_nombre.Text.Trim();
-            this.Close();
+            _nombre = tb_nombre.Text.Trim();
+            Close();
         }
     }
 }

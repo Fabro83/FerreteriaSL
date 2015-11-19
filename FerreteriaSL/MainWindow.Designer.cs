@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL
 {
     partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -225,21 +228,21 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip ms_mainMenu;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoClientes;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoProductos;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoProveedores;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoPedidos;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_cambiarUsuario;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_archivo;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_archivoSalir;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_ventas;
-        private System.Windows.Forms.StatusStrip ss_mainStatusBar;
-        public System.Windows.Forms.ToolStripMenuItem tsmi_mantenimiento;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoVentas;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoUsuarios;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoEmpleados;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoCajaDiaria;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mantenimientoSecciones;
+        private MenuStrip ms_mainMenu;
+        private ToolStripMenuItem tsmi_mantenimientoClientes;
+        private ToolStripMenuItem tsmi_mantenimientoProductos;
+        private ToolStripMenuItem tsmi_mantenimientoProveedores;
+        private ToolStripMenuItem tsmi_mantenimientoPedidos;
+        private ToolStripMenuItem tsmi_cambiarUsuario;
+        private ToolStripMenuItem tsmi_archivo;
+        private ToolStripMenuItem tsmi_archivoSalir;
+        private ToolStripMenuItem tsmi_ventas;
+        private StatusStrip ss_mainStatusBar;
+        public ToolStripMenuItem tsmi_mantenimiento;
+        private ToolStripMenuItem tsmi_mantenimientoVentas;
+        private ToolStripMenuItem tsmi_mantenimientoUsuarios;
+        private ToolStripMenuItem tsmi_mantenimientoEmpleados;
+        private ToolStripMenuItem tsmi_mantenimientoCajaDiaria;
+        private ToolStripMenuItem tsmi_mantenimientoSecciones;
     }
 }

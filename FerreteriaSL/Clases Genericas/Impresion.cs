@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
+using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Clases_Genericas
 {
     public class Impresion
     {
@@ -73,7 +73,7 @@ namespace FerreteriaSL
                         else
                         {
                             fieldParameters.CalculateFontSize(fieldValue.Value.ToString(),e);
-                            fieldParameters.CenterText(fieldValue.Value.ToString(), e, false, true);
+                            fieldParameters.CenterText(fieldValue.Value.ToString(), e, false);
                             e.Graphics.DrawString(fieldValue.Value.ToString(), fieldParameters.CalculatedFont, Brushes.Black, fieldParameters.CenteredPosX, fieldParameters.CenteredPosY + (fieldParameters.Height + fieldParameters.VerticalMargin*2) * i);
                         }
 
@@ -106,7 +106,7 @@ namespace FerreteriaSL
 
         public ModelPage(string documentType)
         {
-            BD db = new BD();
+            Bd db = new Bd();
             DataTable dt = db.Read("SELECT * FROM print_page WHERE scope = '"+documentType+"'");
 
             _modelPageSize = new PointF(float.Parse(dt.Rows[0]["model_page_width"].ToString()), float.Parse(dt.Rows[0]["model_page_height"].ToString()));

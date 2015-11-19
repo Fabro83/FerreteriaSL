@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
     public partial class ImportWindow : Form
     {
-        KoograExcelImporter KEI;
-        DataTable importedExcel;
-        string fileName;
+        KoograExcelImporter _kei;
+        DataTable _importedExcel;
+        string _fileName;
 
         public string FileName
         {
-            get { return fileName; }
+            get { return _fileName; }
         }
 
         public DataTable ImportedExcel
         {
-            get { return importedExcel; }
+            get { return _importedExcel; }
         }
 
         public ImportWindow()
@@ -35,25 +31,25 @@ namespace FerreteriaSL
 
         private void btn_openFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog OFD = new OpenFileDialog();
-            OFD.Filter = "Archivos Excel|*.xls;*.xlsx";
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Archivos Excel|*.xls;*.xlsx";
 
-            if (OFD.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
-                KEI = new KoograExcelImporter();
-                KEI.StatusChanged += new StatusChangedHandler(KEI_StatusChanged);
-                KEI.ExcelFileLoaded += new ExcelFileLoadedHandler(KEI_ExcelFileLoaded);
-                this.fileName = OFD.FileName.Substring(OFD.FileName.LastIndexOf("\\"));
-                KEI.loadExcelFile(OFD.FileName);
+                _kei = new KoograExcelImporter();
+                _kei.StatusChanged += KEI_StatusChanged;
+                _kei.ExcelFileLoaded += KEI_ExcelFileLoaded;
+                _fileName = ofd.FileName.Substring(ofd.FileName.LastIndexOf("\\"));
+                _kei.LoadExcelFile(ofd.FileName);
             }      
         }
 
         void KEI_ExcelFileLoaded()
         {
             cb_sheet.Items.Clear();
-            cb_sheet.Items.AddRange(KEI.getSheetNames());
-            lbl_fileValue.Text = KEI.FilePath.Split('\\')[KEI.FilePath.Split('\\').Length - 1];
-            lbl_directoryValue.Text = KEI.FilePath.Replace(lbl_fileValue.Text, "");
+            cb_sheet.Items.AddRange(_kei.GetSheetNames());
+            lbl_fileValue.Text = _kei.FilePath.Split('\\')[_kei.FilePath.Split('\\').Length - 1];
+            lbl_directoryValue.Text = _kei.FilePath.Replace(lbl_fileValue.Text, "");
 
             gb_sheet.Enabled = true;
             gb_sheetPreview.Enabled = false;
@@ -97,11 +93,11 @@ namespace FerreteriaSL
             if (cb_sheet.SelectedIndex == -1)
                 return;
 
-            KEI.getSheetPreview(cb_sheet.SelectedIndex);
+            _kei.GetSheetPreview(cb_sheet.SelectedIndex);
             gb_columns.Enabled = false;
             btn_import.Enabled = false;
             gb_sheetPreview.Enabled = false;
-            KEI.PreviewLoaded += new PreviewLoadedhandler(KEI_PreviewLoaded);
+            _kei.PreviewLoaded += KEI_PreviewLoaded;
 
         }
 
@@ -115,8 +111,8 @@ namespace FerreteriaSL
 
         private void btn_cancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void btn_import_Click(object sender, EventArgs e)
@@ -129,15 +125,15 @@ namespace FerreteriaSL
             btn_import.Enabled = false;
             int[] targetColumns = { cb_codeColumn.SelectedIndex, cb_descriptionColumn.SelectedIndex, cb_priceColumn.SelectedIndex };
             int targetSheet = cb_sheet.SelectedIndex;
-            KEI.processExcelFile(targetSheet, targetColumns);
-            KEI.DataTableReady += new DataTableReadyHandler(KEI_DataTableReady);
+            _kei.ProcessExcelFile(targetSheet, targetColumns);
+            _kei.DataTableReady += KEI_DataTableReady;
         }
 
         void KEI_DataTableReady(DataTable result)
         {
-            importedExcel = result;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            _importedExcel = result;
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
 

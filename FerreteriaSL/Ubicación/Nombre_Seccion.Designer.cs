@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ubicación
 {
-    partial class Nombre_Seccion
+    partial class NombreSeccion
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -104,7 +107,7 @@
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.btn_ok);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Nombre_Seccion";
+            this.Name = "NombreSeccion";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -116,11 +119,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_ok;
-        private System.Windows.Forms.Button btn_cancel;
-        public System.Windows.Forms.TextBox txb_name;
-        private System.Windows.Forms.Label lbl_name;
-        private System.Windows.Forms.Label lbl_abb;
-        public System.Windows.Forms.TextBox txb_abb;
+        private Button btn_ok;
+        private Button btn_cancel;
+        public TextBox txb_name;
+        private Label lbl_name;
+        private Label lbl_abb;
+        public TextBox txb_abb;
     }
 }

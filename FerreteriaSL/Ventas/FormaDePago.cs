@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class FormaDePago : Form
     {
         public FormaDePago()
         {
             InitializeComponent();
-            initialize();
+            Initialize();
         }
 
-        void initialize()
+        void Initialize()
         { 
-            BD DBCon = new BD();
-            cb_payingType.DataSource = DBCon.Read("SELECT * FROM type_formadepago");
+            Bd dbCon = new Bd();
+            cb_payingType.DataSource = dbCon.Read("SELECT * FROM type_formadepago");
             cb_payingType.DisplayMember = "nombre";
             cb_payingType.ValueMember = "id";
         }
 
-        void loadConditionalComboBox(int type)
+        void LoadConditionalComboBox(int type)
         {
             switch (type)
             { 
@@ -38,8 +33,8 @@ namespace FerreteriaSL
                     break;
                 case 3:                   
                 case 4:
-                    BD DBCon = new BD();        
-                    cb_extraParameters.DataSource = DBCon.Read("SELECT * FROM tarjeta WHERE tipo_tarjeta = "+ (type - 3));
+                    Bd dbCon = new Bd();        
+                    cb_extraParameters.DataSource = dbCon.Read("SELECT * FROM tarjeta WHERE tipo_tarjeta = "+ (type - 3));
                     cb_extraParameters.DisplayMember = "nombre";
                     cb_extraParameters.Enabled = true;
                     break;
@@ -54,7 +49,7 @@ namespace FerreteriaSL
 
         private void cb_payingType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            loadConditionalComboBox(int.Parse((sender as ComboBox).SelectedIndex.ToString()) + 1);
+            LoadConditionalComboBox(int.Parse((sender as ComboBox).SelectedIndex.ToString()) + 1);
         }
 
     }

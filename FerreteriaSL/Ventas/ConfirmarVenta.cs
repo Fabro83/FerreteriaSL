@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing.Printing;
 using System.Windows.Forms;
+using FerreteriaSL.Clases_Genericas;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class ConfirmacionVenta : Form
     {
@@ -15,7 +15,7 @@ namespace FerreteriaSL
         public ConfirmacionVenta(double monto, DataTable productosIngresadosTable)
         {
             InitializeComponent();
-            this._monto = monto;
+            _monto = monto;
             SetValues();
             _productosTable = productosIngresadosTable;
         }

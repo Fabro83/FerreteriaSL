@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using FerreteriaSL.Clases_Base_de_Datos;
+using FerreteriaSL.Productos;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ubicación
 {
     public partial class Ubicacion : Form
     {
         public Ubicacion()
         {
             InitializeComponent();
-            loadTreeView();
+            LoadTreeView();
         }
 
         private void btn_addSection_Click(object sender, EventArgs e)
         {
-            Nombre_Seccion NS = new Nombre_Seccion();
-            if (NS.ShowDialog(this) == DialogResult.OK)
+            NombreSeccion ns = new NombreSeccion();
+            if (ns.ShowDialog(this) == DialogResult.OK)
             {
-                string newNodeName = NS.txb_name.Text.Trim().Replace("'","");
-                string newNodeAbb = NS.txb_abb.Text.Trim().Replace("'", "").ToUpper();
+                string newNodeName = ns.txb_name.Text.Trim().Replace("'","");
+                string newNodeAbb = ns.txb_abb.Text.Trim().Replace("'", "").ToUpper();
                 int newNodeLevel = tv_sections.SelectedNode != null ? tv_sections.SelectedNode.Level + 1 : 0;
                 TreeNode newNodeParent = tv_sections.SelectedNode;
                 if (!NodeAlreadyExists(newNodeName, newNodeAbb, int.Parse(newNodeParent.Name)))
                 {
-                    BD DBCon = new BD();
+                    Bd dbCon = new Bd();
                     string query = String.Format("INSERT INTO PRO_SECCION (name,parent_node, level,abb) VALUES ('{0}',{1},{2},'{3}')", newNodeName, (newNodeParent != null ? newNodeParent.Name : "0"), newNodeLevel,newNodeAbb);
-                    DBCon.Write(query);
-                    string newNodeKey = DBCon.Read("SELECT * FROM PRO_SECCION ORDER BY id DESC LIMIT 1").Rows[0]["id"].ToString();
+                    dbCon.Write(query);
+                    string newNodeKey = dbCon.Read("SELECT * FROM PRO_SECCION ORDER BY id DESC LIMIT 1").Rows[0]["id"].ToString();
                     if (newNodeParent != null)
                     {
                         tv_sections.SelectedNode.Nodes.Add(newNodeKey, "[" + newNodeAbb + "] " + newNodeName);
@@ -54,16 +53,16 @@ namespace FerreteriaSL
         {
             if (tv_sections.SelectedNode.Name == "1")
                 return;
-            BD DBcon = new BD();
-            DBcon.Write("DELETE FROM PRO_SECCION WHERE id = " + tv_sections.SelectedNode.Name);
+            Bd dBcon = new Bd();
+            dBcon.Write("DELETE FROM PRO_SECCION WHERE id = " + tv_sections.SelectedNode.Name);
             tv_sections.SelectedNode.Remove();   
         }
 
-        private void loadTreeView()
+        private void LoadTreeView()
         {
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
             string query = "SELECT * FROM PRO_SECCION ORDER BY level, id";
-            DataTable treeViewDataTable = DBCon.Read(query);
+            DataTable treeViewDataTable = dbCon.Read(query);
             tv_sections.Nodes.Clear();
             List<TreeNode> insertedNodes = new List<TreeNode>();
             foreach (DataRow sRow in treeViewDataTable.Rows)
@@ -86,22 +85,22 @@ namespace FerreteriaSL
 
         private bool NodeAlreadyExists(string nodeName,string nodeAbb, int nodeParent)
         {
-            BD DBCon = new BD();
-            int res = int.Parse(DBCon.Read(String.Format("SELECT Count(*) FROM pro_seccion WHERE (name = '{0}' OR abb = '{1}') AND parent_node = {2}", nodeName, nodeAbb, nodeParent)).Rows[0][0].ToString());
+            Bd dbCon = new Bd();
+            int res = int.Parse(dbCon.Read(String.Format("SELECT Count(*) FROM pro_seccion WHERE (name = '{0}' OR abb = '{1}') AND parent_node = {2}", nodeName, nodeAbb, nodeParent)).Rows[0][0].ToString());
             return res > 0 ? true : false;
         }
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        public string selectedLocationName()
+        public string SelectedLocationName()
         {
             return tv_sections.SelectedNode.Text;
         }
 
-        public int selectedLocationID()
+        public int SelectedLocationId()
         {
             return int.Parse(tv_sections.SelectedNode.Name);
         }
@@ -110,21 +109,21 @@ namespace FerreteriaSL
         {
             foreach (Form frm in Application.OpenForms)
             {
-                if (frm is Administrar_Stock)
+                if (frm is AdministrarStock)
                 {
                     frm.Focus();
                     return;
                 }
             }
-            Administrar_Stock AS = new Administrar_Stock();
+            AdministrarStock AS = new AdministrarStock();
             AS.ShowInTaskbar = false;
 
-            int height = Screen.FromControl(this).Bounds.Height / 2 - this.Size.Height / 2;
-            this.Location = new Point(50, height);         
+            int height = Screen.FromControl(this).Bounds.Height / 2 - Size.Height / 2;
+            Location = new Point(50, height);         
             AS.Show(this);
             AS.tc_productos.SelectedIndex = 1;
-            AS.Height = this.Height;
-            AS.Location = new Point(this.Location.X + this.Size.Width + 2, this.Location.Y + 45);                                  
+            AS.Height = Height;
+            AS.Location = new Point(Location.X + Size.Width + 2, Location.Y + 45);                                  
         }
 
         private void tv_sections_BeforeSelect(object sender, TreeViewCancelEventArgs e)

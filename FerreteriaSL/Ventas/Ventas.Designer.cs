@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ventas
 {
     partial class Ventas
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -67,7 +70,7 @@
             this.lbl_pesosSymbol = new System.Windows.Forms.Label();
             this.btn_help = new System.Windows.Forms.Button();
             this.tt_help = new System.Windows.Forms.ToolTip(this.components);
-            this.cg_busqueda = new FerreteriaSL.ComboGrid();
+            this.cg_busqueda = new ComboGrid();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_productosIngresados)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_cantidad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_discountPercent)).BeginInit();
@@ -511,7 +514,7 @@
             this.cg_busqueda.SearchPhrase = "";
             this.cg_busqueda.Size = new System.Drawing.Size(581, 21);
             this.cg_busqueda.TabIndex = 22;
-            this.cg_busqueda.SelectionMade += new FerreteriaSL.SelectionMadeHandler(this.comboGrid1_SelectionMade);
+            this.cg_busqueda.SelectionMade += new SelectionMadeHandler(this.comboGrid1_SelectionMade);
             this.cg_busqueda.Leave += new System.EventHandler(this.cg_busqueda_Leave);
             // 
             // Ventas
@@ -565,41 +568,41 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_cerrar;
-        private System.Windows.Forms.Label lbl_totalMonto;
-        private System.Windows.Forms.Label lbl_total;
-        private System.Windows.Forms.Button btn_imprimirTicket;
-        private System.Windows.Forms.Button btn_remover;
-        private System.Windows.Forms.Label lbl_fecha;
-        public System.Windows.Forms.Timer tm_fechaHora;
+        private Button btn_cerrar;
+        private Label lbl_totalMonto;
+        private Label lbl_total;
+        private Button btn_imprimirTicket;
+        private Button btn_remover;
+        private Label lbl_fecha;
+        public Timer tm_fechaHora;
         private ComboGrid cg_busqueda;
-        private System.Windows.Forms.NumericUpDown nud_cantidad;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btn_incrementar;
-        private System.Windows.Forms.Button btn_disminuir;
-        private System.Windows.Forms.Button btn_removerTodos;
-        private System.Windows.Forms.Label lbl_hora;
-        private System.Windows.Forms.Label lbl_discount;
-        private System.Windows.Forms.NumericUpDown nud_discountPercent;
-        private System.Windows.Forms.Label lbl_percentSymbol;
-        private System.Windows.Forms.Button btn_search;
-        private System.Windows.Forms.DataGridViewTextBoxColumn codigo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descripcion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;
-        private System.Windows.Forms.DataGridViewTextBoxColumn precio_unitario;
-        private System.Windows.Forms.DataGridViewTextBoxColumn precio_subtotal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn proveedor;
-        private System.Windows.Forms.DataGridViewTextBoxColumn proveedor_id;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label lbl_iva;
-        private System.Windows.Forms.Label lbl_ivaValue;
-        private System.Windows.Forms.NumericUpDown nud_discountImport;
-        private System.Windows.Forms.Label lbl_pesosSymbol;
-        private System.Windows.Forms.Button btn_help;
-        private System.Windows.Forms.ToolTip tt_help;
-        public System.Windows.Forms.DataGridView dgv_productosIngresados;
+        private NumericUpDown nud_cantidad;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Button btn_incrementar;
+        private Button btn_disminuir;
+        private Button btn_removerTodos;
+        private Label lbl_hora;
+        private Label lbl_discount;
+        private NumericUpDown nud_discountPercent;
+        private Label lbl_percentSymbol;
+        private Button btn_search;
+        private DataGridViewTextBoxColumn codigo;
+        private DataGridViewTextBoxColumn descripcion;
+        private DataGridViewTextBoxColumn cantidad;
+        private DataGridViewTextBoxColumn precio_unitario;
+        private DataGridViewTextBoxColumn precio_subtotal;
+        private DataGridViewTextBoxColumn id;
+        private DataGridViewTextBoxColumn proveedor;
+        private DataGridViewTextBoxColumn proveedor_id;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label lbl_iva;
+        private Label lbl_ivaValue;
+        private NumericUpDown nud_discountImport;
+        private Label lbl_pesosSymbol;
+        private Button btn_help;
+        private ToolTip tt_help;
+        public DataGridView dgv_productosIngresados;
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.RegistroVentas
 {
     partial class Cajas
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -339,25 +342,25 @@
 
         #endregion
 
-        private System.Windows.Forms.DateTimePicker dtp_dateFrom;
-        private System.Windows.Forms.DateTimePicker dtp_dateTo;
-        private System.Windows.Forms.ComboBox cb_user;
-        private System.Windows.Forms.DataGridView dgv_caja;
-        private System.Windows.Forms.Label lbl_dateFrom;
-        private System.Windows.Forms.Label lbl_dateTo;
-        private System.Windows.Forms.Label lbl_user;
-        private System.Windows.Forms.Label lbl_totalImporte;
-        private System.Windows.Forms.Label lbl_totalDescuentos;
-        private System.Windows.Forms.Label lbl_porcentajeTotal;
-        private System.Windows.Forms.Label lbl_totalImporteValue;
-        private System.Windows.Forms.Label lbl_totalDescuentosValue;
-        private System.Windows.Forms.Label lbl_porcentajeTotalValue;
-        private System.Windows.Forms.TableLayoutPanel tlp_statistics;
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.Label lbl_mediaPorcentajeDescuentos;
-        private System.Windows.Forms.Label lbl_mediaPorcentajeDescuentosValue;
-        private System.Windows.Forms.Label lbl_ganacia;
-        private System.Windows.Forms.Label lbl_gananciaValue;
+        private DateTimePicker dtp_dateFrom;
+        private DateTimePicker dtp_dateTo;
+        private ComboBox cb_user;
+        private DataGridView dgv_caja;
+        private Label lbl_dateFrom;
+        private Label lbl_dateTo;
+        private Label lbl_user;
+        private Label lbl_totalImporte;
+        private Label lbl_totalDescuentos;
+        private Label lbl_porcentajeTotal;
+        private Label lbl_totalImporteValue;
+        private Label lbl_totalDescuentosValue;
+        private Label lbl_porcentajeTotalValue;
+        private TableLayoutPanel tlp_statistics;
+        private Button btn_close;
+        private Label lbl_mediaPorcentajeDescuentos;
+        private Label lbl_mediaPorcentajeDescuentosValue;
+        private Label lbl_ganacia;
+        private Label lbl_gananciaValue;
 
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ventas
 {
     partial class ConfirmacionVenta
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -172,14 +175,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbl_total;
-        private System.Windows.Forms.Label lbl_totalMonto;
-        private System.Windows.Forms.Label lbl_pagaCon;
-        private System.Windows.Forms.TextBox tb_pagaConMonto;
-        private System.Windows.Forms.Label lbl_vuelto;
-        private System.Windows.Forms.Label lbl_vueltoMonto;
-        private System.Windows.Forms.Button btn_finalizar;
-        private System.Windows.Forms.Button btn_cancelar;
-        private System.Windows.Forms.Button btn_otherForms;
+        private Label lbl_total;
+        private Label lbl_totalMonto;
+        private Label lbl_pagaCon;
+        private TextBox tb_pagaConMonto;
+        private Label lbl_vuelto;
+        private Label lbl_vueltoMonto;
+        private Button btn_finalizar;
+        private Button btn_cancelar;
+        private Button btn_otherForms;
     }
 }

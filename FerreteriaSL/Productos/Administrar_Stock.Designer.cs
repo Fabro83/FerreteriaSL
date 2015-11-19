@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Productos
 {
-    partial class Administrar_Stock
+    partial class AdministrarStock
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -29,7 +32,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Administrar_Stock));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdministrarStock));
             this.btn_cerrarVentana = new System.Windows.Forms.Button();
             this.tb_listarProductos = new System.Windows.Forms.TabPage();
             this.tlp_productProgressInfo = new System.Windows.Forms.TableLayoutPanel();
@@ -327,7 +330,7 @@
             this.cb_filtroArticulosAMostrar.Name = "cb_filtroArticulosAMostrar";
             this.cb_filtroArticulosAMostrar.Size = new System.Drawing.Size(121, 21);
             this.cb_filtroArticulosAMostrar.TabIndex = 13;
-            this.cb_filtroArticulosAMostrar.SelectedIndexChanged += new System.EventHandler(this.filterTrigger);
+            this.cb_filtroArticulosAMostrar.SelectedIndexChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // gb_filtrosFechaModificacion
             // 
@@ -351,8 +354,8 @@
             this.dtp_filtrosFechaModificacionAntes.ShowCheckBox = true;
             this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(136, 20);
             this.dtp_filtrosFechaModificacionAntes.TabIndex = 4;
-            this.dtp_filtrosFechaModificacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
-            this.dtp_filtrosFechaModificacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
+            this.dtp_filtrosFechaModificacionAntes.ValueChanged += new System.EventHandler(this.FilterTrigger);
+            this.dtp_filtrosFechaModificacionAntes.EnabledChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // dtp_filtrosFechaModificacionDespues
             // 
@@ -363,8 +366,8 @@
             this.dtp_filtrosFechaModificacionDespues.ShowCheckBox = true;
             this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(136, 20);
             this.dtp_filtrosFechaModificacionDespues.TabIndex = 2;
-            this.dtp_filtrosFechaModificacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
-            this.dtp_filtrosFechaModificacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
+            this.dtp_filtrosFechaModificacionDespues.ValueChanged += new System.EventHandler(this.FilterTrigger);
+            this.dtp_filtrosFechaModificacionDespues.EnabledChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // lbl_filtrosFechaModificacionAntes
             // 
@@ -406,8 +409,8 @@
             this.dtp_filtrosFechaCreacionAntes.ShowCheckBox = true;
             this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(138, 20);
             this.dtp_filtrosFechaCreacionAntes.TabIndex = 4;
-            this.dtp_filtrosFechaCreacionAntes.ValueChanged += new System.EventHandler(this.filterTrigger);
-            this.dtp_filtrosFechaCreacionAntes.EnabledChanged += new System.EventHandler(this.filterTrigger);
+            this.dtp_filtrosFechaCreacionAntes.ValueChanged += new System.EventHandler(this.FilterTrigger);
+            this.dtp_filtrosFechaCreacionAntes.EnabledChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // dtp_filtrosFechaCreacionDespues
             // 
@@ -418,8 +421,8 @@
             this.dtp_filtrosFechaCreacionDespues.ShowCheckBox = true;
             this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(138, 20);
             this.dtp_filtrosFechaCreacionDespues.TabIndex = 2;
-            this.dtp_filtrosFechaCreacionDespues.ValueChanged += new System.EventHandler(this.filterTrigger);
-            this.dtp_filtrosFechaCreacionDespues.EnabledChanged += new System.EventHandler(this.filterTrigger);
+            this.dtp_filtrosFechaCreacionDespues.ValueChanged += new System.EventHandler(this.FilterTrigger);
+            this.dtp_filtrosFechaCreacionDespues.EnabledChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // lbl_filtrosFechaCreacionAntes
             // 
@@ -463,7 +466,7 @@
             this.nud_stockMenor.Name = "nud_stockMenor";
             this.nud_stockMenor.Size = new System.Drawing.Size(60, 20);
             this.nud_stockMenor.TabIndex = 3;
-            this.nud_stockMenor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_stockMenor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // nud_stockMayor
             // 
@@ -476,7 +479,7 @@
             this.nud_stockMayor.Name = "nud_stockMayor";
             this.nud_stockMayor.Size = new System.Drawing.Size(60, 20);
             this.nud_stockMayor.TabIndex = 2;
-            this.nud_stockMayor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_stockMayor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // lbl_filtrosStockMenor
             // 
@@ -521,7 +524,7 @@
             this.nud_precioFinalMenor.Name = "nud_precioFinalMenor";
             this.nud_precioFinalMenor.Size = new System.Drawing.Size(85, 20);
             this.nud_precioFinalMenor.TabIndex = 3;
-            this.nud_precioFinalMenor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_precioFinalMenor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // nud_precioFinalMayor
             // 
@@ -535,7 +538,7 @@
             this.nud_precioFinalMayor.Name = "nud_precioFinalMayor";
             this.nud_precioFinalMayor.Size = new System.Drawing.Size(85, 20);
             this.nud_precioFinalMayor.TabIndex = 2;
-            this.nud_precioFinalMayor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_precioFinalMayor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // lbl_filtrosPreciodeCompraMenor
             // 
@@ -580,7 +583,7 @@
             this.nud_precioMenor.Name = "nud_precioMenor";
             this.nud_precioMenor.Size = new System.Drawing.Size(85, 20);
             this.nud_precioMenor.TabIndex = 3;
-            this.nud_precioMenor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_precioMenor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // nud_precioMayor
             // 
@@ -594,7 +597,7 @@
             this.nud_precioMayor.Name = "nud_precioMayor";
             this.nud_precioMayor.Size = new System.Drawing.Size(85, 20);
             this.nud_precioMayor.TabIndex = 2;
-            this.nud_precioMayor.ValueChanged += new System.EventHandler(this.filterTrigger);
+            this.nud_precioMayor.ValueChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // lbl_filtrosPreciodeVentaMenor
             // 
@@ -651,7 +654,7 @@
             this.tb_filtroNombre.Name = "tb_filtroNombre";
             this.tb_filtroNombre.Size = new System.Drawing.Size(139, 20);
             this.tb_filtroNombre.TabIndex = 3;
-            this.tb_filtroNombre.TextChanged += new System.EventHandler(this.filterTrigger);
+            this.tb_filtroNombre.TextChanged += new System.EventHandler(this.FilterTrigger);
             this.tb_filtroNombre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_filtroNombre_KeyDown);
             // 
             // cb_filtroProveedor
@@ -662,7 +665,7 @@
             this.cb_filtroProveedor.Name = "cb_filtroProveedor";
             this.cb_filtroProveedor.Size = new System.Drawing.Size(139, 21);
             this.cb_filtroProveedor.TabIndex = 5;
-            this.cb_filtroProveedor.SelectedIndexChanged += new System.EventHandler(this.filterTrigger);
+            this.cb_filtroProveedor.SelectedIndexChanged += new System.EventHandler(this.FilterTrigger);
             // 
             // dgv_listaProductos
             // 
@@ -1075,6 +1078,7 @@
             // 
             // cb_includeZeroPriced
             // 
+            this.cb_includeZeroPriced.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.cb_includeZeroPriced.AutoSize = true;
             this.cb_includeZeroPriced.Location = new System.Drawing.Point(582, 338);
             this.cb_includeZeroPriced.Name = "cb_includeZeroPriced";
@@ -1085,12 +1089,13 @@
             // 
             // cb_updateDescription
             // 
+            this.cb_updateDescription.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.cb_updateDescription.AutoSize = true;
             this.cb_updateDescription.Location = new System.Drawing.Point(326, 338);
             this.cb_updateDescription.Name = "cb_updateDescription";
-            this.cb_updateDescription.Size = new System.Drawing.Size(250, 17);
+            this.cb_updateDescription.Size = new System.Drawing.Size(247, 17);
             this.cb_updateDescription.TabIndex = 16;
-            this.cb_updateDescription.Text = "Actualizar descripciones de articulos existentes.";
+            this.cb_updateDescription.Text = "Actualizar descripciones de articulos existentes";
             this.cb_updateDescription.UseVisualStyleBackColor = true;
             // 
             // lbl_importedFileName
@@ -1246,7 +1251,7 @@
             // 
             this.timer1.Enabled = true;
             // 
-            // Administrar_Stock
+            // AdministrarStock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1255,7 +1260,7 @@
             this.Controls.Add(this.tc_productos);
             this.Controls.Add(this.btn_cerrarVentana);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Administrar_Stock";
+            this.Name = "AdministrarStock";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Administrar Articulos";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Administrar_Stock_FormClosing);
@@ -1302,104 +1307,104 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_cerrarVentana;
-        private System.Windows.Forms.TabPage tb_listarProductos;
-        private System.Windows.Forms.TextBox tb_filtroNombre;
-        private System.Windows.Forms.DataGridView dgv_listaProductos;
-        private System.Windows.Forms.TabPage tp_agregarProductos;
-        private System.Windows.Forms.ComboBox cb_ap_proveedor;
-        private System.Windows.Forms.Button btn_ap_agregar;
-        private System.Windows.Forms.NumericUpDown nud_ap_stock;
-        private System.Windows.Forms.TextBox tb_ap_nombre;
-        private System.Windows.Forms.TextBox tb_ap_codigo;
-        private System.Windows.Forms.Label lbl_ap_precio;
-        private System.Windows.Forms.Label lbl_ap_stock;
-        private System.Windows.Forms.Label lbl_ap_nombre;
-        private System.Windows.Forms.Label lbl_ap_proveedor;
-        private System.Windows.Forms.Label lbl_ap_codigo;
-        private System.Windows.Forms.TabPage tp_importarProductos;
-        private System.Windows.Forms.DataGridView dgv_listadoExcel;
-        private System.Windows.Forms.Button btn_cancelarTransferencia;
-        private System.Windows.Forms.Button btn_transferir;
-        private System.Windows.Forms.ComboBox cb_listaProveedores;
-        private System.Windows.Forms.Button btn_seleccionarArchivo;
-        private System.Windows.Forms.ProgressBar pb_transferProgress;
-        private System.Windows.Forms.Label lbl_estado;
-        private System.Windows.Forms.ComboBox cb_filtroProveedor;
-        private System.Windows.Forms.Label lbl_progresoInfo;
-        private System.Windows.Forms.GroupBox gb_filtrosPrecio;
-        private System.Windows.Forms.NumericUpDown nud_precioMayor;
-        private System.Windows.Forms.Label lbl_filtrosPreciodeVentaMenor;
-        private System.Windows.Forms.Label lbl_filtrosPreciodeVentaMayor;
-        private System.Windows.Forms.GroupBox gb_filtros;
-        private System.Windows.Forms.Label lbl_filtrosProveedor;
-        private System.Windows.Forms.Label lbl_filtrosDescipcion;
-        private System.Windows.Forms.GroupBox gb_filtrosPrecioFinal;
-        private System.Windows.Forms.NumericUpDown nud_precioFinalMenor;
-        private System.Windows.Forms.NumericUpDown nud_precioFinalMayor;
-        private System.Windows.Forms.Label lbl_filtrosPreciodeCompraMenor;
-        private System.Windows.Forms.Label lbl_filtrosPreciodeCompraMayor;
-        private System.Windows.Forms.NumericUpDown nud_precioMenor;
-        private System.Windows.Forms.GroupBox gb_filtroStock;
-        private System.Windows.Forms.NumericUpDown nud_stockMenor;
-        private System.Windows.Forms.NumericUpDown nud_stockMayor;
-        private System.Windows.Forms.Label lbl_filtrosStockMenor;
-        private System.Windows.Forms.Label lbl_filtrosStockMayor;
-        private System.Windows.Forms.GroupBox gb_filtrosFechaCreacion;
-        private System.Windows.Forms.DateTimePicker dtp_filtrosFechaCreacionAntes;
-        private System.Windows.Forms.DateTimePicker dtp_filtrosFechaCreacionDespues;
-        private System.Windows.Forms.Label lbl_filtrosFechaCreacionAntes;
-        private System.Windows.Forms.Label lbl_filtrosFechaCreacionDespues;
-        private System.Windows.Forms.GroupBox gb_filtrosFechaModificacion;
-        private System.Windows.Forms.DateTimePicker dtp_filtrosFechaModificacionAntes;
-        private System.Windows.Forms.DateTimePicker dtp_filtrosFechaModificacionDespues;
-        private System.Windows.Forms.Label lbl_filtrosFechaModificacionAntes;
-        private System.Windows.Forms.Label lbl_filtrosFechaModificacionDespues;
-        private System.Windows.Forms.ContextMenuStrip cms_menuProductos;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_eliminar;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_mostrar;
-        private System.Windows.Forms.ToolStripSeparator tss_menuProductoSeparador;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_filasSeleccionadas;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_marcarOculto;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_marcarVisible;
-        private System.Windows.Forms.Label lbl_filtroMostrar;
-        private System.Windows.Forms.ComboBox cb_filtroArticulosAMostrar;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_aplicarPorcentaje;
-        private System.Windows.Forms.NumericUpDown nud_ap_precio;
-        private System.Windows.Forms.Button btn_ap_limpiar;
-        private System.Windows.Forms.Label lbl_importarPorcentaje;
-        private System.Windows.Forms.NumericUpDown nud_importPercentage;
-        private System.Windows.Forms.Label lbl_mariconaDePorcentaje;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_seleccionarTodo;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_sumarPorcentaje;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_aplicarPorcentajeAPrecio;
-        private System.Windows.Forms.ToolStripSeparator tss_locationSeparator;
-        private System.Windows.Forms.Label lbl_limitItems;
-        private System.Windows.Forms.ComboBox cb_itemsPerPage;
-        private System.Windows.Forms.Button btn_prevPage;
-        private System.Windows.Forms.Button btn_nextPage;
-        private System.Windows.Forms.Label lbl_pages;
-        private System.Windows.Forms.Label lbl_proveedorInfo;
-        private System.Windows.Forms.Label lbl_impArticleCount;
-        private System.Windows.Forms.Label lbl_importedFileName;
-        private System.Windows.Forms.ProgressBar pb_productProgress;
-        private System.Windows.Forms.TableLayoutPanel tlp_productProgressInfo;
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label lbl_ap_info;
-        private System.Windows.Forms.NumericUpDown nud_ap_porcentajeDeUtilidad;
-        private System.Windows.Forms.Label lbl_ap_porcentajeDeUtilidad;
-        private System.Windows.Forms.TextBox tb_ap_codigoDeBarras;
-        private System.Windows.Forms.Label lbl_ap_codigoDeBarras;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_addToLocation;
-        private System.Windows.Forms.ToolStripSeparator tss_deleteSeparator;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_locationName;
-        private System.Windows.Forms.ToolStripSeparator tss_columnsSeparator;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_chooseColumns;
-        public System.Windows.Forms.TabControl tc_productos;
-        private System.Windows.Forms.CheckBox cb_includeZeroPriced;
-        private System.Windows.Forms.CheckBox cb_updateDescription;
-        private System.Windows.Forms.BindingSource settingsBindingSource;
-        private System.Windows.Forms.BindingSource userSettingsBindingSource;
-        private System.Windows.Forms.BindingSource administrarStockSettingsBindingSource;
+        private Button btn_cerrarVentana;
+        private TabPage tb_listarProductos;
+        private TextBox tb_filtroNombre;
+        private DataGridView dgv_listaProductos;
+        private TabPage tp_agregarProductos;
+        private ComboBox cb_ap_proveedor;
+        private Button btn_ap_agregar;
+        private NumericUpDown nud_ap_stock;
+        private TextBox tb_ap_nombre;
+        private TextBox tb_ap_codigo;
+        private Label lbl_ap_precio;
+        private Label lbl_ap_stock;
+        private Label lbl_ap_nombre;
+        private Label lbl_ap_proveedor;
+        private Label lbl_ap_codigo;
+        private TabPage tp_importarProductos;
+        private DataGridView dgv_listadoExcel;
+        private Button btn_cancelarTransferencia;
+        private Button btn_transferir;
+        private ComboBox cb_listaProveedores;
+        private Button btn_seleccionarArchivo;
+        private ProgressBar pb_transferProgress;
+        private Label lbl_estado;
+        private ComboBox cb_filtroProveedor;
+        private Label lbl_progresoInfo;
+        private GroupBox gb_filtrosPrecio;
+        private NumericUpDown nud_precioMayor;
+        private Label lbl_filtrosPreciodeVentaMenor;
+        private Label lbl_filtrosPreciodeVentaMayor;
+        private GroupBox gb_filtros;
+        private Label lbl_filtrosProveedor;
+        private Label lbl_filtrosDescipcion;
+        private GroupBox gb_filtrosPrecioFinal;
+        private NumericUpDown nud_precioFinalMenor;
+        private NumericUpDown nud_precioFinalMayor;
+        private Label lbl_filtrosPreciodeCompraMenor;
+        private Label lbl_filtrosPreciodeCompraMayor;
+        private NumericUpDown nud_precioMenor;
+        private GroupBox gb_filtroStock;
+        private NumericUpDown nud_stockMenor;
+        private NumericUpDown nud_stockMayor;
+        private Label lbl_filtrosStockMenor;
+        private Label lbl_filtrosStockMayor;
+        private GroupBox gb_filtrosFechaCreacion;
+        private DateTimePicker dtp_filtrosFechaCreacionAntes;
+        private DateTimePicker dtp_filtrosFechaCreacionDespues;
+        private Label lbl_filtrosFechaCreacionAntes;
+        private Label lbl_filtrosFechaCreacionDespues;
+        private GroupBox gb_filtrosFechaModificacion;
+        private DateTimePicker dtp_filtrosFechaModificacionAntes;
+        private DateTimePicker dtp_filtrosFechaModificacionDespues;
+        private Label lbl_filtrosFechaModificacionAntes;
+        private Label lbl_filtrosFechaModificacionDespues;
+        private ContextMenuStrip cms_menuProductos;
+        private ToolStripMenuItem tsmi_eliminar;
+        private ToolStripMenuItem tsmi_mostrar;
+        private ToolStripSeparator tss_menuProductoSeparador;
+        private ToolStripMenuItem tsmi_filasSeleccionadas;
+        private ToolStripMenuItem tsmi_marcarOculto;
+        private ToolStripMenuItem tsmi_marcarVisible;
+        private Label lbl_filtroMostrar;
+        private ComboBox cb_filtroArticulosAMostrar;
+        private ToolStripMenuItem tsmi_aplicarPorcentaje;
+        private NumericUpDown nud_ap_precio;
+        private Button btn_ap_limpiar;
+        private Label lbl_importarPorcentaje;
+        private NumericUpDown nud_importPercentage;
+        private Label lbl_mariconaDePorcentaje;
+        private ToolStripMenuItem tsmi_seleccionarTodo;
+        private ToolStripMenuItem tsmi_sumarPorcentaje;
+        private ToolStripMenuItem tsmi_aplicarPorcentajeAPrecio;
+        private ToolStripSeparator tss_locationSeparator;
+        private Label lbl_limitItems;
+        private ComboBox cb_itemsPerPage;
+        private Button btn_prevPage;
+        private Button btn_nextPage;
+        private Label lbl_pages;
+        private Label lbl_proveedorInfo;
+        private Label lbl_impArticleCount;
+        private Label lbl_importedFileName;
+        private ProgressBar pb_productProgress;
+        private TableLayoutPanel tlp_productProgressInfo;
+        private Timer timer1;
+        private Label lbl_ap_info;
+        private NumericUpDown nud_ap_porcentajeDeUtilidad;
+        private Label lbl_ap_porcentajeDeUtilidad;
+        private TextBox tb_ap_codigoDeBarras;
+        private Label lbl_ap_codigoDeBarras;
+        private ToolStripMenuItem tsmi_addToLocation;
+        private ToolStripSeparator tss_deleteSeparator;
+        private ToolStripMenuItem tsmi_locationName;
+        private ToolStripSeparator tss_columnsSeparator;
+        private ToolStripMenuItem tsmi_chooseColumns;
+        public TabControl tc_productos;
+        private CheckBox cb_includeZeroPriced;
+        private CheckBox cb_updateDescription;
+        private BindingSource settingsBindingSource;
+        private BindingSource userSettingsBindingSource;
+        private BindingSource administrarStockSettingsBindingSource;
     }
 }

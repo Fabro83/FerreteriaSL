@@ -1,33 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
     public partial class ElegirColumnas : Form
     {
-        DataGridViewColumnCollection currentColumns;
-        Administrar_Stock caller;
-        string[] untouchableColumns = { "pro_seccion_id", "id", "oculto", "id_proveedor" };
+        DataGridViewColumnCollection _currentColumns;
+        AdministrarStock _caller;
+        string[] _untouchableColumns = { "pro_seccion_id", "id", "oculto", "id_proveedor" };
 
-        public ElegirColumnas(DataGridViewColumnCollection currentColumns, Administrar_Stock caller)
+        public ElegirColumnas(DataGridViewColumnCollection currentColumns, AdministrarStock caller)
         {
             InitializeComponent();
-            this.currentColumns = currentColumns;
-            this.caller = caller;
-            fillCheckListBox();
+            _currentColumns = currentColumns;
+            _caller = caller;
+            FillCheckListBox();
         }
 
-        public void fillCheckListBox()
+        public void FillCheckListBox()
         {
-            foreach (DataGridViewColumn sCol in currentColumns)
+            foreach (DataGridViewColumn sCol in _currentColumns)
             {
-                if (!untouchableColumns.Contains<string>(sCol.Name))
+                if (!_untouchableColumns.Contains<string>(sCol.Name))
                 {
                     cbl_columns.Items.Add(sCol, sCol.Visible);
                     cbl_columns.DisplayMember = "HeaderText";
@@ -38,7 +32,7 @@ namespace FerreteriaSL
         private void cbl_columns_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             (cbl_columns.Items[e.Index] as DataGridViewColumn).Visible = e.NewValue == CheckState.Checked ? true : false;
-            caller.ParseDataGrid();
+            _caller.ParseDataGrid();
         }
     }
 }

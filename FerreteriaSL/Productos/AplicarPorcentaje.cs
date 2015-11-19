@@ -1,35 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
     public partial class AplicarPorcentaje : Form
     {
-        double result = 0;
+        double _result;
 
         public double Result
         {
-            get { return result; }
+            get { return _result; }
         }
 
         public AplicarPorcentaje(string mode)
         {
             InitializeComponent();
-            lbl_info.Text = "Ingrese el porcentaje a " + mode + " en los articulos seleccionados.";
-            this.Text = mode[0].ToString().ToUpper() + mode.Substring(1) + " Porcentaje";
+            lbl_info.Text = @"Ingrese el porcentaje a " + mode + @" en los articulos seleccionados.";
+            Text = mode[0].ToString().ToUpper() + mode.Substring(1) + @" Porcentaje";
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         private void nud_percent_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r')
             {
-                result = Convert.ToDouble(nud_percent.Value);
+                _result = Convert.ToDouble(nud_percent.Value);
                 btn_apply.PerformClick();
             }
             if (e.KeyChar == '.')
@@ -40,7 +40,7 @@ namespace FerreteriaSL
 
         private void btn_apply_Click(object sender, EventArgs e)
         {
-            result = Convert.ToDouble(nud_percent.Value);
+            _result = Convert.ToDouble(nud_percent.Value);
         }
 
     }

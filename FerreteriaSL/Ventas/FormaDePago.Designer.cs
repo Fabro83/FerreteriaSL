@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ventas
 {
     partial class FormaDePago
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -254,23 +257,23 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dgv_payments;
-        private System.Windows.Forms.ComboBox cb_payingType;
-        private System.Windows.Forms.ComboBox cb_extraParameters;
-        private System.Windows.Forms.Label lbl_formaDePago;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label lbl_monto;
-        private System.Windows.Forms.Label lbl_infoExtra;
-        private System.Windows.Forms.Label lbl_payingTypesAtUse;
-        private System.Windows.Forms.Button btn_addPayment;
-        private System.Windows.Forms.Button btn_continuar;
-        private System.Windows.Forms.Button btn_cancel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_formaDePago;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_info;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_recargo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_monto;
-        private System.Windows.Forms.Label lbl_totalValue;
-        private System.Windows.Forms.Label lbl_total;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private DataGridView dgv_payments;
+        private ComboBox cb_payingType;
+        private ComboBox cb_extraParameters;
+        private Label lbl_formaDePago;
+        private TextBox textBox1;
+        private Label lbl_monto;
+        private Label lbl_infoExtra;
+        private Label lbl_payingTypesAtUse;
+        private Button btn_addPayment;
+        private Button btn_continuar;
+        private Button btn_cancel;
+        private DataGridViewTextBoxColumn col_formaDePago;
+        private DataGridViewTextBoxColumn col_info;
+        private DataGridViewTextBoxColumn col_recargo;
+        private DataGridViewTextBoxColumn col_monto;
+        private Label lbl_totalValue;
+        private Label lbl_total;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

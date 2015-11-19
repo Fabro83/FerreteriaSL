@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Usuarios
 {
     partial class AgregarNuevoUsuario
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -119,11 +122,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbl_userName;
-        private System.Windows.Forms.Label lbl_userPassword;
-        private System.Windows.Forms.Button btn_add;
-        private System.Windows.Forms.Button btn_cancel;
-        public System.Windows.Forms.TextBox tb_userName;
-        public System.Windows.Forms.TextBox tb_userPassword;
+        private Label lbl_userName;
+        private Label lbl_userPassword;
+        private Button btn_add;
+        private Button btn_cancel;
+        public TextBox tb_userName;
+        public TextBox tb_userPassword;
     }
 }

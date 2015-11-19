@@ -5,18 +5,21 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
+using FerreteriaSL.Clases_Base_de_Datos;
+using FerreteriaSL.Clases_Genericas;
+using FerreteriaSL.Ubicación;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
-    public partial class Administrar_Stock : Form
+    public partial class AdministrarStock : Form
     {
 
-        private int winLastWidth = 1200;
-        private int winLastHeight = 450;
-        FormWindowState winLastState = FormWindowState.Normal;
+        private int _winLastWidth = 1200;
+        private int _winLastHeight = 450;
+        FormWindowState _winLastState = FormWindowState.Normal;
 
-              
-        public Administrar_Stock()
+        
+        public AdministrarStock()
         {       
             InitializeComponent();
             dtp_filtrosFechaCreacionAntes.Checked = false;
@@ -26,32 +29,32 @@ namespace FerreteriaSL
             //loadLastConfig();
         }
 
-        private void loadProviderComboBox(string firstItem, string condition, ComboBox cb_target)
+        private void LoadProviderComboBox(string firstItem, string condition, ComboBox cbTarget)
         {
-            BD DBCon = new BD();
-            DataTable ProviderTable = DBCon.Read("SELECT id,nombre FROM proveedor WHERE " + condition);
-            DataRow defaultRow = ProviderTable.NewRow();
+            Bd dbCon = new Bd();
+            DataTable providerTable = dbCon.Read("SELECT id,nombre FROM proveedor WHERE " + condition);
+            DataRow defaultRow = providerTable.NewRow();
             defaultRow[0] = "-1";
             defaultRow[1] = " " + firstItem;
-            ProviderTable.Rows.Add(defaultRow);
-            ProviderTable.DefaultView.Sort = "nombre asc";
-            cb_target.DataSource = ProviderTable;
-            cb_target.DisplayMember = "nombre";
+            providerTable.Rows.Add(defaultRow);
+            providerTable.DefaultView.Sort = "nombre asc";
+            cbTarget.DataSource = providerTable;
+            cbTarget.DisplayMember = "nombre";
         }
 
         private void btn_cerrarVentana_Click(object sender, EventArgs e)
         {
-            if ((bgw_actualizarProducto != null && bgw_actualizarProducto.IsBusy) || (bgw_transferToDB != null && bgw_transferToDB.IsBusy))
-                MessageBox.Show("Hay una operación ejecutandose, aguarde a que finalice.", "Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if ((_bgwActualizarProducto != null && _bgwActualizarProducto.IsBusy) || (_bgwTransferToDb != null && _bgwTransferToDb.IsBusy))
+                MessageBox.Show(@"Hay una operación ejecutandose, aguarde a que finalice.", @"Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
-                this.Close();       
+                Close();       
         }
 
         private void Administrar_Stock_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((bgw_actualizarProducto != null && bgw_actualizarProducto.IsBusy) || (bgw_transferToDB != null && bgw_transferToDB.IsBusy))
+            if ((_bgwActualizarProducto != null && _bgwActualizarProducto.IsBusy) || (_bgwTransferToDb != null && _bgwTransferToDb.IsBusy))
             {
-                MessageBox.Show("Hay una operación ejecutandose, aguarde a que finalice.", "Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Hay una operación ejecutandose, aguarde a que finalice.", @"Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 e.Cancel = true;
             }
         }
@@ -60,19 +63,19 @@ namespace FerreteriaSL
 
         private void btn_ap_agregar_Click(object sender, EventArgs e)
         {
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
             string query = "INSERT INTO producto (codigo, id_proveedor, nombre, stock, precio, codigo_barra, porcentaje) VALUES ('{0}',{1},'{2}',{3},{4},'{5}',{6})";
             
             string codigo = tb_ap_codigo.Text.Trim().Replace("'", "\\'");
-            int id_proveedor = int.Parse((cb_ap_proveedor.SelectedItem as DataRowView)["id"].ToString());
+            int idProveedor = int.Parse((cb_ap_proveedor.SelectedItem as DataRowView)["id"].ToString());
             string nombre = tb_ap_nombre.Text.Trim().Replace("'", "\\'");
-            int stock = int.Parse(nud_ap_stock.Value.ToString());
+            int stock = int.Parse(nud_ap_stock.Value.ToString(CultureInfo.InvariantCulture));
             string precio = nud_ap_precio.Value.ToString("0.00", CultureInfo.InvariantCulture);
-            string codigo_barra = tb_ap_codigoDeBarras.Text.Trim().Replace("'", "\\'");
+            string codigoBarra = tb_ap_codigoDeBarras.Text.Trim().Replace("'", "\\'");
             string porcentaje = nud_ap_porcentajeDeUtilidad.Value.ToString("0.00",CultureInfo.InvariantCulture);
 
-            query = String.Format(query,codigo,id_proveedor,nombre,stock,precio,codigo_barra,porcentaje);
-            int result = DBCon.Write(query);
+            query = String.Format(query,codigo,idProveedor,nombre,stock,precio,codigoBarra,porcentaje);
+            int result = dbCon.Write(query);
             if (result > 0)
             {
                 lbl_ap_info.ForeColor = Color.DarkGreen;
@@ -81,24 +84,24 @@ namespace FerreteriaSL
             else
             {
                 lbl_ap_info.ForeColor = Color.DarkRed;
-                lbl_ap_info.Text = "Ha ocurrido un error al intentar agregar el articulo.";
+                lbl_ap_info.Text = @"Ha ocurrido un error al intentar agregar el articulo.";
             }
             btn_ap_limpiar_Click(this, EventArgs.Empty);
         }
 
-        void validateProductCode()
+        void ValidateProductCode()
         {
             if (tb_ap_codigo.Text.Length > 0 && cb_ap_proveedor.SelectedIndex > 0)
             {
-                BD DBCon = new BD();
+                Bd dbCon = new Bd();
                 string codigo = tb_ap_codigo.Text.Trim().Replace("'", "\\'");
-                int id_proveedor = int.Parse((cb_ap_proveedor.SelectedItem as DataRowView)["id"].ToString());
-                int check = int.Parse(DBCon.Read(String.Format("SELECT Count(*) FROM producto WHERE codigo = '{0}' AND id_proveedor = {1}",codigo,id_proveedor)).Rows[0][0].ToString());
+                int idProveedor = int.Parse(((DataRowView) cb_ap_proveedor.SelectedItem)["id"].ToString());
+                int check = int.Parse(dbCon.Read(String.Format("SELECT Count(*) FROM producto WHERE codigo = '{0}' AND id_proveedor = {1}",codigo,idProveedor)).Rows[0][0].ToString());
                 if (check > 0)
                 {
                     lbl_ap_info.ForeColor = Color.DarkRed;
-                    string proveedor = (cb_ap_proveedor.SelectedItem as DataRowView)["nombre"].ToString();
-                    lbl_ap_info.Text = "\""+ proveedor +"\" ya poseé un articulo con codigo \"" + codigo + "\"";
+                    string proveedor = ((DataRowView) cb_ap_proveedor.SelectedItem)["nombre"].ToString();
+                    lbl_ap_info.Text = @""""+ proveedor +@""" ya poseé un articulo con codigo """ + codigo + @"""";
                 }
                 else
                 {
@@ -118,14 +121,14 @@ namespace FerreteriaSL
 
         private void tp_agregarProductos_Enter(object sender, EventArgs e)
         {
-            winLastState = this.WindowState != FormWindowState.Normal ? this.WindowState : winLastState;
-            this.WindowState = FormWindowState.Normal;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            winLastWidth = this.Width != 1200 ? this.Width : winLastWidth;
-            winLastHeight = this.Height != 450 ? this.Height : winLastHeight;
-            this.Size = new Size(575, 425);
-            this.MaximizeBox = false;
-            loadProviderComboBox("Seleccione un Proveedor", "nombre IS NOT NULL", cb_ap_proveedor);
+            _winLastState = WindowState != FormWindowState.Normal ? WindowState : _winLastState;
+            WindowState = FormWindowState.Normal;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            _winLastWidth = Width != 1200 ? Width : _winLastWidth;
+            _winLastHeight = Height != 450 ? Height : _winLastHeight;
+            Size = new Size(575, 425);
+            MaximizeBox = false;
+            LoadProviderComboBox("Seleccione un Proveedor", "nombre IS NOT NULL", cb_ap_proveedor);
 
             foreach (Control sControl in tp_agregarProductos.Controls)
             {
@@ -170,54 +173,53 @@ namespace FerreteriaSL
 
         private void tb_ap_codigo_Leave(object sender, EventArgs e)
         {
-            validateProductCode();
+            ValidateProductCode();
             if (tb_ap_codigo.Text.Length > 0 && tb_ap_codigoDeBarras.Text.Length == 0)
                 tb_ap_codigoDeBarras.Text = tb_ap_codigo.Text;
         }
 
         private void cb_ap_proveedor_Leave(object sender, EventArgs e)
         {
-            validateProductCode();
+            ValidateProductCode();
         }
 
         #endregion
 
         #region Tab Ver/Modificar Productos
 
-        string currentQuery = "SELECT * FROM vista_administrarStock";
-        int curPage = -1;
-        BackgroundWorker bgw_actualizarProducto;
-        BusquedaGenerica BG;
-        BackgroundWorker bgw_waitFilter;
+        string _currentQuery = "SELECT * FROM vista_administrarStock";
+        int _curPage = -1;
+        BackgroundWorker _bgwActualizarProducto;
+        BusquedaGenerica _bg;
+        BackgroundWorker _bgwWaitFilter;
 
         private void tb_listarProductos_Enter(object sender, EventArgs e)
         {
-            BG = new BusquedaGenerica();
-            BG.SearchEnded += new SearchEndedHandler(BG_SearchEnded);
-            BG.SearchInProgress += new SearchInProgressHandler(BG_SearchInProgress);
+            _bg = new BusquedaGenerica();
+            _bg.SearchEnded += BG_SearchEnded;
+            _bg.SearchInProgress += BG_SearchInProgress;
 
-            bgw_waitFilter = new BackgroundWorker();
-            bgw_waitFilter.DoWork += new DoWorkEventHandler(bgw_waitFilter_DoWork);
-            bgw_waitFilter.WorkerSupportsCancellation = true;
-            bgw_waitFilter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_waitFilter_RunWorkerCompleted);
+            _bgwWaitFilter = new BackgroundWorker();
+            _bgwWaitFilter.DoWork += bgw_waitFilter_DoWork;
+            _bgwWaitFilter.WorkerSupportsCancellation = true;
+            _bgwWaitFilter.RunWorkerCompleted += bgw_waitFilter_RunWorkerCompleted;
 
             if (dgv_listaProductos.DataSource == null)
             {
-                BD DBCon = new BD();
-                runQuery();
+                RunQuery();
             }
             if (cb_filtroProveedor.DataSource == null)
             {
-                loadProviderComboBox("Todos los Proveedores", "nombre IS NOT NULL", cb_filtroProveedor);
+                LoadProviderComboBox("Todos los Proveedores", "nombre IS NOT NULL", cb_filtroProveedor);
             }
 
             cb_itemsPerPage.SelectedIndex = cb_itemsPerPage.SelectedIndex == -1 ? 0 : cb_itemsPerPage.SelectedIndex;
             cb_filtroArticulosAMostrar.SelectedIndex = cb_filtroArticulosAMostrar.SelectedIndex == -1 ? 0 : cb_filtroArticulosAMostrar.SelectedIndex;
 
-            this.WindowState = winLastState;
-            this.Size = new Size(winLastWidth, winLastHeight);
-            this.MaximizeBox = true;
-            this.FormBorderStyle = FormBorderStyle.Sizable;
+            WindowState = _winLastState;
+            Size = new Size(_winLastWidth, _winLastHeight);
+            MaximizeBox = true;
+            FormBorderStyle = FormBorderStyle.Sizable;
             
         }
 
@@ -226,12 +228,12 @@ namespace FerreteriaSL
             if (!e.Cancelled)
             {
                 //afldbg.log(this, "WaitFilter passed without interruption, running query.","green");
-                runQuery(true, false);
+                RunQuery(true);
             }
             else
             {
                 //afldbg.log(this, "WaitFilter cancelled, waiting for new query.");
-                bgw_waitFilter.RunWorkerAsync();
+                _bgwWaitFilter.RunWorkerAsync();
             }
         }
 
@@ -239,7 +241,7 @@ namespace FerreteriaSL
         {
             //afldbg.log(this, "Wait Filter triggered");
             Thread.Sleep(500);
-            e.Cancel = (sender as BackgroundWorker).CancellationPending;
+            e.Cancel = ((BackgroundWorker) sender).CancellationPending;
         }
 
         void BG_SearchInProgress()
@@ -248,23 +250,26 @@ namespace FerreteriaSL
             pb_productProgress.Visible = true;
         }
 
-        void BG_SearchEnded(DataTable Result)
+        void BG_SearchEnded(DataTable result)
         {
-            dgv_listaProductos.DataSource = Result;
-            setPages(BG.TotalPages, BG.CurrentPage);
+            dgv_listaProductos.DataSource = result;
+            SetPages(_bg.TotalPages, _bg.CurrentPage);
             pb_productProgress.Style = ProgressBarStyle.Continuous;
             pb_productProgress.Visible = false;
-            lbl_estado.Text = BG.SearchTotalItemCount + " articulos en lista.";
+            lbl_estado.Text = _bg.SearchTotalItemCount + @" articulos en lista.";
             try
             {
-                dgv_listaProductos.CurrentCell = dgv_listaProductos[BG.LastSelectedColumnIndex, BG.LastSelectedRowIndex];
+                dgv_listaProductos.CurrentCell = dgv_listaProductos[_bg.LastSelectedColumnIndex, _bg.LastSelectedRowIndex];
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
-        private int getItemsPerPage()
+        private int GetItemsPerPage()
         {
-            if (cb_itemsPerPage.Text == "Todos")
+            if (cb_itemsPerPage.Text == @"Todos")
             {
                 return -1;
             }
@@ -277,10 +282,10 @@ namespace FerreteriaSL
             return int.Parse(cb_itemsPerPage.Text);
         }
 
-        private void setPages(int totalPages, int currentPage)
+        private void SetPages(int totalPages, int currentPage)
         {
-            curPage = totalPages > 0 ? currentPage : 0;
-            lbl_pages.Text = (totalPages > 0 ? (currentPage + 1) : 0) + "/" + totalPages;
+            _curPage = totalPages > 0 ? currentPage : 0;
+            lbl_pages.Text = (totalPages > 0 ? (currentPage + 1) : 0) + @"/" + totalPages;
         }
 
         public void ParseDataGrid()
@@ -295,17 +300,17 @@ namespace FerreteriaSL
             dgv_listaProductos.Columns["precio_final"].ReadOnly = true;
             dgv_listaProductos.Columns["codigo"].ReadOnly = true;
 
-            dgv_listaProductos.Columns["proveedor"].HeaderText = "Proveedor";
-            dgv_listaProductos.Columns["codigo"].HeaderText = "Código";
-            dgv_listaProductos.Columns["nombre"].HeaderText = "Descripción";
-            dgv_listaProductos.Columns["stock"].HeaderText = "Stock";
-            dgv_listaProductos.Columns["precio"].HeaderText = "Precio";
-            dgv_listaProductos.Columns["porcentaje"].HeaderText = "% de Utilidad";
-            dgv_listaProductos.Columns["precio_final"].HeaderText = "Precio Final";
-            dgv_listaProductos.Columns["fecha_creacion"].HeaderText = "Creado";
-            dgv_listaProductos.Columns["fecha_modificacion"].HeaderText = "Ultima Modificación";
-            dgv_listaProductos.Columns["codigo_barra"].HeaderText = "Codigo de Barras";
-            dgv_listaProductos.Columns["full_abb"].HeaderText = "Ubicación";
+            dgv_listaProductos.Columns["proveedor"].HeaderText = @"Proveedor";
+            dgv_listaProductos.Columns["codigo"].HeaderText = @"Código";
+            dgv_listaProductos.Columns["nombre"].HeaderText = @"Descripción";
+            dgv_listaProductos.Columns["stock"].HeaderText = @"Stock";
+            dgv_listaProductos.Columns["precio"].HeaderText = @"Precio";
+            dgv_listaProductos.Columns["porcentaje"].HeaderText = @"% de Utilidad";
+            dgv_listaProductos.Columns["precio_final"].HeaderText = @"Precio Final";
+            dgv_listaProductos.Columns["fecha_creacion"].HeaderText = @"Creado";
+            dgv_listaProductos.Columns["fecha_modificacion"].HeaderText = @"Ultima Modificación";
+            dgv_listaProductos.Columns["codigo_barra"].HeaderText = @"Codigo de Barras";
+            dgv_listaProductos.Columns["full_abb"].HeaderText = @"Ubicación";
 
             dgv_listaProductos.Columns["precio_final"].DefaultCellStyle.Format = "$0.00";
             dgv_listaProductos.Columns["precio"].DefaultCellStyle.Format = "$0.00";
@@ -338,9 +343,9 @@ namespace FerreteriaSL
             dgv_listaProductos.CellValueChanged += dgv_listaProductos_CellValueChanged;
         }
 
-        string buildFilters()
+        string BuildFilters()
         {
-            string filters = "";
+            string filters;
             //if(tb_filtroNombre.Text.Length > 2)
             //{
                 string[] separateWords = tb_filtroNombre.Text.Trim().Split(' '); 
@@ -363,9 +368,9 @@ namespace FerreteriaSL
                 }           
             //}
 
-            if (cb_filtroProveedor.SelectedItem != null && int.Parse((cb_filtroProveedor.SelectedItem as DataRowView)["id"].ToString()) != -1)
+            if (cb_filtroProveedor.SelectedItem != null && int.Parse(((DataRowView) cb_filtroProveedor.SelectedItem)["id"].ToString()) != -1)
             {
-                string filtroProveedor = "id_proveedor = " + (cb_filtroProveedor.SelectedItem as DataRowView)["id"].ToString();
+                string filtroProveedor = "id_proveedor = " + (cb_filtroProveedor.SelectedItem as DataRowView)["id"];
                 filters += filters != "" ? " AND " + filtroProveedor : filtroProveedor;
             }
 
@@ -391,7 +396,7 @@ namespace FerreteriaSL
                             if (sControl is NumericUpDown && (sControl as NumericUpDown).Value > 0)
                             {
                                 string fOperator = sControl.Name.Contains("Mayor") ? " >= " : " <= ";
-                                string value = (sControl as NumericUpDown).Value.ToString().Replace(",", ".");
+                                string value = (sControl as NumericUpDown).Value.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
                                 filters += filters != "" ? " AND " + columnName + fOperator + value : columnName + fOperator + value; 
                             }
                             else if (sControl is DateTimePicker && (sControl as DateTimePicker).Checked)
@@ -434,7 +439,7 @@ namespace FerreteriaSL
                 {
                     tsmi_addToLocation.Visible = true;
                     tsmi_locationName.Visible = true;
-                    tsmi_locationName.Text = (frm as Ubicacion).selectedLocationName();
+                    tsmi_locationName.Text = (frm as Ubicacion).SelectedLocationName();
                     tss_locationSeparator.Visible = true;
                 }
             }
@@ -463,9 +468,9 @@ namespace FerreteriaSL
             }
         }
 
-        private void runQuery(bool filterChanged = false, bool changePage = false)
+        private void RunQuery(bool filterChanged = false, bool changePage = false)
         {
-            if (bgw_actualizarProducto != null && bgw_actualizarProducto.IsBusy)
+            if (_bgwActualizarProducto != null && _bgwActualizarProducto.IsBusy)
             {
                 return;
             }
@@ -479,42 +484,42 @@ namespace FerreteriaSL
 
             if (filterChanged)
             {
-                string filters = buildFilters();
-                if (currentQuery.Contains("WHERE"))
+                string filters = BuildFilters();
+                if (_currentQuery.Contains("WHERE"))
                 {
-                    currentQuery = currentQuery.Remove(currentQuery.IndexOf(" WHERE"));
+                    _currentQuery = _currentQuery.Remove(_currentQuery.IndexOf(" WHERE", StringComparison.Ordinal));
                 }
-                currentQuery = filters != "" ? currentQuery + " WHERE " + filters : currentQuery;
+                _currentQuery = filters != "" ? _currentQuery + " WHERE " + filters : _currentQuery;
                 rIdx = cIdx = 0;
             }
 
-            BG.LastSelectedRowIndex = rIdx;
-            BG.LastSelectedColumnIndex = cIdx;
+            _bg.LastSelectedRowIndex = rIdx;
+            _bg.LastSelectedColumnIndex = cIdx;
 
-            if (BG.IsSearchInProgress)
-                BG.CancelSearch();
+            if (_bg.IsSearchInProgress)
+                _bg.CancelSearch();
            
-            BG.StartSearch(currentQuery);
+            _bg.StartSearch(_currentQuery);
         }
 
         private void cb_itemsPerPage_TextChanged(object sender, EventArgs e)
         {
-            BG.ItemsPerPage = getItemsPerPage();
-            BG.CurrentPage = 0;
+            _bg.ItemsPerPage = GetItemsPerPage();
+            _bg.CurrentPage = 0;
         }
 
         private void btn_prevPage_Click(object sender, EventArgs e)
         {
-            BG.CurrentPage--;
+            _bg.CurrentPage--;
         }
 
         private void btn_nextPage_Click(object sender, EventArgs e)
         {
-            BG.CurrentPage++;
+            _bg.CurrentPage++;
         }
 
         private void dgv_listaProductos_KeyDown(object sender, KeyEventArgs e)
-        {           
+        {
             if (e.KeyData == Keys.Right){
                btn_nextPage.PerformClick();
             }
@@ -538,13 +543,13 @@ namespace FerreteriaSL
             if (colName == "precio")
             {
                 e.Control.Text = e.Control.Text.Replace("$", "");
-                e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
+                e.Control.KeyPress += Control_KeyPress;
             }
 
             if (colName == "porcentaje")
             {
                 e.Control.Text = e.Control.Text.Replace("%", "");
-                e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
+                e.Control.KeyPress += Control_KeyPress;
             }
         }
 
@@ -554,35 +559,35 @@ namespace FerreteriaSL
                 e.KeyChar = ',';
         }
 
-        void filterTrigger(object sender, EventArgs e)
+        void FilterTrigger(object sender, EventArgs e)
         {
             //runQuery(true);
-            if (bgw_waitFilter.IsBusy)
+            if (_bgwWaitFilter.IsBusy)
             {
                 ////afldbg.log(this, "filterTrigger Called. Cancelling Wait Filter. Caller: [" + sender.ToString()+"]");
-                bgw_waitFilter.CancelAsync();
+                _bgwWaitFilter.CancelAsync();
             }
             else
             {
                 ////afldbg.log(this, "filterTrigger Called. Starting Wait Filter. Caller: ["+sender.ToString()+"]");
-                bgw_waitFilter.RunWorkerAsync();
+                _bgwWaitFilter.RunWorkerAsync();
             }
         }
 
-        void calcularPorcentaje(int rIdx)
+        void CalcularPorcentaje(int rIdx)
         {
             double precio = Convert.ToDouble(dgv_listaProductos["precio", rIdx].Value.ToString());
             double porcentaje = Convert.ToDouble(dgv_listaProductos["porcentaje", rIdx].Value.ToString());
             double plus = (precio * porcentaje) / 100;
-            double precio_final = Math.Round((precio + plus), 2, MidpointRounding.AwayFromZero);
+            double precioFinal = Math.Round((precio + plus), 2, MidpointRounding.AwayFromZero);
             dgv_listaProductos.CellValueChanged -= dgv_listaProductos_CellValueChanged;
-            dgv_listaProductos["precio_final", rIdx].Value = precio_final;
+            dgv_listaProductos["precio_final", rIdx].Value = precioFinal;
             dgv_listaProductos.CellValueChanged += dgv_listaProductos_CellValueChanged;
         }
 
         private void dgv_listaProductos_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            MessageBox.Show("El valor ingresado no es correcto para el tipo de dato de la columna.", "Fomato no válido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(@"El valor ingresado no es correcto para el tipo de dato de la columna.", @"Fomato no válido", MessageBoxButtons.OK, MessageBoxIcon.Error);
             dgv_listaProductos.CancelEdit();
         }
 
@@ -592,43 +597,43 @@ namespace FerreteriaSL
                 return;
             int rIdx = e.RowIndex;
 
-            calcularPorcentaje(rIdx);
+            CalcularPorcentaje(rIdx);
 
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
             string query = "UPDATE producto SET codigo_barra = '{0}', nombre = '{1}', stock = {2}, precio = {3}, porcentaje = {4}, precio_final = {5},oculto = {6}, pro_seccion_id = {7} WHERE id = {8}";
             
             string id = dgv_listaProductos["id", rIdx].Value.ToString();
-            string codigo_barra = dgv_listaProductos["codigo_barra", rIdx].Value.ToString();
-            string nombre = dgv_listaProductos["nombre", rIdx].Value.ToString().Replace("'", "\\'"); ;
+            string codigoBarra = dgv_listaProductos["codigo_barra", rIdx].Value.ToString();
+            string nombre = dgv_listaProductos["nombre", rIdx].Value.ToString().Replace("'", "\\'");
             string stock = dgv_listaProductos["stock", rIdx].Value.ToString().Replace(",",".");
             string precio = dgv_listaProductos["precio", rIdx].Value.ToString().Replace(",", ".");
             string porcentaje = dgv_listaProductos["porcentaje", rIdx].Value.ToString().Replace(",", ".");
-            string precio_final = dgv_listaProductos["precio_final", rIdx].Value.ToString().Replace(",", ".");
+            string precioFinal = dgv_listaProductos["precio_final", rIdx].Value.ToString().Replace(",", ".");
             string oculto = dgv_listaProductos["oculto", rIdx].Value.ToString();
-            string pro_seccion_id = dgv_listaProductos["pro_seccion_id", rIdx].Value.ToString();
+            string proSeccionId = dgv_listaProductos["pro_seccion_id", rIdx].Value.ToString();
 
-            query = String.Format(query, codigo_barra, nombre, stock, precio, porcentaje, precio_final, oculto, pro_seccion_id, id);
-            DBCon.Write(query);
+            query = String.Format(query, codigoBarra, nombre, stock, precio, porcentaje, precioFinal, oculto, proSeccionId, id);
+            dbCon.Write(query);
         }
 
         private void tsmi_marcar_Click(object sender, EventArgs e)
         {
-            int value = (sender as ToolStripMenuItem).Name.Contains("Visible") ? 0 : 1;
+            int value = ((ToolStripMenuItem) sender).Name.Contains("Visible") ? 0 : 1;
             DataGridViewSelectedRowCollection selectedRows = dgv_listaProductos.SelectedRows;
             
-            bgw_actualizarProducto = new BackgroundWorker();
-            bgw_actualizarProducto.DoWork += new DoWorkEventHandler(bgw_actualizarProducto_DoWork);
-            bgw_actualizarProducto.WorkerReportsProgress = true;
-            bgw_actualizarProducto.ProgressChanged += new ProgressChangedEventHandler(bgw_actualizarProducto_ProgressChanged);
-            bgw_actualizarProducto.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_actualizarProducto_RunWorkerCompleted);
+            _bgwActualizarProducto = new BackgroundWorker();
+            _bgwActualizarProducto.DoWork += bgw_actualizarProducto_DoWork;
+            _bgwActualizarProducto.WorkerReportsProgress = true;
+            _bgwActualizarProducto.ProgressChanged += bgw_actualizarProducto_ProgressChanged;
+            _bgwActualizarProducto.RunWorkerCompleted += bgw_actualizarProducto_RunWorkerCompleted;
 
             object[] argument = {selectedRows,value, "oculto",""};
-            toggleDataGridInteraction(dgv_listaProductos, false);
+            ToggleDataGridInteraction(dgv_listaProductos, false);
             pb_productProgress.Visible = true;
-            bgw_actualizarProducto.RunWorkerAsync(argument);
+            _bgwActualizarProducto.RunWorkerAsync(argument);
         }
 
-        void toggleDataGridInteraction(DataGridView target,bool enabled)
+        void ToggleDataGridInteraction(DataGridView target,bool enabled)
         {
             if (enabled)
             {
@@ -656,8 +661,8 @@ namespace FerreteriaSL
         {
             pb_productProgress.Value = 0;
             pb_productProgress.Visible = false;
-            runQuery();
-            toggleDataGridInteraction(dgv_listaProductos, true);         
+            RunQuery();
+            ToggleDataGridInteraction(dgv_listaProductos, true);         
         }
 
         void bgw_actualizarProducto_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -673,6 +678,7 @@ namespace FerreteriaSL
             object[] parametros = e.Argument as object[];
             BackgroundWorker bgw = sender as BackgroundWorker;
 
+            if (parametros == null) return;
             DataGridViewSelectedRowCollection selectedRows = parametros[0] as DataGridViewSelectedRowCollection;
             var value = parametros[1];
             string columnName = parametros[2].ToString();
@@ -686,7 +692,7 @@ namespace FerreteriaSL
                 {
                     sRow.Cells[columnName].Value =  double.Parse(sRow.Cells[columnName].Value.ToString()) + Convert.ToDouble(value);
                     cont++;
-                    bgw.ReportProgress( (cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
+                    if (bgw != null) bgw.ReportProgress( (cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
                 }
             }
             else if (columnName == "precio")
@@ -697,19 +703,19 @@ namespace FerreteriaSL
                     double newValue = oldValue + ( (Convert.ToDouble(value) * oldValue) / 100 );
                     sRow.Cells[columnName].Value = newValue;
                     cont++;
-                    bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
+                    if (bgw != null) bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
                 }
             }
             else if (columnName == "id")
             {
-                BD DBCon = new BD();
+                Bd dbCon = new Bd();
                 string query = "DELETE FROM producto WHERE id = {0}";
                 foreach (DataGridViewRow sRow in selectedRows)
                 {
-                    string pro_id = sRow.Cells[columnName].Value.ToString();
-                    DBCon.Write(String.Format(query, pro_id));
+                    string proId = sRow.Cells[columnName].Value.ToString();
+                    dbCon.Write(String.Format(query, proId));
                     cont++;
-                    bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
+                    if (bgw != null) bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
                 }
             }
             else
@@ -718,42 +724,42 @@ namespace FerreteriaSL
                 {
                     sRow.Cells[columnName].Value = Convert.ToDouble(value);
                     cont++;
-                    bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
+                    if (bgw != null) bgw.ReportProgress((cont * 100) / cap, "Guardando cambios: " + cont + " de " + cap);
                 }
-            }         
+            }
         }
 
         private void tsmi_Porcentaje_Click(object sender, EventArgs e)
         {
             
-            string percentMode = "";
+            string percentMode;
             string columnName = "porcentaje";
 
-            if ((sender as ToolStripMenuItem).Name.Contains("Precio"))
+            if (((ToolStripMenuItem) sender).Name.Contains("Precio"))
             {
                 percentMode = "incrementar sobre el precio";
                 columnName = "precio";
             }
             else
             {
-                percentMode = (sender as ToolStripMenuItem).Name.Contains("sumar") ? "sumar" : "aplicar";
+                percentMode = ((ToolStripMenuItem) sender).Name.Contains("sumar") ? "sumar" : "aplicar";
             }
 
-            AplicarPorcentaje AP = new AplicarPorcentaje(percentMode);
+            AplicarPorcentaje ap = new AplicarPorcentaje(percentMode);
             
-            if (AP.ShowDialog(this) == DialogResult.OK)
+            if (ap.ShowDialog(this) == DialogResult.OK)
             {
-                bgw_actualizarProducto = new BackgroundWorker();
-                bgw_actualizarProducto.DoWork += new DoWorkEventHandler(bgw_actualizarProducto_DoWork);
-                bgw_actualizarProducto.WorkerReportsProgress = true;
-                bgw_actualizarProducto.ProgressChanged += new ProgressChangedEventHandler(bgw_actualizarProducto_ProgressChanged);
-                bgw_actualizarProducto.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_actualizarProducto_RunWorkerCompleted);
+                _bgwActualizarProducto = new BackgroundWorker();
+                _bgwActualizarProducto.DoWork += bgw_actualizarProducto_DoWork;
+                _bgwActualizarProducto.WorkerReportsProgress = true;
+                _bgwActualizarProducto.ProgressChanged += bgw_actualizarProducto_ProgressChanged;
+                _bgwActualizarProducto.RunWorkerCompleted += bgw_actualizarProducto_RunWorkerCompleted;
 
                 DataGridViewSelectedRowCollection selectedRows = dgv_listaProductos.SelectedRows;
-                double value = AP.Result;
-                toggleDataGridInteraction(dgv_listaProductos, false);
+                double value = ap.Result;
+                ToggleDataGridInteraction(dgv_listaProductos, false);
                 pb_productProgress.Visible = true;
-                bgw_actualizarProducto.RunWorkerAsync(new object[] { selectedRows, value, columnName, percentMode });
+                _bgwActualizarProducto.RunWorkerAsync(new object[] { selectedRows, value, columnName, percentMode });
             }
             
             
@@ -770,41 +776,41 @@ namespace FerreteriaSL
             DataGridViewSelectedRowCollection selectedRows = dgv_listaProductos.SelectedRows;
             int elementCount = selectedRows.Count;
             string messagePart = elementCount > 1 ? " elementos" : " elemento";
-            DialogResult res = MessageBox.Show("¿Está seguro que desea eliminar " + elementCount + messagePart + "?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult res = MessageBox.Show(@"¿Está seguro que desea eliminar " + elementCount + messagePart + @"?", @"Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.Yes)
             {
-                bgw_actualizarProducto = new BackgroundWorker();
-                bgw_actualizarProducto.DoWork += new DoWorkEventHandler(bgw_actualizarProducto_DoWork);
-                bgw_actualizarProducto.WorkerReportsProgress = true;
-                bgw_actualizarProducto.ProgressChanged += new ProgressChangedEventHandler(bgw_actualizarProducto_ProgressChanged);
-                bgw_actualizarProducto.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_actualizarProducto_RunWorkerCompleted);
+                _bgwActualizarProducto = new BackgroundWorker();
+                _bgwActualizarProducto.DoWork += bgw_actualizarProducto_DoWork;
+                _bgwActualizarProducto.WorkerReportsProgress = true;
+                _bgwActualizarProducto.ProgressChanged += bgw_actualizarProducto_ProgressChanged;
+                _bgwActualizarProducto.RunWorkerCompleted += bgw_actualizarProducto_RunWorkerCompleted;
                 pb_productProgress.Visible = true;
-                toggleDataGridInteraction(dgv_listaProductos, false);
-                bgw_actualizarProducto.RunWorkerAsync(new object[] { selectedRows, 1, "id", "" });
+                ToggleDataGridInteraction(dgv_listaProductos, false);
+                _bgwActualizarProducto.RunWorkerAsync(new object[] { selectedRows, 1, "id", "" });
             }          
         }
 
         private void tsmi_addToLocation_Click(object sender, EventArgs e)
         {
             DataGridViewSelectedRowCollection selectedRows = dgv_listaProductos.SelectedRows;
-            int locationID = 0;
+            int locationId = 0;
 
             foreach (Form frm in Application.OpenForms)
             {
                 if (frm is Ubicacion)
                 {
-                    locationID = (frm as Ubicacion).selectedLocationID();
+                    locationId = (frm as Ubicacion).SelectedLocationId();
                 }
             }
 
-            bgw_actualizarProducto = new BackgroundWorker();
-            bgw_actualizarProducto.DoWork += new DoWorkEventHandler(bgw_actualizarProducto_DoWork);
-            bgw_actualizarProducto.WorkerReportsProgress = true;
-            bgw_actualizarProducto.ProgressChanged += new ProgressChangedEventHandler(bgw_actualizarProducto_ProgressChanged);
-            bgw_actualizarProducto.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_actualizarProducto_RunWorkerCompleted);
+            _bgwActualizarProducto = new BackgroundWorker();
+            _bgwActualizarProducto.DoWork += bgw_actualizarProducto_DoWork;
+            _bgwActualizarProducto.WorkerReportsProgress = true;
+            _bgwActualizarProducto.ProgressChanged += bgw_actualizarProducto_ProgressChanged;
+            _bgwActualizarProducto.RunWorkerCompleted += bgw_actualizarProducto_RunWorkerCompleted;
             pb_productProgress.Visible = true;
-            toggleDataGridInteraction(dgv_listaProductos, false);
-            bgw_actualizarProducto.RunWorkerAsync(new object[] { selectedRows, locationID, "pro_seccion_id", "" });
+            ToggleDataGridInteraction(dgv_listaProductos, false);
+            _bgwActualizarProducto.RunWorkerAsync(new object[] { selectedRows, locationId, "pro_seccion_id", "" });
   
         }
 
@@ -826,7 +832,10 @@ namespace FerreteriaSL
                 {
                     dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex - 1];
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
                 e.Handled = true;
             }
             else if (e.KeyData == Keys.Down)
@@ -835,15 +844,18 @@ namespace FerreteriaSL
                 {
                     dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex + 1];
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
                 e.Handled = true;
             }
         }
 
         private void tsmi_chooseColumns_Click(object sender, EventArgs e)
         {
-            ElegirColumnas EC = new ElegirColumnas(dgv_listaProductos.Columns,this);
-            EC.ShowDialog(this);
+            ElegirColumnas ec = new ElegirColumnas(dgv_listaProductos.Columns,this);
+            ec.ShowDialog(this);
         }
 
         private void dgv_listaProductos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -860,24 +872,24 @@ namespace FerreteriaSL
 
         private void btn_seleccionarArchivo_Click(object sender, EventArgs e)
         {
-            ImportWindow IW = new ImportWindow();
-            if (IW.ShowDialog(this) == DialogResult.OK)
+            ImportWindow iw = new ImportWindow();
+            if (iw.ShowDialog(this) == DialogResult.OK)
             {
-                DataTable parcialTable = IW.ImportedExcel;
+                DataTable parcialTable = iw.ImportedExcel;
                 parcialTable.Columns.Add("Precio a Importar",typeof(double));
                 dgv_listadoExcel.DataSource = parcialTable;
-                lbl_importedFileName.Text = IW.FileName.Replace("\\","");
+                lbl_importedFileName.Text = iw.FileName.Replace("\\","");
                 CanTransfer();
             }
         }
 
         private void tp_importarProductos_Enter(object sender, EventArgs e)
         {
-            loadProviderComboBox("Seleccione un proveedor", "1", cb_listaProveedores);
-            this.WindowState = winLastState;
-            this.Size = new Size(winLastWidth, winLastHeight);
-            this.FormBorderStyle = FormBorderStyle.Sizable;
-            this.MaximizeBox = true;
+            LoadProviderComboBox("Seleccione un proveedor", "1", cb_listaProveedores);
+            WindowState = _winLastState;
+            Size = new Size(_winLastWidth, _winLastHeight);
+            FormBorderStyle = FormBorderStyle.Sizable;
+            MaximizeBox = true;
         }
 
         private void cb_listaProveedores_SelectedIndexChanged(object sender, EventArgs e)
@@ -922,11 +934,10 @@ namespace FerreteriaSL
         private void import_applyPercentage()
         {
             double percentage = Convert.ToDouble(nud_importPercentage.Value);
-            double plus = 0;
             foreach (DataGridViewRow sRow in dgv_listadoExcel.Rows)
             {
                 double valor = Convert.ToDouble(sRow.Cells[2].Value);
-                plus = (valor * percentage) / 100;
+                var plus = (valor * percentage) / 100;
 
                 sRow.Cells[3].Value = (valor + plus).ToString("00.00");
             }
@@ -946,99 +957,97 @@ namespace FerreteriaSL
             }
         }
 
-        BackgroundWorker bgw_transferToDB;
+        BackgroundWorker _bgwTransferToDb;
 
         private void btn_transferir_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "¿Está seguro que desea continuar?", "Transferir a Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                bgw_transferToDB = new BackgroundWorker();
-                bgw_transferToDB.WorkerReportsProgress = true;
-                bgw_transferToDB.WorkerSupportsCancellation = true;
-                bgw_transferToDB.DoWork += new DoWorkEventHandler(bgw_transferToDB_DoWork);
-                bgw_transferToDB.ProgressChanged += new ProgressChangedEventHandler(bgw_transferToDB_ProgressChanged);
-                bgw_transferToDB.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_transferToDB_RunWorkerCompleted);
+            if (
+                MessageBox.Show(this, @"¿Está seguro que desea continuar?", @"Transferir a Base de Datos",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            _bgwTransferToDb = new BackgroundWorker();
+            _bgwTransferToDb.WorkerReportsProgress = true;
+            _bgwTransferToDb.WorkerSupportsCancellation = true;
+            _bgwTransferToDb.DoWork += bgw_transferToDB_DoWork;
+            _bgwTransferToDb.ProgressChanged += bgw_transferToDB_ProgressChanged;
+            _bgwTransferToDb.RunWorkerCompleted += bgw_transferToDB_RunWorkerCompleted;
 
-                DataTable productsToImport = dgv_listadoExcel.DataSource as DataTable;
-                int id_proveedor = int.Parse((cb_listaProveedores.SelectedItem as DataRowView)["id"].ToString());
+            DataTable productsToImport = dgv_listadoExcel.DataSource as DataTable;
+            int idProveedor = int.Parse(((DataRowView) cb_listaProveedores.SelectedItem)["id"].ToString());
 
-                object[] args = new object[] { productsToImport, id_proveedor };
+            object[] args = { productsToImport, idProveedor };
 
-                btn_cancelarTransferencia.Enabled = true;
-                btn_transferir.Enabled = false;
-                dgv_listadoExcel.Enabled = false;
-                cb_listaProveedores.Enabled = false;
-                nud_importPercentage.Enabled = false;
+            btn_cancelarTransferencia.Enabled = true;
+            btn_transferir.Enabled = false;
+            dgv_listadoExcel.Enabled = false;
+            cb_listaProveedores.Enabled = false;
+            nud_importPercentage.Enabled = false;
 
-                pb_transferProgress.Maximum = 100;
-                pb_transferProgress.Minimum = 0;
-                pb_transferProgress.Style = ProgressBarStyle.Continuous;
+            pb_transferProgress.Maximum = 100;
+            pb_transferProgress.Minimum = 0;
+            pb_transferProgress.Style = ProgressBarStyle.Continuous;
 
-                bgw_transferToDB.RunWorkerAsync(args);
-            }
+            _bgwTransferToDb.RunWorkerAsync(args);
         }
 
         void bgw_transferToDB_DoWork(object sender, DoWorkEventArgs e)
         {
-            DataTable productsToImport = ((e.Argument as object[])[0] as DataTable);
-            int id_proveedor = int.Parse((e.Argument as object[])[1].ToString());
+            DataTable productsToImport = (((object[]) e.Argument)[0] as DataTable);
+            int idProveedor = int.Parse(((object[]) e.Argument)[1].ToString());
             DateTime startTime = DateTime.Now;
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
 
             int updated = 0, inserted = 0;
 
+            if (productsToImport == null) return;
             foreach (DataRow sRow in productsToImport.Rows)
             {
-                if (bgw_transferToDB.CancellationPending)
+                if (_bgwTransferToDb.CancellationPending)
                 {
                     e.Cancel = true;
                     break;
                 }
-                else
-                {
-                    string codigo = sRow[0].ToString().Trim();
-                    string nombre = sRow[1].ToString().Replace("\"", "\\\"").Replace("'", "").Trim();
-                    double precio = Convert.ToDouble(sRow[3].ToString().Trim());
-                    string query = String.Format("Call sp_importFromExcel('{0}','{1}',{2},{3})", codigo,nombre,precio.ToString("0.00",CultureInfo.InvariantCulture),id_proveedor);
-                    int result = -1;
-                    //while (result == -1)
-                    //{
-                    //    try
-                    //    {
-                    //        //afldbg.log(this, "Trying to connecto to database", "green");
-                            result = int.Parse(DBCon.Read(query).Rows[0][0].ToString());
-                    //    }
-                    //    catch
-                    //    {
-                    //        //afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
-                    //        bgw_transferToDB.ReportProgress(0, 1);
-                    //        Thread.Sleep(3000);
-                    //        //afldbg.log(this, "3 seconds passed, retrying...", "red");
-                    //        if (bgw_transferToDB.CancellationPending)
-                    //        {
-                    //            //afldbg.log(this, "Transfer Cancelled", "orange");
-                    //            e.Cancel = true;
-                    //            return;
-                    //        }
-                    //    }
+                string codigo = sRow[0].ToString().Trim();
+                string nombre = sRow[1].ToString().Replace("\"", "\\\"").Replace("'", "").Trim();
+                double precio = Convert.ToDouble(sRow[3].ToString().Trim());
+                string query = String.Format("Call sp_importFromExcel('{0}','{1}',{2},{3})", codigo,nombre,precio.ToString("0.00",CultureInfo.InvariantCulture),idProveedor);
+                int result = -1;
+                //while (result == -1)
+                //{
+                //    try
+                //    {
+                //        //afldbg.log(this, "Trying to connecto to database", "green");
+                result = int.Parse(dbCon.Read(query).Rows[0][0].ToString());
+                //    }
+                //    catch
+                //    {
+                //        //afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
+                //        bgw_transferToDB.ReportProgress(0, 1);
+                //        Thread.Sleep(3000);
+                //        //afldbg.log(this, "3 seconds passed, retrying...", "red");
+                //        if (bgw_transferToDB.CancellationPending)
+                //        {
+                //            //afldbg.log(this, "Transfer Cancelled", "orange");
+                //            e.Cancel = true;
+                //            return;
+                //        }
+                //    }
                         
-                    //}                   
-                    if (result == 1)
-                        updated++;
-                    else
-                        inserted++;
-                    transferExcelToDataBaseProgressInfo userState = new transferExcelToDataBaseProgressInfo(updated,inserted,productsToImport.Rows.Count, DateTime.Now - startTime);
-                    bgw_transferToDB.ReportProgress(0, userState);
-                    e.Result = userState;
-                }
+                //}                   
+                if (result == 1)
+                    updated++;
+                else
+                    inserted++;
+                TransferExcelToDataBaseProgressInfo userState = new TransferExcelToDataBaseProgressInfo(updated,inserted,productsToImport.Rows.Count, DateTime.Now - startTime);
+                _bgwTransferToDb.ReportProgress(0, userState);
+                e.Result = userState;
             }
         }
 
         void bgw_transferToDB_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.UserState is transferExcelToDataBaseProgressInfo)
+            if (e.UserState is TransferExcelToDataBaseProgressInfo)
             {
-                transferExcelToDataBaseProgressInfo data = e.UserState as transferExcelToDataBaseProgressInfo;
+                TransferExcelToDataBaseProgressInfo data = e.UserState as TransferExcelToDataBaseProgressInfo;
 
                 pb_transferProgress.Value = Convert.ToInt32(data.Percentage);
 
@@ -1049,7 +1058,7 @@ namespace FerreteriaSL
             }
             else
             {
-                lbl_progresoInfo.Text = "La conexión a la base de datos se ha perdido, reintentando en 3 segundos.";
+                lbl_progresoInfo.Text = @"La conexión a la base de datos se ha perdido, reintentando en 3 segundos.";
             }
             
             
@@ -1060,12 +1069,12 @@ namespace FerreteriaSL
             
             if (e.Cancelled)
             {
-                lbl_progresoInfo.Text = "Tranferencia Cancelada.";
+                lbl_progresoInfo.Text = @"Tranferencia Cancelada.";
             }
             else
             {
-                transferExcelToDataBaseProgressInfo data = e.Result as transferExcelToDataBaseProgressInfo;
-                string completeInfo = "Tranferencia Completada en {0}:{1}, {2} productos agregados, {3} productos actualizados.";
+                TransferExcelToDataBaseProgressInfo data = e.Result as TransferExcelToDataBaseProgressInfo;
+                const string completeInfo = "Tranferencia Completada en {0}:{1}, {2} productos agregados, {3} productos actualizados.";
                 lbl_progresoInfo.Text = String.Format(completeInfo,data.ElapsedTime.Minutes.ToString("00"),data.ElapsedTime.Seconds.ToString("00"),
                                                       data.Inserted,data.Updated);
             }
@@ -1080,14 +1089,13 @@ namespace FerreteriaSL
 
         private void btn_cancelarTransferencia_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "¿Está seguro que desea cancelar la transferencia?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            if (MessageBox.Show(this, @"¿Está seguro que desea cancelar la transferencia?", @"Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
-                bgw_transferToDB.CancelAsync();
+                _bgwTransferToDb.CancelAsync();
             }
         }
 
         #endregion       
-
 
         //private void loadLastConfig()
         //{ 
@@ -1107,71 +1115,70 @@ namespace FerreteriaSL
         //{ 
             
         //}
-
     }
 
-    public class transferExcelToDataBaseProgressInfo
+    public class TransferExcelToDataBaseProgressInfo
     {
 
-        double percentage = 0;
+        double _percentage;
 
         public double Percentage
         {
-            get { return percentage; }
+            get { return _percentage; }
         }
 
-        TimeSpan elapsedTime = new TimeSpan();
+        TimeSpan _elapsedTime;
 
         public TimeSpan ElapsedTime
         {
-            get { return elapsedTime; }
+            get { return _elapsedTime; }
         }
 
-        int updated = 0, inserted = 0, total = 0, proccessed = 0, remaining = 0;
+        int _updated, _inserted, _total, _proccessed, _remaining;
 
         public int Total
         {
-            get { return total; }
+            get { return _total; }
         }
 
         public int Remaining
         {
-            get { return remaining; }
+            get { return _remaining; }
         }
 
         public int Proccessed
         {
-            get { return proccessed; }
+            get { return _proccessed; }
         }
 
         public int Inserted
         {
-            get { return inserted; }
+            get { return _inserted; }
         }
 
         public int Updated
         {
-            get { return updated; }
+            get { return _updated; }
         }
 
-        public transferExcelToDataBaseProgressInfo(int u, int i, int t, TimeSpan et)
+        public TransferExcelToDataBaseProgressInfo(int u, int i, int t, TimeSpan et)
         {
-            updated = u;
-            inserted = i;
-            total = t;
-            proccessed = u + i;
-            remaining = total - proccessed;
-            percentage = ((Convert.ToDouble(proccessed) * 100D) / Convert.ToDouble(total));
-            elapsedTime = et;
+            _updated = u;
+            _inserted = i;
+            _total = t;
+            _proccessed = u + i;
+            _remaining = _total - _proccessed;
+            _percentage = ((Convert.ToDouble(_proccessed) * 100D) / Convert.ToDouble(_total));
+            _elapsedTime = et;
         }
     }
 
 
-    public delegate void ASC_ChangedHandler(string option, object newValue);
+    public delegate void AscChangedHandler(string option, object newValue);
 
-    public class Adminstrar_Stock_Config
+    public class AdminstrarStockConfig
     {
-        public event ASC_ChangedHandler OptionChanged;
+        public event AscChangedHandler OptionChanged;
 
         private void OnOptionChanged(string option, object newValue)
         {
@@ -1179,42 +1186,42 @@ namespace FerreteriaSL
                 OptionChanged(option, newValue);
         }
 
-        private int winLastWidth = 1200;
+        private int _winLastWidth = 1200;
         public int WinLastWidth
         {
-            get { return winLastWidth; }
+            get { return _winLastWidth; }
             set { 
-                    winLastWidth = value;
+                    _winLastWidth = value;
                     //OnOptionChanged("winLastWidth"
                 }
         }
 
-        private int winLastHeight = 450;
+        private int _winLastHeight = 450;
         public int WinLastHeight
         {
-            get { return winLastHeight; }
-            set { winLastHeight = value; }
+            get { return _winLastHeight; }
+            set { _winLastHeight = value; }
         }
 
-        FormWindowState winLastState = FormWindowState.Normal;
+        FormWindowState _winLastState = FormWindowState.Normal;
         public FormWindowState WinLastState
         {
-            get { return winLastState; }
-            set { winLastState = value; }
+            get { return _winLastState; }
+            set { _winLastState = value; }
         }
 
-        private bool includeZeroPriced = false;
+        private bool _includeZeroPriced;
         public bool IncludeZeroPriced
         {
-            get { return includeZeroPriced; }
-            set { includeZeroPriced = value; }
+            get { return _includeZeroPriced; }
+            set { _includeZeroPriced = value; }
         }
 
-        private bool updateDescription = false;
+        private bool _updateDescription;
         public bool UpdateDescription
         {
-            get { return updateDescription; }
-            set { updateDescription = value; }
+            get { return _updateDescription; }
+            set { _updateDescription = value; }
         }
 
 

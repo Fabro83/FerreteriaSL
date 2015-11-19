@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace FerreteriaSL
+﻿namespace FerreteriaSL.Clases_Genericas
 {
     public static class CommonStringParser
     {
-        public static string EscapeSQLQuery(string Query)
+        public static string EscapeSqlQuery(string query)
         {
-            return Query.Replace("'", "\\'");
+            return query.Replace("'", "\\'");
         }
     }
 }

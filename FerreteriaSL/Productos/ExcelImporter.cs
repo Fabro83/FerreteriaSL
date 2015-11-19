@@ -1,31 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Data;
+using System.Globalization;
 using System.Text;
 using Net.SourceForge.Koogra;
-using System.Data;
-using System.ComponentModel;
-using System.IO;
-using System.Globalization;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Productos
 {
     public delegate void StatusChangedHandler(string status, int percentage, int type);
     public delegate void DataTableReadyHandler(DataTable result);
     public delegate void ExcelFileLoadedHandler();
     public delegate void PreviewLoadedhandler(DataTable previewTable);
 
-    class KoograExcelImporter : ExcelReader
+    class KoograExcelImporter : IExcelReader
     {
-        IWorkbook ExcelWorkBook;
-        BackgroundWorker bgw_cargarArchivo;
-        BackgroundWorker bgw_cargarHoja;
-        BackgroundWorker bgw_cargarVistaPrevia;
-        string filePath;
+        IWorkbook _excelWorkBook;
+        BackgroundWorker _bgwCargarArchivo;
+        BackgroundWorker _bgwCargarHoja;
+        BackgroundWorker _bgwCargarVistaPrevia;
+        string _filePath;
 
         public string FilePath
         {
-            get { return filePath; }
+            get { return _filePath; }
         }
      
         public event StatusChangedHandler StatusChanged;
@@ -62,15 +60,15 @@ namespace FerreteriaSL
                 PreviewLoaded(previewTable);
         }
 
-        public void loadExcelFile(string filePath)
+        public void LoadExcelFile(string filePath)
         {
-            this.filePath = filePath;
-            bgw_cargarArchivo = new BackgroundWorker();
-            bgw_cargarArchivo.DoWork += new DoWorkEventHandler(bgw_cargarArchivo_DoWork);
-            bgw_cargarArchivo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_cargarArchivo_RunWorkerCompleted);
+            _filePath = filePath;
+            _bgwCargarArchivo = new BackgroundWorker();
+            _bgwCargarArchivo.DoWork += bgw_cargarArchivo_DoWork;
+            _bgwCargarArchivo.RunWorkerCompleted += bgw_cargarArchivo_RunWorkerCompleted;
             string fileName = filePath.Split('\\')[filePath.Split('\\').Length - 1];
             OnStatusChange("Cargando archivo \"" + fileName + "\"...",0,3);
-            bgw_cargarArchivo.RunWorkerAsync(filePath);
+            _bgwCargarArchivo.RunWorkerAsync(filePath);
         }
 
         void bgw_cargarArchivo_DoWork(object sender, DoWorkEventArgs e)
@@ -79,9 +77,9 @@ namespace FerreteriaSL
             try
             {
                 if (path.Contains("xlsx"))
-                    ExcelWorkBook = Net.SourceForge.Koogra.WorkbookFactory.GetExcel2007Reader(path);
+                    _excelWorkBook = WorkbookFactory.GetExcel2007Reader(path);
                 else
-                    ExcelWorkBook = Net.SourceForge.Koogra.WorkbookFactory.GetExcelBIFFReader(path);                  
+                    _excelWorkBook = WorkbookFactory.GetExcelBIFFReader(path);                  
             }
             catch (Exception eose)
             {
@@ -103,16 +101,16 @@ namespace FerreteriaSL
             }
         }
 
-        public void processExcelFile(int targetSheet, int[] targetColumns)
+        public void ProcessExcelFile(int targetSheet, int[] targetColumns)
         {
             object[] workerArgs = { targetColumns, targetSheet };
-            bgw_cargarHoja = new BackgroundWorker();
-            bgw_cargarHoja.DoWork += new DoWorkEventHandler(bgw_cargarHoja_DoWork);
-            bgw_cargarHoja.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_cargarHoja_RunWorkerCompleted);
-            bgw_cargarHoja.WorkerReportsProgress = true;
-            bgw_cargarHoja.WorkerSupportsCancellation = true;
-            bgw_cargarHoja.ProgressChanged += new ProgressChangedEventHandler(bgw_cargarHoja_ProgressChanged);
-            bgw_cargarHoja.RunWorkerAsync(workerArgs);
+            _bgwCargarHoja = new BackgroundWorker();
+            _bgwCargarHoja.DoWork += bgw_cargarHoja_DoWork;
+            _bgwCargarHoja.RunWorkerCompleted += bgw_cargarHoja_RunWorkerCompleted;
+            _bgwCargarHoja.WorkerReportsProgress = true;
+            _bgwCargarHoja.WorkerSupportsCancellation = true;
+            _bgwCargarHoja.ProgressChanged += bgw_cargarHoja_ProgressChanged;
+            _bgwCargarHoja.RunWorkerAsync(workerArgs);
         }
 
         void bgw_cargarHoja_DoWork(object sender, DoWorkEventArgs e)
@@ -122,7 +120,7 @@ namespace FerreteriaSL
 
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[] { new DataColumn("Codigo"), new DataColumn("Descripción"), new DataColumn("Precio", typeof(double)) });
-            IWorksheet ws = ExcelWorkBook.Worksheets.GetWorksheetByIndex(targetSheet);
+            IWorksheet ws = _excelWorkBook.Worksheets.GetWorksheetByIndex(targetSheet);
             
             for (uint r = ws.FirstRow; r <= ws.LastRow; r++)
             {
@@ -132,7 +130,7 @@ namespace FerreteriaSL
                     break;
                 }
                 (sender as BackgroundWorker).ReportProgress(0, (Convert.ToDouble(r) * 100D) / Convert.ToDouble(ws.LastRow));
-                Net.SourceForge.Koogra.IRow iRow = ws.Rows.GetRow(r);
+                IRow iRow = ws.Rows.GetRow(r);
                 double precio = 0;
                 string codigo = "";
                 string descripcion = "";
@@ -181,39 +179,39 @@ namespace FerreteriaSL
             OnStatusChange("Cargando " + percentage.ToString("0.00", CultureInfo.InvariantCulture) + "%",Convert.ToInt32(percentage),1);
         }
 
-        public string[] getSheetNames()
+        public string[] GetSheetNames()
         {
-            string[] sheetNames = new string[ExcelWorkBook.Worksheets.Count];
-            for (int i = 0; i < ExcelWorkBook.Worksheets.Count; i++)
+            string[] sheetNames = new string[_excelWorkBook.Worksheets.Count];
+            for (int i = 0; i < _excelWorkBook.Worksheets.Count; i++)
             {
-                sheetNames[i] = ExcelWorkBook.Worksheets.GetWorksheetByIndex(i).Name;
+                sheetNames[i] = _excelWorkBook.Worksheets.GetWorksheetByIndex(i).Name;
             }
             return sheetNames;
         }
 
-        public int getNumberOfUsedColumns(int sheetIndex)
+        public int GetNumberOfUsedColumns(int sheetIndex)
         {
-            IWorksheet ws = ExcelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex);
+            IWorksheet ws = _excelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex);
             return Convert.ToInt32(ws.LastCol);
         }
 
-        public void getSheetPreview(int sheetIndex)
+        public void GetSheetPreview(int sheetIndex)
         {
-            bgw_cargarVistaPrevia = new BackgroundWorker();
-            bgw_cargarVistaPrevia.DoWork += new DoWorkEventHandler(bgw_cargarVistaPrevia_DoWork);
-            bgw_cargarVistaPrevia.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_cargarVistaPrevia_RunWorkerCompleted);
-            OnStatusChange("Cargando hoja \"" + ExcelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex).Name + "\"...", 0, 3);
-            bgw_cargarVistaPrevia.RunWorkerAsync(sheetIndex);
+            _bgwCargarVistaPrevia = new BackgroundWorker();
+            _bgwCargarVistaPrevia.DoWork += bgw_cargarVistaPrevia_DoWork;
+            _bgwCargarVistaPrevia.RunWorkerCompleted += bgw_cargarVistaPrevia_RunWorkerCompleted;
+            OnStatusChange("Cargando hoja \"" + _excelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex).Name + "\"...", 0, 3);
+            _bgwCargarVistaPrevia.RunWorkerAsync(sheetIndex);
         }
 
         void bgw_cargarVistaPrevia_DoWork(object sender, DoWorkEventArgs e)
         {
-             IWorksheet wSheet = ExcelWorkBook.Worksheets.GetWorksheetByIndex(Convert.ToInt32(e.Argument));
+             IWorksheet wSheet = _excelWorkBook.Worksheets.GetWorksheetByIndex(Convert.ToInt32(e.Argument));
 
             uint maxRows = wSheet.LastRow <= 30 ? wSheet.LastRow : 30;
             uint maxColumns = wSheet.LastCol + 1 <= 10 ? wSheet.LastCol + 1 : 10;
 
-            string[] columnNames = buildColumnsNames(Convert.ToInt32(maxColumns));
+            string[] columnNames = BuildColumnsNames(Convert.ToInt32(maxColumns));
 
             DataTable previewTable = new DataTable();
 
@@ -237,7 +235,7 @@ namespace FerreteriaSL
                     {
                         newRow[Convert.ToInt32(c)] = String.Empty;
                     }
-                    if (newRow[Convert.ToInt32(c)] != null && newRow[Convert.ToInt32(c)].ToString() != String.Empty && newRow[Convert.ToInt32(c)] != System.DBNull.Value)
+                    if (newRow[Convert.ToInt32(c)] != null && newRow[Convert.ToInt32(c)].ToString() != String.Empty && newRow[Convert.ToInt32(c)] != DBNull.Value)
                         newRowHasValues = true;
                 }
                 if(newRowHasValues)
@@ -254,7 +252,7 @@ namespace FerreteriaSL
             OnPreviewLoaded(e.Result as DataTable);
         }
 
-        string[] buildColumnsNames(int columnCount)
+        string[] BuildColumnsNames(int columnCount)
         {
             string[] baseColumns = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
             List<string> columnName = new List<string>();
@@ -284,14 +282,14 @@ namespace FerreteriaSL
 
     }
 
-    interface ExcelReader
+    interface IExcelReader
     {
         string FilePath { get; }
 
-        string[] getSheetNames();
-        void loadExcelFile(string filePath);
-        void processExcelFile(int targetSheet, int[] targetColumns);
-        int getNumberOfUsedColumns(int sheetIndex);
+        string[] GetSheetNames();
+        void LoadExcelFile(string filePath);
+        void ProcessExcelFile(int targetSheet, int[] targetColumns);
+        int GetNumberOfUsedColumns(int sheetIndex);
 
         event StatusChangedHandler StatusChanged;
         event ExcelFileLoadedHandler ExcelFileLoaded;

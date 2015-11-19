@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using System.Diagnostics;
-
-
-
 
 namespace FerreteriaSL
 {
     static class Program
     {
-        public static string workingServer = "";
+        public static string WorkingServer = "";
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>

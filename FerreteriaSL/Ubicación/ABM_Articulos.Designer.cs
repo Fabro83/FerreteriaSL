@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ubicación
 {
-    partial class ABM_Articulos
+    partial class AbmArticulos
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -67,7 +70,7 @@
             this.ClientSize = new System.Drawing.Size(1085, 539);
             this.Controls.Add(this.gb_articles);
             this.Controls.Add(this.gb_articlesInSection);
-            this.Name = "ABM_Articulos";
+            this.Name = "AbmArticulos";
             this.Text = "ABM_Articulos";
             this.gb_articlesInSection.ResumeLayout(false);
             this.gb_articlesInSection.PerformLayout();
@@ -77,8 +80,8 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox gb_articlesInSection;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.GroupBox gb_articles;
+        private GroupBox gb_articlesInSection;
+        private TextBox textBox1;
+        private GroupBox gb_articles;
     }
 }

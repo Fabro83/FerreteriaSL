@@ -1,31 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Globalization;
+using System.Windows.Forms;
+using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Clientes
 {
     public partial class Clientes : Form
     {
         public Clientes()
         {
             InitializeComponent();
-            loadclientListBox();            
+            LoadclientListBox();            
         }
 
-        private void loadclientListBox()
+        private void LoadclientListBox()
         {
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
 
-            lb_clients.DataSource = DBCon.Read("SELECT id,CONCAT(nombre,' ',apellido) as nombre FROM cliente WHERE id > 0");
+            lb_clients.DataSource = dbCon.Read("SELECT id,CONCAT(nombre,' ',apellido) as nombre FROM cliente WHERE id > 0");
             lb_clients.DisplayMember = "nombre";
             lb_clients.SelectedIndex = -1;
-            clearAllFields();
+            ClearAllFields();
         }
 
         private void lb_clients_SelectedIndexChanged(object sender, EventArgs e)
@@ -33,13 +29,13 @@ namespace FerreteriaSL
             if (lb_clients.SelectedIndex != -1)
             {
                 gb_clientData.Enabled = true;
-                int cliente_id = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
+                int clienteId = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
                 gb_clientData.Text = "Datos de " + (lb_clients.SelectedItem as DataRowView)["nombre"].ToString();
 
-                BD DBCon = new BD();
-                DataRow data = DBCon.Read("SELECT * FROM cliente WHERE id =" + cliente_id).Rows[0];
+                Bd dbCon = new Bd();
+                DataRow data = dbCon.Read("SELECT * FROM cliente WHERE id =" + clienteId).Rows[0];
 
-                loadAllclientData(data);
+                LoadAllclientData(data);
             }
             else
             {
@@ -47,7 +43,7 @@ namespace FerreteriaSL
             }           
         }
 
-        private void clearAllFields()
+        private void ClearAllFields()
         {
             gb_clientData.Text = "";
             tb_clientFirstName.Clear();
@@ -58,7 +54,7 @@ namespace FerreteriaSL
             tb_clientAccount.Clear();
         }
 
-        private void loadAllclientData(DataRow data)
+        private void LoadAllclientData(DataRow data)
         {
             tb_clientFirstName.Text = data["nombre"].ToString();
             tb_clientLastName.Text = data["apellido"].ToString();
@@ -70,7 +66,7 @@ namespace FerreteriaSL
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void btn_deleteclient_Click(object sender, EventArgs e)
@@ -78,42 +74,42 @@ namespace FerreteriaSL
 
             if (MessageBox.Show("¿Está seguro que desea eliminar este cliente?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                int cliente_id = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
-                BD DBcon = new BD();
-                DBcon.Write("DELETE FROM cliente WHERE id = " + cliente_id);
-                loadclientListBox();
+                int clienteId = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
+                Bd dBcon = new Bd();
+                dBcon.Write("DELETE FROM cliente WHERE id = " + clienteId);
+                LoadclientListBox();
             }
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            int cli_id = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
-            string cli_firstName = tb_clientFirstName.Text.Trim();
-            string cli_lastName= tb_clientLastName.Text.Trim();
-            string cli_address = tb_clientAddress.Text.Trim();
-            string cli_phone = tb_clientPhone.Text.Trim();
+            int cliId = int.Parse((lb_clients.SelectedItem as DataRowView)["id"].ToString());
+            string cliFirstName = tb_clientFirstName.Text.Trim();
+            string cliLastName= tb_clientLastName.Text.Trim();
+            string cliAddress = tb_clientAddress.Text.Trim();
+            string cliPhone = tb_clientPhone.Text.Trim();
             double saldo = double.Parse(tb_clientAccount.Text.Trim());
-            string cli_dni = tb_clientDni.Text.Trim();
+            string cliDni = tb_clientDni.Text.Trim();
 
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
             string query = "UPDATE cliente SET nombre = '{0}',apellido = '{1}', dni = '{2}', direccion = '{3}', telefono = '{4}',saldo = {5} WHERE id = {6}";           
-            query = String.Format(query, cli_firstName, cli_lastName, cli_dni, cli_address, cli_phone, saldo.ToString("0.00",CultureInfo.InvariantCulture),cli_id);
-            DBCon.Write(query);
+            query = String.Format(query, cliFirstName, cliLastName, cliDni, cliAddress, cliPhone, saldo.ToString("0.00",CultureInfo.InvariantCulture),cliId);
+            dbCon.Write(query);
 
-            loadclientListBox();
+            LoadclientListBox();
 
         }
 
         private void btn_addNewclient_Click(object sender, EventArgs e)
         {
-            AgregarNuevoCliente ANC = new AgregarNuevoCliente();
-            if (ANC.ShowDialog(this) == DialogResult.OK)
+            AgregarNuevoCliente anc = new AgregarNuevoCliente();
+            if (anc.ShowDialog(this) == DialogResult.OK)
             {
-                string cli_firstName = ANC.tb_firstName.Text.Trim();
-                string cli_LastName = ANC.tb_lastName.Text.Trim();
-                BD DBCon = new BD();
-                DBCon.Write(String.Format("INSERT INTO cliente (nombre, apellido) VALUES ('{0}','{1}')", cli_firstName, cli_LastName));
-                loadclientListBox();
+                string cliFirstName = anc.tb_firstName.Text.Trim();
+                string cliLastName = anc.tb_lastName.Text.Trim();
+                Bd dbCon = new Bd();
+                dbCon.Write(String.Format("INSERT INTO cliente (nombre, apellido) VALUES ('{0}','{1}')", cliFirstName, cliLastName));
+                LoadclientListBox();
             }
         }
 

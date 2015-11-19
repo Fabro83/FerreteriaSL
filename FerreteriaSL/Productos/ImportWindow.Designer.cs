@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Productos
 {
     partial class ImportWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -417,29 +420,29 @@
 
         #endregion
 
-        private System.Windows.Forms.StatusStrip ss_statusInfo;
-        private System.Windows.Forms.ToolStripStatusLabel tssl_statusInfo;
-        private System.Windows.Forms.ToolStripStatusLabel tssl_separator;
-        private System.Windows.Forms.ToolStripProgressBar tspb_progressInfo;
-        private System.Windows.Forms.GroupBox gb_file;
-        private System.Windows.Forms.Label lbl_directoryValue;
-        private System.Windows.Forms.Label lbl_fileValue;
-        private System.Windows.Forms.Label lbl_directoryInfo;
-        private System.Windows.Forms.Label lbl_fileInfo;
-        private System.Windows.Forms.Button btn_openFile;
-        private System.Windows.Forms.GroupBox gb_sheet;
-        private System.Windows.Forms.ComboBox cb_sheet;
-        private System.Windows.Forms.Label lbl_sheetInfo;
-        private System.Windows.Forms.GroupBox gb_sheetPreview;
-        private System.Windows.Forms.DataGridView dgv_sheetPreview;
-        private System.Windows.Forms.GroupBox gb_columns;
-        private System.Windows.Forms.ComboBox cb_priceColumn;
-        private System.Windows.Forms.ComboBox cb_descriptionColumn;
-        private System.Windows.Forms.ComboBox cb_codeColumn;
-        private System.Windows.Forms.Label lbl_priceColumnInfo;
-        private System.Windows.Forms.Label lbl_descriptionColumnInfo;
-        private System.Windows.Forms.Label lbl_codeColumnInfo;
-        private System.Windows.Forms.Button btn_import;
-        private System.Windows.Forms.Button btn_cancel;
+        private StatusStrip ss_statusInfo;
+        private ToolStripStatusLabel tssl_statusInfo;
+        private ToolStripStatusLabel tssl_separator;
+        private ToolStripProgressBar tspb_progressInfo;
+        private GroupBox gb_file;
+        private Label lbl_directoryValue;
+        private Label lbl_fileValue;
+        private Label lbl_directoryInfo;
+        private Label lbl_fileInfo;
+        private Button btn_openFile;
+        private GroupBox gb_sheet;
+        private ComboBox cb_sheet;
+        private Label lbl_sheetInfo;
+        private GroupBox gb_sheetPreview;
+        private DataGridView dgv_sheetPreview;
+        private GroupBox gb_columns;
+        private ComboBox cb_priceColumn;
+        private ComboBox cb_descriptionColumn;
+        private ComboBox cb_codeColumn;
+        private Label lbl_priceColumnInfo;
+        private Label lbl_descriptionColumnInfo;
+        private Label lbl_codeColumnInfo;
+        private Button btn_import;
+        private Button btn_cancel;
     }
 }

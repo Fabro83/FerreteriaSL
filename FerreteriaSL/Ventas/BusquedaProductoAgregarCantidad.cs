@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class BusquedaProductoAgregarCantidad : Form
     {
-        private double value = 1;
-        private double precio;
+        private double _value = 1;
+        private double _precio;
 
         public double Value
         {
-            get { return this.value; }
+            get { return _value; }
         }
 
         public BusquedaProductoAgregarCantidad(double precio,string nombre)
         {
             InitializeComponent();
-            this.precio = precio;
+            _precio = precio;
             tb_quantity.Text = "1";
             lbl_productName.Text = nombre;
             lbl_ppuFirstVariable.Text = "1";
@@ -102,18 +97,18 @@ namespace FerreteriaSL
             if (tb_quantity.Text.Length < 1)
             {
                 tb_quantity.Select();
-                this.DialogResult = DialogResult.None;
+                DialogResult = DialogResult.None;
                 return;
             }
-            value = Convert.ToDouble(tb_quantity.Text);
+            _value = Convert.ToDouble(tb_quantity.Text);
         }
 
-        private void calculateTotalPrice()
+        private void CalculateTotalPrice()
         {
             double quantity = 0;
             if (double.TryParse(tb_quantity.Text, out quantity))
             {
-                double finalPrice = precio * quantity;
+                double finalPrice = _precio * quantity;
                 lbl_ppuFirstVariable.Text = quantity.ToString();
                 lbl_ppuSecondVariable.Text = quantity == 1 ? "unidad:" : "unidades:";
                 lbl_ppuThirdVariable.Text = finalPrice.ToString("$0.00");
@@ -122,13 +117,13 @@ namespace FerreteriaSL
             {
                 lbl_ppuFirstVariable.Text = "1";
                 lbl_ppuSecondVariable.Text = "unidad:";
-                lbl_ppuThirdVariable.Text = precio.ToString("$0.00");
+                lbl_ppuThirdVariable.Text = _precio.ToString("$0.00");
             }
         }
 
         private void tb_quantity_TextChanged(object sender, EventArgs e)
         {
-            calculateTotalPrice();
+            CalculateTotalPrice();
         }
 
         private void tb_quantity_KeyDown(object sender, KeyEventArgs e)
@@ -187,10 +182,10 @@ namespace FerreteriaSL
 
         private void btn_calculator_Click(object sender, EventArgs e)
         {
-            Calculadora Cal = new Calculadora(precio);
-            if (Cal.ShowDialog(this) == DialogResult.OK)
+            Calculadora cal = new Calculadora(_precio);
+            if (cal.ShowDialog(this) == DialogResult.OK)
             {
-                tb_quantity.Text = Cal.Resultado.ToString();
+                tb_quantity.Text = cal.Resultado.ToString();
             }
         }
     }
