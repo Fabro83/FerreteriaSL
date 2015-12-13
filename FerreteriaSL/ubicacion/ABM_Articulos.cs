@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace FerreteriaSL
 {
-    public partial class FacturaA : Form
+    public partial class ABM_Articulos : Form
     {
-        public FacturaA()
+        public ABM_Articulos()
         {
             InitializeComponent();
         }

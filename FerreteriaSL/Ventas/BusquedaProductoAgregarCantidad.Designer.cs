@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Ventas
+﻿namespace FerreteriaSL
 {
     partial class BusquedaProductoAgregarCantidad
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -201,16 +198,16 @@ namespace FerreteriaSL.Ventas
 
         #endregion
 
-        private Label lbl_unidadesAgregar;
-        private Button btn_add;
-        private Button btn_cancel;
-        private Label lbl_productName;
-        private Label lbl_ppuFirstStatic;
-        private Label lbl_ppuFirstVariable;
-        private Label lbl_ppuSecondVariable;
-        private Label lbl_ppuThirdVariable;
-        private TextBox tb_quantity;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Button btn_calculator;
+        private System.Windows.Forms.Label lbl_unidadesAgregar;
+        private System.Windows.Forms.Button btn_add;
+        private System.Windows.Forms.Button btn_cancel;
+        private System.Windows.Forms.Label lbl_productName;
+        private System.Windows.Forms.Label lbl_ppuFirstStatic;
+        private System.Windows.Forms.Label lbl_ppuFirstVariable;
+        private System.Windows.Forms.Label lbl_ppuSecondVariable;
+        private System.Windows.Forms.Label lbl_ppuThirdVariable;
+        private System.Windows.Forms.TextBox tb_quantity;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button btn_calculator;
     }
 }

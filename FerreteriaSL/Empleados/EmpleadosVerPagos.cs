@@ -1,28 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using System.Management;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
+using System.Management;
 
-namespace FerreteriaSL.Empleados
+namespace FerreteriaSL
 {
     public partial class EmpleadosVerPagos : Form
     {
-        int _windowHeightFill;
+        int windowHeightFill;
 
-        public EmpleadosVerPagos(int empId, string empNombre)
+        public EmpleadosVerPagos(int emp_id, string emp_nombre)
         {
             InitializeComponent();
-            _windowHeightFill = GetOsFriendlyName().Contains("XP") ? 56 : 58;
-            LoadDataGrid(empId);        
-            Text = "Pagos a " + empNombre;
+            windowHeightFill = GetOSFriendlyName().Contains("XP") ? 56 : 58;
+            loadDataGrid(emp_id);        
+            this.Text = "Pagos a " + emp_nombre;
         }
 
-        private void LoadDataGrid(int empId)
+        private void loadDataGrid(int emp_id)
         {
-            Bd dbCon = new Bd();
-            DataTable res = dbCon.Read("SELECT fecha_pago as Fecha,año as ano, type_mes.mes as Mes, monto as Monto, observacion as obs,empleado_pago.mes as ocultar "+
-                                       "FROM empleado_pago LEFT JOIN type_mes ON empleado_pago.mes = type_mes.id WHERE empleado_id = " + empId + 
+            BD DBCon = new BD();
+            DataTable res = DBCon.Read("SELECT fecha_pago as Fecha,año as ano, type_mes.mes as Mes, monto as Monto, observacion as obs,empleado_pago.mes as ocultar "+
+                                       "FROM empleado_pago LEFT JOIN type_mes ON empleado_pago.mes = type_mes.id WHERE empleado_id = " + emp_id + 
                                        " ORDER BY ano, empleado_pago.mes, empleado_pago.id");
             dgv_pagos.DataSource = res;
             dgv_pagos.Columns["Monto"].DefaultCellStyle.Format = "$0.00";
@@ -38,16 +42,16 @@ namespace FerreteriaSL.Empleados
                 }
             }
             dgv_pagos.ScrollBars = ScrollBars.None;
-            Height = _windowHeightFill + dgv_pagos.ColumnHeadersHeight + (dgv_pagos.Rows.Count * dgv_pagos.RowTemplate.Height);
+            this.Height = windowHeightFill + dgv_pagos.ColumnHeadersHeight + (dgv_pagos.Rows.Count * dgv_pagos.RowTemplate.Height);
 
         }
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        public static string GetOsFriendlyName()
+        public static string GetOSFriendlyName()
         {
             string result = string.Empty;
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem");

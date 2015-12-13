@@ -1,30 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using System.Globalization;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
-using FerreteriaSL.Ventas;
+using System.Globalization;
 
-namespace FerreteriaSL.Pedidos
+namespace FerreteriaSL
 {
     public partial class Pedidos : Form
     {
-        Bd _dbCon;
+        BD DBCon;
 
         public Pedidos()
         {
             InitializeComponent();
-            _dbCon = new Bd();
-            LoadProviderListBox();
+            DBCon = new BD();
+            loadProviderListBox();
             cb_tipoPedido.SelectedIndex = 0;
         }
 
-        void LoadProviderListBox()
+        void loadProviderListBox()
         {
-            lb_proveedores.DataSource = _dbCon.Read("SELECT id, nombre FROM proveedor");
+            lb_proveedores.DataSource = DBCon.Read("SELECT id, nombre FROM proveedor");
             lb_proveedores.DisplayMember = "nombre";
             lb_proveedores.SelectedIndex = -1;
-            _dbCon.CloseConnection();
+            DBCon.CloseConnection();
         }
 
         private void lb_proveedores_SelectedIndexChanged(object sender, EventArgs e)
@@ -41,9 +44,9 @@ namespace FerreteriaSL.Pedidos
                 lb_pedidos.Enabled = true;
                 btn_agregarNuevoPedido.Enabled = true;
                 btn_agregarNuevoPedido.Text = "Agregar Pedido a " + (lb_proveedores.SelectedItem as DataRowView)["nombre"].ToString();
-                string proId = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
+                string pro_id = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
                 lb_pedidos.SelectedIndexChanged -= lb_pedidos_SelectedIndexChanged;
-                lb_pedidos.DataSource = _dbCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + proId );                               
+                lb_pedidos.DataSource = DBCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + pro_id );                               
                 lb_pedidos.DisplayMember = "fecha";
                 string filtro = cb_tipoPedido.SelectedIndex == 0 ? "fecha_arrivo IS NULL" : "fecha_arrivo IS NOT NULL";
                 (lb_pedidos.DataSource as DataTable).DefaultView.RowFilter = filtro;
@@ -69,7 +72,7 @@ namespace FerreteriaSL.Pedidos
 
         private void btn_cerrar_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void lb_pedidos_SelectedIndexChanged(object sender, EventArgs e)
@@ -78,13 +81,13 @@ namespace FerreteriaSL.Pedidos
             {
                 gb_datosPedido.Enabled = true;
                 string dateString = (lb_pedidos.SelectedItem as DataRowView)["fecha"].ToString();
-                string pedidoId = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
+                string pedido_id = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
                 string proveedor = (lb_proveedores.SelectedItem as DataRowView)["nombre"].ToString();
-                string fechaArrivo = (lb_pedidos.SelectedItem as DataRowView)["fecha_arrivo"].ToString();
-                if (fechaArrivo != "")
+                string fecha_arrivo = (lb_pedidos.SelectedItem as DataRowView)["fecha_arrivo"].ToString();
+                if (fecha_arrivo != "")
                 {
                     btn_registrarIngreso.Enabled = false;
-                    lbl_fechaArrivoValue.Text = fechaArrivo.Remove(10);
+                    lbl_fechaArrivoValue.Text = fecha_arrivo.Remove(10);
                 }
                 else
                 {
@@ -93,7 +96,7 @@ namespace FerreteriaSL.Pedidos
                 }
                 dtp_fechaPedido.Value = DateTime.Parse(dateString);
                 gb_datosPedido.Text = "Datos del Pedido " + dtp_fechaPedido.Value.ToString("dd/MM/yyyy") + " a " + proveedor;
-                dgv_pedido.DataSource = _dbCon.Read("SELECT * FROM vista_pedidoProducto WHERE PedidoID = " + pedidoId);
+                dgv_pedido.DataSource = DBCon.Read("SELECT * FROM vista_pedidoProducto WHERE PedidoID = " + pedido_id);
             }
             else
             {
@@ -119,12 +122,12 @@ namespace FerreteriaSL.Pedidos
                     if (sCol.Name != "Cantidad")
                         sCol.ReadOnly = true;
                 }
-                CalculateTotal();
+                calculateTotal();
             }
             
         }
 
-        private void CalculateTotal()
+        private void calculateTotal()
         {
             double costoTotal = 0;
             foreach (DataGridViewRow sRow in dgv_pedido.Rows)
@@ -136,63 +139,63 @@ namespace FerreteriaSL.Pedidos
 
         private void btn_eliminarPedido_Click(object sender, EventArgs e)
         {
-            string pedId = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
+            string ped_id = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
             if (MessageBox.Show("¿Está seguro que desea elminar este pedido?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                _dbCon.Write("DELETE FROM pedido WHERE id = " + pedId);
-                _dbCon.Write("DELETE FROM pedido_producto WHERE pedido_id = "+pedId);
-                _dbCon.CloseConnection();
+                DBCon.Write("DELETE FROM pedido WHERE id = " + ped_id);
+                DBCon.Write("DELETE FROM pedido_producto WHERE pedido_id = "+ped_id);
+                DBCon.CloseConnection();
                 lb_proveedores_SelectedIndexChanged(this,EventArgs.Empty);
             }
         }
 
         private void btn_agregarProductos_Click(object sender, EventArgs e)
         {
-            BusquedaProducto bp = new BusquedaProducto(int.Parse((lb_proveedores.SelectedItem as DataRowView)["id"].ToString()));
-            bp.Show();
+            BusquedaProducto BP = new BusquedaProducto(int.Parse((lb_proveedores.SelectedItem as DataRowView)["id"].ToString()));
+            BP.Show();
         }
 
-        public void AddItemToCartFromSearchWindow(int productoId, double cantidad)
+        public void addItemToCartFromSearchWindow(int producto_id, double cantidad)
         {
-            string pedidoId = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
+            string pedido_id = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
             string query = "INSERT INTO pedido_producto (pedido_id, producto_id, cantidad) VALUES ({0},{1},{2})";
-            _dbCon.Write(String.Format(query,pedidoId,productoId,cantidad.ToString("0.00",CultureInfo.InvariantCulture)));
-            dgv_pedido.DataSource = _dbCon.Read("SELECT * FROM vista_pedidoProducto WHERE PedidoID = " + pedidoId);
+            DBCon.Write(String.Format(query,pedido_id,producto_id,cantidad.ToString("0.00",CultureInfo.InvariantCulture)));
+            dgv_pedido.DataSource = DBCon.Read("SELECT * FROM vista_pedidoProducto WHERE PedidoID = " + pedido_id);
         }
 
         private void dgv_pedido_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            string pedProId = dgv_pedido["id",e.RowIndex].Value.ToString();
-            string pedProCantidad = dgv_pedido["Cantidad", e.RowIndex].Value.ToString().Replace(",",".");
-            _dbCon.Write("UPDATE pedido_producto SET cantidad = " + pedProCantidad + " WHERE id = " + pedProId);
-            CalculateTotal();
+            string ped_pro_id = dgv_pedido["id",e.RowIndex].Value.ToString();
+            string ped_pro_cantidad = dgv_pedido["Cantidad", e.RowIndex].Value.ToString().Replace(",",".");
+            DBCon.Write("UPDATE pedido_producto SET cantidad = " + ped_pro_cantidad + " WHERE id = " + ped_pro_id);
+            calculateTotal();
         }
 
         private void dgv_pedido_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            string pedProId = e.Row.Cells["id"].Value.ToString();
-            _dbCon.Write("DELETE FROM pedido_producto WHERE id = " + pedProId);
+            string ped_pro_id = e.Row.Cells["id"].Value.ToString();
+            DBCon.Write("DELETE FROM pedido_producto WHERE id = " + ped_pro_id);
         }
 
         private void btn_cambiarFecha_Click(object sender, EventArgs e)
         {
             string nuevaFecha = dtp_fechaPedido.Value.ToString("yyyy-MM-dd");
-            string pedId = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
-            _dbCon.Write("UPDATE pedido SET fecha = '" + nuevaFecha + "' WHERE id = " + pedId);
-            string proId = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
-            lb_pedidos.DataSource = _dbCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + proId);
+            string ped_id = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
+            DBCon.Write("UPDATE pedido SET fecha = '" + nuevaFecha + "' WHERE id = " + ped_id);
+            string pro_id = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
+            lb_pedidos.DataSource = DBCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + pro_id);
             btn_cambiarFecha.Enabled = (lb_pedidos.SelectedItem as DataRowView)["fecha"].ToString().Remove(10) != dtp_fechaPedido.Value.ToString("dd/MM/yyyy");
         }
 
         private void btn_agregarNuevoPedido_Click(object sender, EventArgs e)
         {
-            AgregarPedido ap = new AgregarPedido();
-            if (ap.ShowDialog(this) == DialogResult.OK)
+            AgregarPedido AP = new AgregarPedido();
+            if (AP.ShowDialog(this) == DialogResult.OK)
             {
-                string proId = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
-                string pedFecha = ap.dtp_fecha.Value.ToString("yyyy-MM-dd");
-                _dbCon.Write(String.Format("INSERT INTO pedido (fecha, proveedor_id) VALUES ('{0}',{1})",pedFecha,proId));
-                lb_pedidos.DataSource = _dbCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + proId);
+                string pro_id = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
+                string ped_fecha = AP.dtp_fecha.Value.ToString("yyyy-MM-dd");
+                DBCon.Write(String.Format("INSERT INTO pedido (fecha, proveedor_id) VALUES ('{0}',{1})",ped_fecha,pro_id));
+                lb_pedidos.DataSource = DBCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + pro_id);
                 cb_tipoPedido.SelectedIndex = 0;
             }
         }
@@ -201,12 +204,12 @@ namespace FerreteriaSL.Pedidos
         {
             if (MessageBox.Show("¿Éstá seguro de querer registrar el ingreso de este pedido con los datos especificados?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                string pedFechaArrivo = DateTime.Now.ToString("yyyy-MM-dd");
-                string pedId = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
-                string proId = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
-                _dbCon.Write("UPDATE pedido SET fecha_arrivo = '" + pedFechaArrivo + "' WHERE id = " + pedId);
-                _dbCon.Write("CALL sp_updateStock(" + pedId + ")");
-                lb_pedidos.DataSource = _dbCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + proId);
+                string ped_fecha_arrivo = DateTime.Now.ToString("yyyy-MM-dd");
+                string ped_id = (lb_pedidos.SelectedItem as DataRowView)["id"].ToString();
+                string pro_id = (lb_proveedores.SelectedItem as DataRowView)["id"].ToString();
+                DBCon.Write("UPDATE pedido SET fecha_arrivo = '" + ped_fecha_arrivo + "' WHERE id = " + ped_id);
+                DBCon.Write("CALL sp_updateStock(" + ped_id + ")");
+                lb_pedidos.DataSource = DBCon.Read("SELECT id, fecha,fecha_arrivo FROM pedido WHERE proveedor_id = " + pro_id);
                 cb_tipoPedido.SelectedIndex = 1;
             }
         }
@@ -218,7 +221,7 @@ namespace FerreteriaSL.Pedidos
 
         private void dgv_pedido_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            e.Control.KeyPress += Control_KeyPress;
+            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
         }
 
         void Control_KeyPress(object sender, KeyPressEventArgs e)

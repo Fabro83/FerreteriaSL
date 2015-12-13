@@ -1,14 +1,20 @@
-﻿using System;
+﻿using FerreteriaSL.Properties;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 
-namespace FerreteriaSL.Clases_Genericas
+namespace FerreteriaSL
 {
     static class Usuario
     {
-        private static string _name;
-        private static int _id;
+        private static string name;
+        private static int id;
         public delegate void UserChangedHandler(object sender, EventArgs e);
         public static event UserChangedHandler UserChanged = delegate { };
-        private static bool[] _permissions = new bool[9];
+        private static bool[] permissions = new bool[9];
         public static event EventHandler UserLogedOut;
         
         private static void UserLogedOutHandler()
@@ -25,40 +31,40 @@ namespace FerreteriaSL.Clases_Genericas
         
         public static bool[] Permissions
         {
-            get { return _permissions; }
+            get { return Usuario.permissions; }
 
         }
 
         public static string Name
         {
-            get { return _name; }
+            get { return Usuario.name; }
 
         }
         
-        public static int Id
+        public static int ID
         {
-            get { return _id; }
+            get { return Usuario.id; }
 
         }
 
-        public static void ChangeUser(int newId, string newName, int privilege)
+        public static void ChangeUser(int new_id, string new_name, int privilege)
         {
-            _id = newId;
-            _name = newName;
-            SetPermissionsArray(Convert.ToDouble(privilege));
+            id = new_id;
+            name = new_name;
+            setPermissionsArray(Convert.ToDouble(privilege));
             UserChangedFunction();
         }
 
-        private static void SetPermissionsArray(double privilege)
+        private static void setPermissionsArray(double privilege)
         {
-            Array.Clear(_permissions, 0, _permissions.Length);
+            Array.Clear(permissions, 0, permissions.Length);
 
             // CAMBIAR PARA QUE SE ADAPTER DINAMICAMENTE A LA CANTIDAD DE OPCIONES Y PRIVILEGIOS [MainWindow.cs:37 | Usuario.cs:60 | Usuarios.cs:112]
             for (int i = 9; i >= 1 && privilege > -1; i--) 
             {
                 if (privilege - Math.Pow(2, i) > -1)
                 {
-                    _permissions[i-1] = true;
+                    permissions[i-1] = true;
                     privilege -= Math.Pow(2, i);
                 }
             }
@@ -67,9 +73,9 @@ namespace FerreteriaSL.Clases_Genericas
 
         public static void LogOut()
         {
-            _id = -1;
-            _name = null;
-            Array.Clear(_permissions, 0, _permissions.Length);
+            id = -1;
+            name = null;
+            Array.Clear(permissions, 0, permissions.Length);
             UserLogedOutHandler();
         }
 

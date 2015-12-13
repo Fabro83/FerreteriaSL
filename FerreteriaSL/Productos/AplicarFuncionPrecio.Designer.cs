@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Productos
+﻿namespace FerreteriaSL
 {
     partial class AplicarFuncionPrecio
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -332,29 +329,29 @@ namespace FerreteriaSL.Productos
 
         #endregion
 
-        private ComboBox cb_funcionesGuardas;
-        private Label lbl_funcion;
-        private TextBox tb_funcion;
-        private Button btn_cargarFuncion;
-        private Button btn_guardar;
-        private Label lbl_precioOrigen;
-        private Label lbl_precioDestino;
-        private Button btn_ayuda;
-        private Button btn_aplicar;
-        private Button btn_cancelar;
-        private GroupBox gb_preciosDeMuestra;
-        private Button btn_probarFuncion;
-        private Label lbl_precioDestinoValor;
-        private Button btn_eliminarFuncion;
-        private ProgressBar pb_aplicarFormula;
-        private Label label1;
-        private GroupBox gb_ayuda;
-        private Label label7;
-        private Label label6;
-        private Label label5;
-        private Label label4;
-        private Label label3;
-        private Label label2;
-        private Label label8;
+        private System.Windows.Forms.ComboBox cb_funcionesGuardas;
+        private System.Windows.Forms.Label lbl_funcion;
+        private System.Windows.Forms.TextBox tb_funcion;
+        private System.Windows.Forms.Button btn_cargarFuncion;
+        private System.Windows.Forms.Button btn_guardar;
+        private System.Windows.Forms.Label lbl_precioOrigen;
+        private System.Windows.Forms.Label lbl_precioDestino;
+        private System.Windows.Forms.Button btn_ayuda;
+        private System.Windows.Forms.Button btn_aplicar;
+        private System.Windows.Forms.Button btn_cancelar;
+        private System.Windows.Forms.GroupBox gb_preciosDeMuestra;
+        private System.Windows.Forms.Button btn_probarFuncion;
+        private System.Windows.Forms.Label lbl_precioDestinoValor;
+        private System.Windows.Forms.Button btn_eliminarFuncion;
+        private System.Windows.Forms.ProgressBar pb_aplicarFormula;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox gb_ayuda;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label8;
     }
 }

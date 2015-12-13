@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Empleados
+﻿namespace FerreteriaSL
 {
     partial class EmpleadosVerPagos
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -91,7 +88,7 @@ namespace FerreteriaSL.Empleados
 
         #endregion
 
-        private DataGridView dgv_pagos;
-        private Button btn_close;
+        private System.Windows.Forms.DataGridView dgv_pagos;
+        private System.Windows.Forms.Button btn_close;
     }
 }

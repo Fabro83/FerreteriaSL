@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Threading;
+using System.Data;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
-using FerreteriaSL.Clases_Genericas;
+using System.Reflection;
+using System.Threading;
 
-namespace FerreteriaSL.Ventas
+namespace FerreteriaSL
 {
-    public delegate void SelectionMadeHandler(object sender, int idProducto);
+    public delegate void SelectionMadeHandler(object sender, int id_producto);
 
     public partial class ComboGrid : UserControl
     {
-        int _textBoxHeight = 20;
-        int _heightFix = 26;
-        string _lastStringToSearch = "";
+        int textBoxHeight = 20;
+        int heightFix = 26;
+        string lastStringToSearch = "";
         public event SelectionMadeHandler SelectionMade;
-        BackgroundWorker _bgwDelaySearch;
+        BackgroundWorker bgw_delaySearch;
 
         public string SearchPhrase 
         {
@@ -29,81 +31,81 @@ namespace FerreteriaSL.Ventas
         public ComboGrid()
         {
             InitializeComponent();
-            _bgwDelaySearch = new BackgroundWorker();
-            _bgwDelaySearch.WorkerSupportsCancellation = true;
-            _bgwDelaySearch.DoWork += bgw_delaySearch_DoWork;
-            _bgwDelaySearch.RunWorkerCompleted += bgw_delaySearch_RunWorkerCompleted;
+            bgw_delaySearch = new BackgroundWorker();
+            bgw_delaySearch.WorkerSupportsCancellation = true;
+            bgw_delaySearch.DoWork += new DoWorkEventHandler(bgw_delaySearch_DoWork);
+            bgw_delaySearch.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_delaySearch_RunWorkerCompleted);
         }
 
         void bgw_delaySearch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled)
             {
-                DoSearch();
+                doSearch();
             }
             else
             {
-                _bgwDelaySearch.RunWorkerAsync();
+                bgw_delaySearch.RunWorkerAsync();
             }
         }
 
         void bgw_delaySearch_DoWork(object sender, DoWorkEventArgs e)
         {
             Thread.Sleep(200);
-            e.Cancel = _bgwDelaySearch.CancellationPending;
+            e.Cancel = bgw_delaySearch.CancellationPending;
         }    
 
-        void SelectionMadeCall(object sender, int idProducto)
+        void SelectionMadeCall(object sender, int id_producto)
         {
             if (SelectionMade != null)
             {
-                SelectionMade(sender, idProducto);
+                SelectionMade(sender, id_producto);
             }
         }
 
         private void tb_cuadroBusqueda_TextChanged(object sender, EventArgs e)
         {
-            if (_bgwDelaySearch.IsBusy)
-                _bgwDelaySearch.CancelAsync();
+            if (bgw_delaySearch.IsBusy)
+                bgw_delaySearch.CancelAsync();
             else
-                _bgwDelaySearch.RunWorkerAsync();
+                bgw_delaySearch.RunWorkerAsync();
         }
 
-        void DoSearch()
+        void doSearch()
         {
             if (tb_cuadroBusqueda.Text.Trim().Length < 4)
             {
                 dgv_vistaResultados.DataSource = null;
-                _lastStringToSearch = "";
+                lastStringToSearch = "";
                 lbl_moreInfo.Visible = false;
-                _heightFix = 4;
+                heightFix = 4;
                 return;
             }
 
-            Bd dbCon = new Bd();
-            string stringToSearch = BuildCondition();
+            BD DBCon = new BD();
+            string stringToSearch = buildCondition();
 
-            if (stringToSearch == _lastStringToSearch)
+            if (stringToSearch == lastStringToSearch)
             {
                 return;
             }
             else
             {
-                _lastStringToSearch = stringToSearch;
+                lastStringToSearch = stringToSearch;
             }
             string query = String.Format("SELECT Proveedor, Descripcion,Precio,id FROM vista_tablaproductosventas WHERE {0} OR Codigo LIKE '%{1}%' LIMIT 0,10", stringToSearch, tb_cuadroBusqueda.Text.Trim());
-            DataTable res = dbCon.Read(query);
+            DataTable res = DBCon.Read(query);
             if (res.Rows.Count >= 10)
             {
-                int itemCount = int.Parse(dbCon.Read(query.Replace("Proveedor, Descripcion,Precio,id", "Count(*)")).Rows[0][0].ToString());
+                int itemCount = int.Parse(DBCon.Read(query.Replace("Proveedor, Descripcion,Precio,id", "Count(*)")).Rows[0][0].ToString());
                 lbl_moreInfo.Visible = true;
                 lbl_moreInfo.Text = "+" + (itemCount - 10) + " articulos no mostrados.";
-                _heightFix = 26;
+                heightFix = 26;
             }
             else
             {
                 lbl_moreInfo.Visible = false;
-                _heightFix = 4;
+                heightFix = 4;
             }
             dgv_vistaResultados.DataSource = res;
             dgv_vistaResultados.Columns["id"].Visible = false;
@@ -115,24 +117,24 @@ namespace FerreteriaSL.Ventas
                 int trueHeight = dgv_vistaResultados.Rows[0].Height * dgv_vistaResultados.Rows.Count - 1;
                 if (trueHeight > dgv_vistaResultados.Rows[0].Height * 10)
                 {
-                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, dgv_vistaResultados.Rows[0].Height * 10 + _heightFix);
+                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, dgv_vistaResultados.Rows[0].Height * 10 + heightFix);
                 }
                 else
                 {
-                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, trueHeight + _heightFix);
+                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, trueHeight + heightFix);
                 }
 
             }
         }
 
-        private string BuildCondition()
+        private string buildCondition()
         {
             string[] separateWords = tb_cuadroBusqueda.Text.Trim().Split(' ');
             string condition = "";
             for (int i = 0; i < separateWords.Length; i++)
             {
                 condition += "Descripcion LIKE ";
-                condition += "'%" + CommonStringParser.EscapeSqlQuery(separateWords[i]) + "%'";
+                condition += "'%" + CommonStringParser.EscapeSQLQuery(separateWords[i]) + "%'";
                 condition += i == separateWords.Length - 1 ? "" : " AND ";
             }
             return condition;
@@ -142,7 +144,7 @@ namespace FerreteriaSL.Ventas
         {
             if (dgv_vistaResultados.Rows.Count == 0)
             {
-                Size = new Size(Width, _textBoxHeight);
+                this.Size = new Size(this.Width, textBoxHeight);
                 return;
             }
             
@@ -150,11 +152,11 @@ namespace FerreteriaSL.Ventas
 
             if (trueHeight > dgv_vistaResultados.Rows[0].Height * 10)
             {
-                Size = new Size(Width, _textBoxHeight + dgv_vistaResultados.Rows[0].Height * 10 + _heightFix);
+                this.Size = new Size(this.Width, textBoxHeight + dgv_vistaResultados.Rows[0].Height * 10 + heightFix);
             }
             else
             {
-                Size = new Size(Width, _textBoxHeight + trueHeight + _heightFix);
+                this.Size = new Size(this.Width, textBoxHeight + trueHeight + heightFix);
             }
                 
         }
@@ -203,7 +205,7 @@ namespace FerreteriaSL.Ventas
             }       
         }
 
-        public void ClearTextBox()
+        public void clearTextBox()
         {
             tb_cuadroBusqueda.Text = "";
         }

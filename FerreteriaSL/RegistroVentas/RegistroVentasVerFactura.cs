@@ -1,27 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using System.Management;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
+using System.Management;
 
-namespace FerreteriaSL.RegistroVentas
+namespace FerreteriaSL
 {
     public partial class CajasVerFactura : Form
     {
-        int _windowHeightFill;
+        int windowHeightFill;
 
-        public CajasVerFactura(int ventasCajaId,string numeroFactura)
+        public CajasVerFactura(int ventas_caja_id,string numero_factura)
         {
             InitializeComponent();
-            _windowHeightFill = GetOsFriendlyName().Contains("XP") ? 56 : 58;
-            LoadDataGrid(ventasCajaId);        
-            Text = "Factura " + numeroFactura;
+            windowHeightFill = GetOSFriendlyName().Contains("XP") ? 56 : 58;
+            loadDataGrid(ventas_caja_id);        
+            this.Text = "Factura " + numero_factura;
         }
 
-        private void LoadDataGrid(int ventasCajaId)
+        private void loadDataGrid(int ventas_caja_id)
         {
-            Bd dbCon = new Bd();
-            DataTable res = dbCon.Read("SELECT Proveedor,Codigo,Articulo,Cantidad,`Precio Unitario`,`Precio Total` FROM vista_factura WHERE ventas_caja_id = " + ventasCajaId);
+            BD DBCon = new BD();
+            DataTable res = DBCon.Read("SELECT Proveedor,Codigo,Articulo,Cantidad,`Precio Unitario`,`Precio Total` FROM vista_factura WHERE ventas_caja_id = " + ventas_caja_id);
             dgv_factura.DataSource = res;
             dgv_factura.Columns["Precio Unitario"].DefaultCellStyle.Format = "$0.00";
             dgv_factura.Columns["Precio Total"].DefaultCellStyle.Format = "$0.00";
@@ -33,16 +37,16 @@ namespace FerreteriaSL.RegistroVentas
                 }
             }
             dgv_factura.ScrollBars = ScrollBars.None;
-            Height = _windowHeightFill + dgv_factura.ColumnHeadersHeight + (dgv_factura.Rows.Count * dgv_factura.RowTemplate.Height);
+            this.Height = windowHeightFill + dgv_factura.ColumnHeadersHeight + (dgv_factura.Rows.Count * dgv_factura.RowTemplate.Height);
 
         }
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        public static string GetOsFriendlyName()
+        public static string GetOSFriendlyName()
         {
             string result = string.Empty;
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem");

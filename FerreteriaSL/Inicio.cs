@@ -1,24 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
 
 namespace FerreteriaSL
 {
     public partial class Inicio : Form
     {
 
-        MainWindow _mdiContainer;
+        MainWindow MDIContainer;
 
-        public Inicio(MainWindow mdiContainer)
+        public Inicio(MainWindow MDIContainer)
         {
             InitializeComponent();
 
 #if DEBUG
-            usuario.Text = "afliw";
-            contraseña.Text = "1234";
+            usuario.Text = "";
+            contraseña.Text = "";
 #endif
 
-            _mdiContainer = mdiContainer;
+            this.MDIContainer = MDIContainer;
         }
 
         private void btn_inicioEntrar_Click(object sender, EventArgs e)
@@ -28,33 +33,33 @@ namespace FerreteriaSL
 
         private void Ingresar()
         {
-            if (!FieldValidation())
+            if (!fieldValidation())
             {
                 return;
             }
 
-            int result = BdFunctions.Login(usuario.Text.Trim(), contraseña.Text.Trim());
+            int result = BD_Functions.Login(usuario.Text.Trim(), contraseña.Text.Trim());
 
             switch (result)
             {                 
                 case 11:
-                    ShowAlertMessage("El usuario ingresado no existe.");
+                    showAlertMessage("El usuario ingresado no existe.");
                     usuario.Focus();
                     usuario.SelectAll();
                     break;
                 case 12:
-                    ShowAlertMessage("La contraseña ingresada es incorrecta.");
+                    showAlertMessage("La contraseña ingresada es incorrecta.");
                     contraseña.Focus();
                     contraseña.SelectAll();
                     break;
                 default:
-                    Close();
+                    this.Close();
                     break;
             }
         }
 
 
-        private void ShowAlertMessage(string msg)
+        private void showAlertMessage(string msg)
         {
             lbl_inicioAlerta.Text = msg;
             lbl_inicioAlerta.Visible = true;
@@ -80,17 +85,17 @@ namespace FerreteriaSL
 
         }
 
-        private bool FieldValidation()
+        private bool fieldValidation()
         {
             if (usuario.Text == "")
             {
-                ShowAlertMessage("Debe ingresar su usuario.");
+                showAlertMessage("Debe ingresar su usuario.");
                 usuario.Focus();
                 return false;
             }
             else if (contraseña.Text == "")
             {
-                ShowAlertMessage("Debe ingresar su contraseña.");
+                showAlertMessage("Debe ingresar su contraseña.");
                 contraseña.Focus();
                 return false;
             }
