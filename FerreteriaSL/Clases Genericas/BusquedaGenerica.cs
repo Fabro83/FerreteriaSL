@@ -1,58 +1,62 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Data;
-using FerreteriaSL.Clases_Base_de_Datos;
+using System.ComponentModel;
+using System.Threading;
+using System.Diagnostics;
 
-namespace FerreteriaSL.Clases_Genericas
+namespace FerreteriaSL
 {
-    public delegate void SearchEndedHandler(DataTable result);
+    public delegate void SearchEndedHandler(DataTable Result);
     public delegate void SearchInProgressHandler();
 
     class BusquedaGenerica
     {
-        Bd _dbCon;
-        DataTable _lastSearchResult;
-        string _lastQuery;
+        BD DBCon;
+        DataTable lastSearchResult;
+        string lastQuery;
 
-        BackgroundWorker _bgwSearch;
-        bool _isSearchInProgress;
-        int _itemsPerPage;
-        int _searchTotalItemCount;
-        int _currentPage;
-        int _totalPages;
-        string _newSearch;
-        DateTime _sleepTimer;
+        BackgroundWorker bgw_search;
+        bool isSearchInProgress;
+        int itemsPerPage;
+        int searchTotalItemCount;
+        int currentPage;
+        int totalPages;
+        string newSearch;
+        DateTime sleepTimer;
 
-        int _lastSelectedRowIndex, _lastSelectedColumnIndex;
+        int lastSelectedRowIndex = 0, lastSelectedColumnIndex = 0;
 
         public int LastSelectedColumnIndex
         {
-            get { return _lastSelectedColumnIndex; }
-            set { _lastSelectedColumnIndex = value; }
+            get { return lastSelectedColumnIndex; }
+            set { lastSelectedColumnIndex = value; }
         }
 
         public int LastSelectedRowIndex
         {
-            get { return _lastSelectedRowIndex; }
-            set { _lastSelectedRowIndex = value; }
+            get { return lastSelectedRowIndex; }
+            set { lastSelectedRowIndex = value; }
         }
 
         public int TotalPages
         {
-            get { return _totalPages; }
-            set { _totalPages = value; }
+            get { return totalPages; }
+            set { totalPages = value; }
         }
         public int CurrentPage
         {
-            get { return _currentPage; }
+            get { return currentPage; }
             set 
             {
                 int newPage = value;
-                if (newPage >= 0 && (newPage < _totalPages))
+                if (newPage >= 0 && (newPage < totalPages))
                 {
                     //afldbg.log(this, "currentPage Value Change");
-                    _currentPage = value;
-                    StartSearch(_lastQuery);
+                    currentPage = value;
+                    StartSearch(lastQuery);
                 }
                     
             }
@@ -61,31 +65,31 @@ namespace FerreteriaSL.Clases_Genericas
         public event SearchInProgressHandler SearchInProgress;
         public int SearchTotalItemCount
         {
-            get { return _searchTotalItemCount; }
+            get { return searchTotalItemCount; }
         }
         public int ItemsPerPage
         {
-          get { return _itemsPerPage; }
-            set { _itemsPerPage = value;  StartSearch(_lastQuery); }
+          get { return itemsPerPage; }
+            set { itemsPerPage = value;  StartSearch(lastQuery); }
         }
         public bool IsSearchInProgress
         {
-            get { return _isSearchInProgress; }
+            get { return isSearchInProgress; }
         }
 
         public BusquedaGenerica()
         {
-            _dbCon = new Bd();
-            _lastSearchResult = null;
-            _isSearchInProgress = false;
-            _bgwSearch = new BackgroundWorker();
-            _itemsPerPage = 10;
+            DBCon = new BD();
+            lastSearchResult = null;
+            isSearchInProgress = false;
+            bgw_search = new BackgroundWorker();
+            itemsPerPage = 10;
             
-            _bgwSearch.DoWork += bgw_search_DoWork;
-            _bgwSearch.WorkerSupportsCancellation = true;
-            _bgwSearch.RunWorkerCompleted += bgw_search_RunWorkerCompleted;
-            _bgwSearch.WorkerReportsProgress = true;
-            _bgwSearch.ProgressChanged += bgw_search_ProgressChanged;
+            bgw_search.DoWork += new DoWorkEventHandler(bgw_search_DoWork);
+            bgw_search.WorkerSupportsCancellation = true;
+            bgw_search.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgw_search_RunWorkerCompleted);
+            bgw_search.WorkerReportsProgress = true;
+            bgw_search.ProgressChanged += new ProgressChangedEventHandler(bgw_search_ProgressChanged);
         }
 
                void bgw_search_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -99,10 +103,10 @@ namespace FerreteriaSL.Clases_Genericas
                 SearchInProgress();
         }
 
-        void OnSearchEnded(DataTable result)
+        void OnSearchEnded(DataTable Result)
         {
             if (SearchEnded != null)
-                SearchEnded(result);
+                SearchEnded(Result);
         }
 
         public void StartSearch(string query)
@@ -112,38 +116,38 @@ namespace FerreteriaSL.Clases_Genericas
             if (query == null)
                 return;
 
-            if (query != _lastQuery)
-                _currentPage = 0;
+            if (query != lastQuery)
+                currentPage = 0;
 
-            if (_bgwSearch.IsBusy)
+            if (bgw_search.IsBusy)
             {
-                _newSearch = query;
+                newSearch = query;
             }
             else
             {
-                _isSearchInProgress = true;
+                isSearchInProgress = true;
                 OnSearchInProgress();
-                _bgwSearch.RunWorkerAsync(query);
+                bgw_search.RunWorkerAsync(query);
             }
         }
 
         void bgw_search_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _isSearchInProgress = false;
+            isSearchInProgress = false;
             //afldbg.log(this, "bgw_search_RunWorkerCompleted()");
-            if (_newSearch != String.Empty)
+            if (newSearch != String.Empty)
             {
                 //afldbg.log(this, "bgw_search_RunWorkerCompleted > IF");
                 //afldbg.log(this, "newSearch = "+newSearch,"blue");
-                string ns = _newSearch;
-                _newSearch = String.Empty;
+                string ns = newSearch;
+                newSearch = String.Empty;
                 StartSearch(ns);
             }
             else
             {
                 //afldbg.log(this, "bgw_search_RunWorkerCompleted > ELSE");
-                _lastSearchResult = e.Result as DataTable;                
-                OnSearchEnded(_lastSearchResult);
+                lastSearchResult = e.Result as DataTable;                
+                OnSearchEnded(lastSearchResult);
             }
         }
 
@@ -151,7 +155,7 @@ namespace FerreteriaSL.Clases_Genericas
         {
             //afldbg.log(this, "bgw_search_DoWork()");
             //afldbg.log(this, "query = " + e.Argument.ToString(), "blue");
-            if (_bgwSearch.CancellationPending)
+            if (bgw_search.CancellationPending)
             {
                 //afldbg.log(this, "bgw_search_DoWork > IF");
                 e.Cancel = true;
@@ -161,34 +165,34 @@ namespace FerreteriaSL.Clases_Genericas
             {
                 //afldbg.log(this, "bgw_search_DoWork > ELSE");
                 string query = e.Argument as string;             
-                _totalPages = GetPageCount(query);
-                DataTable result = _dbCon.Read(ApplyLimitToQuery(query));
-                e.Result = result;
-                _lastQuery = e.Argument as string;
+                totalPages = getPageCount(query);
+                DataTable Result = DBCon.Read(applyLimitToQuery(query));
+                e.Result = Result;
+                lastQuery = e.Argument as string;
             }
         }
 
-        private int GetPageCount(string query)
+        private int getPageCount(string query)
         {
-            Bd dbCon = new Bd();
-            double items = double.Parse(dbCon.Read(query.Replace("*", "Count(*)")).Rows[0][0].ToString());
-            _searchTotalItemCount = Convert.ToInt32(items);
-            if (_itemsPerPage == -1)
+            BD DBCon = new BD();
+            double items = double.Parse(DBCon.Read(query.Replace("*", "Count(*)")).Rows[0][0].ToString());
+            searchTotalItemCount = Convert.ToInt32(items);
+            if (itemsPerPage == -1)
             {
                 return 1;
             }
             else
             {
-                int pages = Convert.ToInt32(Math.Ceiling(items / Convert.ToDouble(_itemsPerPage)));
+                int pages = Convert.ToInt32(Math.Ceiling(items / Convert.ToDouble(itemsPerPage)));
                 return pages;
             }
         }
 
-        string ApplyLimitToQuery(string query)
+        string applyLimitToQuery(string query)
         {
-            if (_itemsPerPage != -1)
+            if (itemsPerPage != -1)
             {
-                return query + " LIMIT " + _currentPage * _itemsPerPage + "," + _itemsPerPage;
+                return query + " LIMIT " + currentPage * itemsPerPage + "," + itemsPerPage;
             }
             else
             {
@@ -200,7 +204,7 @@ namespace FerreteriaSL.Clases_Genericas
         public void CancelSearch()
         {
             //afldbg.log(this, "CancelSearch()","red");              
-            _bgwSearch.CancelAsync();
+            bgw_search.CancelAsync();
         }
 
     }

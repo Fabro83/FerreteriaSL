@@ -90,6 +90,18 @@
   <ItemGroup>
     <Compile Include="afldbg.cs" />
     <Compile Include="Clases Genericas\Impresion.cs" />
+    <Compile Include="ubicacion\ABM_Articulos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ubicacion\ABM_Articulos.Designer.cs" />
+    <Compile Include="ubicacion\Nombre_Seccion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ubicacion\Nombre_Seccion.Designer.cs" />
+    <Compile Include="ubicacion\Ubicacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ubicacion\Ubicacion.Designer.cs" />
     <Compile Include="Ventas\FacturaA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,24 +119,6 @@
     </Compile>
     <Compile Include="Productos\ElegirColumnas.Designer.cs">
       <DependentUpon>ElegirColumnas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Ubicación\ABM_Articulos.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ubicación\ABM_Articulos.Designer.cs">
-      <DependentUpon>ABM_Articulos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Ubicación\Nombre_Seccion.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ubicación\Nombre_Seccion.Designer.cs">
-      <DependentUpon>Nombre_Seccion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Ubicación\Ubicacion.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ubicación\Ubicacion.Designer.cs">
-      <DependentUpon>Ubicacion.cs</DependentUpon>
     </Compile>
     <Compile Include="Ventas\Calculadora.cs">
       <SubType>Form</SubType>
@@ -311,6 +305,9 @@
     <EmbeddedResource Include="Empleados\RegistrarPago.resx">
       <DependentUpon>RegistrarPago.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ubicacion\ABM_Articulos.resx" />
+    <EmbeddedResource Include="ubicacion\Nombre_Seccion.resx" />
+    <EmbeddedResource Include="ubicacion\Ubicacion.resx" />
     <EmbeddedResource Include="Ventas\FacturaA.resx">
       <DependentUpon>FacturaA.cs</DependentUpon>
     </EmbeddedResource>
@@ -334,15 +331,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Proveedores\Proveedores.resx">
       <DependentUpon>Proveedores.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ubicación\ABM_Articulos.resx">
-      <DependentUpon>ABM_Articulos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ubicación\Nombre_Seccion.resx">
-      <DependentUpon>Nombre_Seccion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ubicación\Ubicacion.resx">
-      <DependentUpon>Ubicacion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Usuarios\AgregarNuevoUsuario.resx">
       <DependentUpon>AgregarNuevoUsuario.cs</DependentUpon>
@@ -484,10 +472,41 @@
     <None Include="Resources\Logo SL Recortado.png" />
     <None Include="Resources\Logo SL Recortado.gif" />
     <None Include="Resources\Logo SL Recortado.jpg" />
+    <Content Include="MySql.Data.dll" />
+    <Content Include="Net.SourceForge.Koogra.dll" />
     <Content Include="Settings.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

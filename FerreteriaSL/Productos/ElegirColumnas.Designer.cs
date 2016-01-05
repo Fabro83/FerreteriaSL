@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Productos
+﻿namespace FerreteriaSL
 {
     partial class ElegirColumnas
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -77,7 +74,7 @@ namespace FerreteriaSL.Productos
 
         #endregion
 
-        private Button btn_ok;
-        public CheckedListBox cbl_columns;
+        private System.Windows.Forms.Button btn_ok;
+        public System.Windows.Forms.CheckedListBox cbl_columns;
     }
 }

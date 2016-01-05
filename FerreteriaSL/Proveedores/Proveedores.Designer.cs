@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Proveedores
+﻿namespace FerreteriaSL
 {
     partial class Proveedores
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -311,28 +308,28 @@ namespace FerreteriaSL.Proveedores
 
         #endregion
 
-        private ListBox lb_providers;
-        private GroupBox gb_providerData;
-        private Button btn_save;
-        private Label lbl_providerAddress;
-        private TextBox tb_providerCuit;
-        private TextBox tb_providerName;
-        private Label lbl_providerPhone;
-        private Label lbl_providerCuit;
-        private Label lbl_providerName;
-        private Button btn_close;
-        private Button btn_deleteProvider;
-        private Button btn_addNewProvider;
-        private TextBox tb_providerPhone;
-        private GroupBox gb_statistics;
-        private Label lbl_totalImport;
-        private Label lbl_soldItems;
-        private Label lbl_itemQuantity;
-        private TextBox tb_providerAddress;
-        private Label lbl_totalImportValue;
-        private Label lbl_soldItemsValue;
-        private Label lbl_itemQuantityValue;
-        private Label lbl_itemQuantityInStockValue;
-        private Label lbl_itemQuantityInStock;
+        private System.Windows.Forms.ListBox lb_providers;
+        private System.Windows.Forms.GroupBox gb_providerData;
+        private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.Label lbl_providerAddress;
+        private System.Windows.Forms.TextBox tb_providerCuit;
+        private System.Windows.Forms.TextBox tb_providerName;
+        private System.Windows.Forms.Label lbl_providerPhone;
+        private System.Windows.Forms.Label lbl_providerCuit;
+        private System.Windows.Forms.Label lbl_providerName;
+        private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.Button btn_deleteProvider;
+        private System.Windows.Forms.Button btn_addNewProvider;
+        private System.Windows.Forms.TextBox tb_providerPhone;
+        private System.Windows.Forms.GroupBox gb_statistics;
+        private System.Windows.Forms.Label lbl_totalImport;
+        private System.Windows.Forms.Label lbl_soldItems;
+        private System.Windows.Forms.Label lbl_itemQuantity;
+        private System.Windows.Forms.TextBox tb_providerAddress;
+        private System.Windows.Forms.Label lbl_totalImportValue;
+        private System.Windows.Forms.Label lbl_soldItemsValue;
+        private System.Windows.Forms.Label lbl_itemQuantityValue;
+        private System.Windows.Forms.Label lbl_itemQuantityInStockValue;
+        private System.Windows.Forms.Label lbl_itemQuantityInStock;
     }
 }

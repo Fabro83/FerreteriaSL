@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL.Caja_Diaria
+namespace FerreteriaSL
 {
     public partial class CajaDiaria : Form
     {
@@ -12,7 +15,7 @@ namespace FerreteriaSL.Caja_Diaria
         {
             InitializeComponent();
             cb_filterType.SelectedIndex = 0;
-            LoadMoneyValues();
+            loadMoneyValues();
         }
 
 
@@ -21,21 +24,21 @@ namespace FerreteriaSL.Caja_Diaria
 
         private void tp_resumen_Enter(object sender, EventArgs e)
         {
-            LoadBalanceInfo();
-            CalculateDifference();
+            loadBalanceInfo();
+            calculateDifference();
         }
 
-        void CalculateDifference()
+        void calculateDifference()
         {
             double totalCaja = double.Parse(lbl_totalEnCajaValue.Text.Replace("$",""));
             double totalMoneda = double.Parse(lbl_moneyValuesTotalValue.Text.Replace("$", ""));
             lbl_moneyValuesDiferenceValue.Text = (totalMoneda - totalCaja).ToString("$0.00");
         }
 
-        void LoadBalanceInfo()
+        void loadBalanceInfo()
         {
-            Bd dbCon = new Bd();
-            DataTable cajas = dbCon.Read("SELECT Fecha,Monto FROM vista_cajasporturno WHERE CAST(Fecha as date) = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' ORDER BY Fecha");
+            BD DBCon = new BD();
+            DataTable cajas = DBCon.Read("SELECT Fecha,Monto FROM vista_cajasporturno WHERE CAST(Fecha as date) = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' ORDER BY Fecha");
             foreach (DataRow sRow in cajas.Rows)
             {
                 DateTime fecha = DateTime.Parse(sRow["Fecha"].ToString());
@@ -49,7 +52,7 @@ namespace FerreteriaSL.Caja_Diaria
                 }
             }
 
-            DataTable total = dbCon.Read("SELECT valor FROM caja_registro_total ORDER BY fecha DESC LIMIT 1");
+            DataTable total = DBCon.Read("SELECT valor FROM caja_registro_total ORDER BY fecha DESC LIMIT 1");
 
             if(total.Rows.Count > 0)
             {
@@ -58,17 +61,17 @@ namespace FerreteriaSL.Caja_Diaria
             }          
         }
 
-        void LoadMoneyValues()
+        void loadMoneyValues()
         {           
-            Bd dbCon = new Bd();
-            dgv_moneyValues.DataSource = dbCon.Read("SELECT * FROM caja_valores");
+            BD DBCon = new BD();
+            dgv_moneyValues.DataSource = DBCon.Read("SELECT * FROM caja_valores");
             dgv_moneyValues.Columns["id"].Visible = false;
             dgv_moneyValues.Columns["name"].ReadOnly = true;
             dgv_moneyValues.Columns["quantity"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgv_moneyValues.Columns["name"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;         
-            MoneyValuesCalculateTotal();
-            dgv_moneyValues.CellValueChanged += dgv_moneyValues_CellValueChanged;
-            dgv_moneyValues.DataError += dgv_moneyValues_DataError;
+            moneyValuesCalculateTotal();
+            dgv_moneyValues.CellValueChanged += new DataGridViewCellEventHandler(dgv_moneyValues_CellValueChanged);
+            dgv_moneyValues.DataError += new DataGridViewDataErrorEventHandler(dgv_moneyValues_DataError);
         }
 
         void dgv_moneyValues_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -79,16 +82,16 @@ namespace FerreteriaSL.Caja_Diaria
 
         private void dgv_moneyValues_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Bd dbCon = new Bd();
+            BD DBCon = new BD();
             double id = double.Parse(dgv_moneyValues["id", e.RowIndex].Value.ToString());
             int quantity = int.Parse(dgv_moneyValues["quantity", e.RowIndex].Value.ToString());
             string query = "UPDATE caja_valores SET quantity = {0} WHERE id = {1}";
-            dbCon.Write(String.Format(query, quantity, id.ToString().Replace(",",".")));
-            MoneyValuesCalculateTotal();
-            CalculateDifference();
+            DBCon.Write(String.Format(query, quantity, id.ToString().Replace(",",".")));
+            moneyValuesCalculateTotal();
+            calculateDifference();
         }
 
-        private void MoneyValuesCalculateTotal()
+        private void moneyValuesCalculateTotal()
         {
             double total = 0;
             foreach (DataGridViewRow sRow in dgv_moneyValues.Rows)
@@ -117,8 +120,8 @@ namespace FerreteriaSL.Caja_Diaria
 
             string fullCondition = typeCondition == "" ? dateCondition : typeCondition + " AND " + dateCondition;
 
-            Bd dbCon = new Bd();
-            dgv_caja.DataSource = dbCon.Read("SELECT * FROM vista_cajadiaria WHERE " + fullCondition + " ORDER BY Fecha");
+            BD DBCon = new BD();
+            dgv_caja.DataSource = DBCon.Read("SELECT * FROM vista_cajadiaria WHERE " + fullCondition + " ORDER BY Fecha");
         }
 
         private void rb_singleDay_CheckedChanged(object sender, EventArgs e)
@@ -154,7 +157,7 @@ namespace FerreteriaSL.Caja_Diaria
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void dgv_caja_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

@@ -1,45 +1,47 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Data.OleDb;
+using System.Data;
+using System.Windows.Forms;
+using System.ComponentModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using System.Xml;
-using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL.Productos
+namespace FerreteriaSL
 {
     public delegate void BeginTransferHandler(object sender, EventArgs e);
     public delegate void EndTransferHandler(object sender, EventArgs e);
 
     class ListadoEnExcel
     {
-        private string _cfgProvider, _cfgDataSource, _cfgExtendedProperties, _connecionString, _providerTableName, _providerTableFilters, _providerTableColumns, _providerPrice, _priceFunction;
+        private string cfgProvider, cfgDataSource, cfgExtendedProperties, connecionString, providerTableName, providerTableFilters, providerTableColumns, providerPrice, priceFunction;
 
         public string PriceFunction
         {
-            get { return _priceFunction; }
-            set { _priceFunction = value; }
+            get { return priceFunction; }
+            set { priceFunction = value; }
         }
 
         public string ProviderPrice
         {
-            get { return _providerPrice; }
+            get { return providerPrice; }
         }
 
-        private int _idProveedor;
-        DataTable _importedTable;
-        BackgroundWorker _transferWorker;
-        ProgressBar _importProgressBar;
-        Label _importLabel;
-        int[] _affectedRows = { 0, 0 };
+        private int id_proveedor;
+        DataTable importedTable;
+        BackgroundWorker transferWorker;
+        ProgressBar importProgressBar;
+        Label importLabel;
+        int[] affectedRows = { 0, 0 };
         public event BeginTransferHandler OnBeginTransfer;
         public event EndTransferHandler OnEndTransfer;
 
-        public ListadoEnExcel(int idProveedor)
+        public ListadoEnExcel(int id_proveedor)
         {
-            _idProveedor = idProveedor;
+            this.id_proveedor = id_proveedor;
             LoadConfig();   
         }
 
@@ -61,37 +63,37 @@ namespace FerreteriaSL.Productos
 
         private void LoadConfig()
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "Settings.xml");
-            XmlNode officeXml = xmlDoc["Settings"]["OfficeString"];
-            _cfgProvider = officeXml["Provider"].InnerText;
-            _cfgExtendedProperties = officeXml["ExtendedProperties"].InnerText;
-            Bd dbCon = new Bd();
-            DataRow providerInfo = dbCon.Read("SELECT import_providerTableName, import_providerTableFilters, import_providerTableColumns, import_providerPrice FROM proveedor WHERE id = " + _idProveedor).Rows[0];
+            XmlDocument XMLDoc = new XmlDocument();
+            XMLDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "Settings.xml");
+            XmlNode OfficeXML = XMLDoc["Settings"]["OfficeString"];
+            this.cfgProvider = OfficeXML["Provider"].InnerText;
+            this.cfgExtendedProperties = OfficeXML["ExtendedProperties"].InnerText;
+            BD DBCon = new BD();
+            DataRow providerInfo = DBCon.Read("SELECT import_providerTableName, import_providerTableFilters, import_providerTableColumns, import_providerPrice FROM proveedor WHERE id = " + id_proveedor).Rows[0];
 
-            _providerTableName = providerInfo["import_providerTableName"].ToString()+"$";
-            _providerTableFilters = providerInfo["import_providerTableFilters"].ToString();
-            _providerTableColumns = providerInfo["import_providerTableColumns"].ToString();
-            _providerPrice = providerInfo["import_providerPrice"].ToString();
+            this.providerTableName = providerInfo["import_providerTableName"].ToString()+"$";
+            this.providerTableFilters = providerInfo["import_providerTableFilters"].ToString();
+            this.providerTableColumns = providerInfo["import_providerTableColumns"].ToString();
+            this.providerPrice = providerInfo["import_providerPrice"].ToString();
         }
 
         public void LoadExcel(string filePath)
         {
-            _cfgDataSource = filePath;
-            _connecionString = String.Format("Provider={0};Data Source=\"{1}\";Extended Properties=\"{2}\"", _cfgProvider, _cfgDataSource, _cfgExtendedProperties);
-            OleDbConnection con = new OleDbConnection(_connecionString);
-            OleDbCommand cmd = new OleDbCommand("SELECT " + _providerTableColumns + " FROM [" + _providerTableName + "] WHERE " + _providerTableFilters, con);
+            this.cfgDataSource = filePath;
+            this.connecionString = String.Format("Provider={0};Data Source=\"{1}\";Extended Properties=\"{2}\"", cfgProvider, cfgDataSource, cfgExtendedProperties);
+            OleDbConnection con = new OleDbConnection(connecionString);
+            OleDbCommand cmd = new OleDbCommand("SELECT " + providerTableColumns + " FROM [" + providerTableName + "] WHERE " + providerTableFilters, con);
         
             con.Open();
             try
             {
                 OleDbDataReader rdr = cmd.ExecuteReader();
-                _importedTable = new DataTable();
-                _importedTable.Columns.Add(new DataColumn("F1",typeof(string)));
-                _importedTable.Columns.Add(new DataColumn("F2",typeof(string)));
-                _importedTable.Columns.Add(new DataColumn("F3",typeof(string)));
-                _importedTable.Columns.Add(new DataColumn("F4", typeof(string)));
-                _importedTable.Load(rdr);
+                importedTable = new DataTable();
+                importedTable.Columns.Add(new DataColumn("F1",typeof(string)));
+                importedTable.Columns.Add(new DataColumn("F2",typeof(string)));
+                importedTable.Columns.Add(new DataColumn("F3",typeof(string)));
+                importedTable.Columns.Add(new DataColumn("F4", typeof(string)));
+                this.importedTable.Load(rdr);
             }
             catch (OleDbException ode)
             {
@@ -100,7 +102,7 @@ namespace FerreteriaSL.Productos
             con.Close();
         }
 
-        private DataTable ParseDataTable(DataTable target)
+        private DataTable parseDataTable(DataTable target)
         {
 
             foreach (DataRow sRow in target.Rows)
@@ -111,7 +113,7 @@ namespace FerreteriaSL.Productos
                 }
                 
                 string precio = sRow[2].ToString();
-                double validacionPrecio = -1;
+                double validacion_precio = -1;
                 Regex reg1 = new Regex(@"^\d+,\d+$");
                 Regex reg2 = new Regex(@"^\d+\.\d+\,\d+$");
                 bool stringReplaced = false;
@@ -131,8 +133,8 @@ namespace FerreteriaSL.Productos
 
                 try
                 {
-                    validacionPrecio = double.Parse(precio);
-                    sRow[2] = validacionPrecio.ToString();
+                    validacion_precio = double.Parse(precio);
+                    sRow[2] = validacion_precio.ToString();
                 }
                 catch (Exception ea)
                 {
@@ -151,49 +153,49 @@ namespace FerreteriaSL.Productos
             return target;
         }
 
-        public void ShowExcelList(DataGridView dgvTarget)
+        public void ShowExcelList(DataGridView dgv_target)
         {
-            if (_importedTable != null)
+            if (importedTable != null)
             {
-                dgvTarget.DataSource = ParseDataTable(_importedTable);
-                if (dgvTarget.DataSource == null)
+                dgv_target.DataSource = parseDataTable(importedTable);
+                if (dgv_target.DataSource == null)
                 {
                     return;
                 }
-                dgvTarget.Columns[0].HeaderText = "Codigo";
-                dgvTarget.Columns[1].HeaderText = "Nombre";
-                dgvTarget.Columns[2].HeaderText = "Precio en lista";
-                dgvTarget.Columns[3].HeaderText = "Precio a Importar";
+                dgv_target.Columns[0].HeaderText = "Codigo";
+                dgv_target.Columns[1].HeaderText = "Nombre";
+                dgv_target.Columns[2].HeaderText = "Precio en lista";
+                dgv_target.Columns[3].HeaderText = "Precio a Importar";
 
-                dgvTarget.Columns[0].ReadOnly = true;
-                dgvTarget.Columns[1].ReadOnly = true;
-                dgvTarget.Columns[2].ReadOnly = true;
-                dgvTarget.Columns[3].ReadOnly = true;
+                dgv_target.Columns[0].ReadOnly = true;
+                dgv_target.Columns[1].ReadOnly = true;
+                dgv_target.Columns[2].ReadOnly = true;
+                dgv_target.Columns[3].ReadOnly = true;
             }
         }
 
         public int TransferToDataBase(ProgressBar importProgressBar,Label importLabel)
         {
-            if (_importedTable == null)
+            if (importedTable == null)
             {
                 return -1;
             }
 
             OnBeginTransferCall(this, EventArgs.Empty);
 
-            _importLabel = importLabel;
-            _importProgressBar = importProgressBar;
+            this.importLabel = importLabel;
+            this.importProgressBar = importProgressBar;
             
-            _importProgressBar.Style = ProgressBarStyle.Continuous;
-            _importProgressBar.Maximum = 100;
-            _importProgressBar.Value = 0;
-            _transferWorker = new BackgroundWorker();
-            _transferWorker.WorkerReportsProgress = true;
-            _transferWorker.WorkerSupportsCancellation = true;
-            _transferWorker.DoWork += transferWorker_DoTransfer;
-            _transferWorker.ProgressChanged += transferWorker_ProgressChanged;
-            _transferWorker.RunWorkerCompleted += transferWorker_RunWorkerCompleted;
-            _transferWorker.RunWorkerAsync();
+            this.importProgressBar.Style = ProgressBarStyle.Continuous;
+            this.importProgressBar.Maximum = 100;
+            this.importProgressBar.Value = 0;
+            transferWorker = new BackgroundWorker();
+            transferWorker.WorkerReportsProgress = true;
+            transferWorker.WorkerSupportsCancellation = true;
+            transferWorker.DoWork += new DoWorkEventHandler(transferWorker_DoTransfer);
+            transferWorker.ProgressChanged += new ProgressChangedEventHandler(transferWorker_ProgressChanged);
+            transferWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(transferWorker_RunWorkerCompleted);
+            transferWorker.RunWorkerAsync();
             return 1;        
         }
 
@@ -201,12 +203,12 @@ namespace FerreteriaSL.Productos
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            Bd bdCon = new Bd();
+            BD BDCon = new BD();
 
             int processedRows = 0;
-            ChangeProgressLabelText("Transfiriendo datos de Excel a la Base de Datos...");
+            changeProgressLabelText("Transfiriendo datos de Excel a la Base de Datos...");
             
-            foreach (DataRow singleRow in _importedTable.Rows)
+            foreach (DataRow SingleRow in importedTable.Rows)
             {
                 if ((worker.CancellationPending == true))
                 {
@@ -215,15 +217,15 @@ namespace FerreteriaSL.Productos
                 }
                 else
                 {
-                    string codigo = singleRow[0].ToString();
-                    string nombre = singleRow[1].ToString().Replace("\"", "\\\"").Replace("'","");
-                    double precio = Convert.ToDouble(singleRow[3].ToString().Trim());
+                    string codigo = SingleRow[0].ToString();
+                    string nombre = SingleRow[1].ToString().Replace("\"", "\\\"").Replace("'","");
+                    double precio = Convert.ToDouble(SingleRow[3].ToString().Trim());
                     
-                    string query = String.Format("SELECT id, precio,porcentaje FROM producto WHERE codigo = \"{0}\" AND nombre = \"{1}\" AND id_proveedor = {2}", codigo, nombre, _idProveedor);
+                    string query = String.Format("SELECT id, precio,porcentaje FROM producto WHERE codigo = \"{0}\" AND nombre = \"{1}\" AND id_proveedor = {2}", codigo, nombre, id_proveedor);
 
                     // POR AQUI PEDIR EL PORCENTAJE, VERIFICAR QUE SEA DISTINTO DE CERO Y APLICAR EN CASO NEGATIVO.
 
-                    DataTable checkResult = bdCon.Read(query);
+                    DataTable checkResult = BDCon.Read(query);
 
                     if (checkResult.Rows.Count > 0)
                     {
@@ -239,62 +241,62 @@ namespace FerreteriaSL.Productos
                             
                             int id = int.Parse(checkResult.Rows[0][0].ToString());
                             query = String.Format("UPDATE producto SET precio = {0},precio_final = {1} WHERE id = {2}", precio.ToString("0.00", CultureInfo.InvariantCulture), precioFinal.ToString("0.00", CultureInfo.InvariantCulture), id);                       
-                            bdCon.Write(query);
-                            _affectedRows[1]++;
+                            BDCon.Write(query);
+                            affectedRows[1]++;
                         }         
                     }
                     else
                     {                 
-                        query = String.Format("INSERT INTO producto (codigo,id_proveedor,nombre,precio) VALUES (\"{0}\",{1},\"{2}\",{3})", codigo, _idProveedor, nombre, precio.ToString("0.00", CultureInfo.InvariantCulture));      
-                        bdCon.Write(query);
-                        _affectedRows[0]++;
+                        query = String.Format("INSERT INTO producto (codigo,id_proveedor,nombre,precio) VALUES (\"{0}\",{1},\"{2}\",{3})", codigo, id_proveedor, nombre, precio.ToString("0.00", CultureInfo.InvariantCulture));      
+                        BDCon.Write(query);
+                        affectedRows[0]++;
                     }
                     processedRows++;
-                    worker.ReportProgress((processedRows * 100) / _importedTable.Rows.Count);
+                    worker.ReportProgress((processedRows * 100) / importedTable.Rows.Count);
                 }               
             }
         }
 
         void transferWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            _importProgressBar.Value = e.ProgressPercentage;
-            ChangeProgressLabelText("Transfiriendo datos de Excel a la Base de Datos... " + e.ProgressPercentage + "%");
+            importProgressBar.Value = e.ProgressPercentage;
+            changeProgressLabelText("Transfiriendo datos de Excel a la Base de Datos... " + e.ProgressPercentage + "%");
         }
 
         void transferWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _importProgressBar.Value = 0;
+            importProgressBar.Value = 0;
             if ((e.Cancelled == true))
             {              
-                ChangeProgressLabelText("La importación ha sido cancelada.");
-                MessageBox.Show("La importacion ha sido cancelada.\n\nArticulos agregados: " + _affectedRows[0] + "\nArticulos actualizados: " + _affectedRows[1], "Tarea Cancelada!");
+                changeProgressLabelText("La importación ha sido cancelada.");
+                MessageBox.Show("La importacion ha sido cancelada.\n\nArticulos agregados: " + affectedRows[0] + "\nArticulos actualizados: " + affectedRows[1], "Tarea Cancelada!");
             }
 
             else if (!(e.Error == null))
             {
-                ChangeProgressLabelText("Error al importar.");
+                changeProgressLabelText("Error al importar.");
                 MessageBox.Show("Ha ocurrido un error durante la importación.\n\nExcepción:\n" + e.Error.Message, "Error al importar.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             else
             {
           
-                ChangeProgressLabelText("Importacion completada exitosamente.");
-                MessageBox.Show("La importacion ha finalizado.\n\nArticulos agregados: " + _affectedRows[0] + "\nArticulos actualizados: " + _affectedRows[1], "Tarea Completada!");
+                changeProgressLabelText("Importacion completada exitosamente.");
+                MessageBox.Show("La importacion ha finalizado.\n\nArticulos agregados: " + affectedRows[0] + "\nArticulos actualizados: " + affectedRows[1], "Tarea Completada!");
             }
             OnEndTransferCall(this, EventArgs.Empty);
         }
 
-        void ChangeProgressLabelText(string text)
+        void changeProgressLabelText(string text)
         {
-            if(_importLabel != null)
-                _importLabel.Invoke(new Action(() => _importLabel.Text = text));
+            if(importLabel != null)
+                importLabel.Invoke(new Action(() => importLabel.Text = text));
         }
 
         public void CancelTransfer() 
         {
-            if(_transferWorker != null && _transferWorker.IsBusy)
-                _transferWorker.CancelAsync();
+            if(transferWorker != null && transferWorker.IsBusy)
+                transferWorker.CancelAsync();
         }
 
     }

@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Productos
+﻿namespace FerreteriaSL
 {
     partial class AplicarPorcentaje
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -120,10 +117,10 @@ namespace FerreteriaSL.Productos
 
         #endregion
 
-        private Label lbl_info;
-        private NumericUpDown nud_percent;
-        private Label lbl_percentSymbol;
-        private Button btn_apply;
-        private Button btn_cancel;
+        private System.Windows.Forms.Label lbl_info;
+        private System.Windows.Forms.NumericUpDown nud_percent;
+        private System.Windows.Forms.Label lbl_percentSymbol;
+        private System.Windows.Forms.Button btn_apply;
+        private System.Windows.Forms.Button btn_cancel;
     }
 }

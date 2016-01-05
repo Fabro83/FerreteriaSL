@@ -1,72 +1,75 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
+using System.Globalization;
 
-namespace FerreteriaSL.RegistroVentas
+namespace FerreteriaSL
 {
     public partial class Cajas : Form
     {
         public Cajas()
         {
             InitializeComponent();
-            LoadUserComboBox();
-            ApplyFilters();
+            loadUserComboBox();
+            applyFilters();
         }
         
-        private void LoadUserComboBox()
+        private void loadUserComboBox()
         {
-            Bd dbCon = new Bd();
-            cb_user.DataSource = dbCon.Read("SELECT id, user FROM usuario");
+            BD DBCon = new BD();
+            cb_user.DataSource = DBCon.Read("SELECT id, user FROM usuario");
             cb_user.DisplayMember = "user";
         }
 
         private void dtp_dateFrom_ValueChanged(object sender, EventArgs e)
         {
-            ApplyFilters();
+            applyFilters();
         }
 
         private void dtp_dateTo_ValueChanged(object sender, EventArgs e)
         {
-            ApplyFilters();
+            applyFilters();
         }
 
         private void cb_user_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ApplyFilters();
+            applyFilters();
         }
 
-        private void ApplyFilters()
+        private void applyFilters()
         {
-            Bd dbCon = new Bd();
+            BD DBCon = new BD();
 
             string query = "SELECT id, Fecha, Usuario,`Nº Factura`, Cliente, Importe, `Descuento Monto`, `Porcentaje Descuento`, Ganancia FROM vista_cajas WHERE ";
 
-            query += BuildFilters();
+            query += buildFilters();
 
-            DataTable res = dbCon.Read(query);
+            DataTable res = DBCon.Read(query);
 
-            double totalImporte = 0, totalDescuentos = 0, descuentoPorcentajeTotal = 0, mediaPorcentajeDescuentos = 0, totalGanancia = 0;
+            double totalImporte = 0, totalDescuentos = 0, DescuentoPorcentajeTotal = 0, mediaPorcentajeDescuentos = 0, totalGanancia = 0;
             int discountRows = 0;
 
             foreach (DataRow sRow in res.Rows)
             {
                 totalImporte += Convert.ToDouble(sRow["Importe"].ToString());
                 totalDescuentos += Convert.ToDouble(sRow["Descuento Monto"].ToString());
-                descuentoPorcentajeTotal += Convert.ToDouble(sRow["Porcentaje Descuento"].ToString());
+                DescuentoPorcentajeTotal += Convert.ToDouble(sRow["Porcentaje Descuento"].ToString());
                 totalGanancia += Convert.ToDouble(sRow["Ganancia"].ToString());
                 if (Convert.ToDouble(sRow["Porcentaje Descuento"].ToString()) > 0)
                     discountRows++;
             }
 
-            mediaPorcentajeDescuentos = discountRows > 0 ? descuentoPorcentajeTotal / discountRows : 0;
-            descuentoPorcentajeTotal = res.Rows.Count > 0 ? descuentoPorcentajeTotal / res.Rows.Count : 0;
+            mediaPorcentajeDescuentos = discountRows > 0 ? DescuentoPorcentajeTotal / discountRows : 0;
+            DescuentoPorcentajeTotal = res.Rows.Count > 0 ? DescuentoPorcentajeTotal / res.Rows.Count : 0;
 
             lbl_totalImporteValue.Text = "$" + totalImporte.ToString("0.00", CultureInfo.InvariantCulture);
             lbl_totalDescuentosValue.Text = "$" + totalDescuentos.ToString("0.00", CultureInfo.InvariantCulture);
-            lbl_porcentajeTotalValue.Text = Math.Round(descuentoPorcentajeTotal, 2, MidpointRounding.AwayFromZero).ToString("0.00", CultureInfo.InvariantCulture) + "%";
+            lbl_porcentajeTotalValue.Text = Math.Round(DescuentoPorcentajeTotal, 2, MidpointRounding.AwayFromZero).ToString("0.00", CultureInfo.InvariantCulture) + "%";
             lbl_mediaPorcentajeDescuentosValue.Text = Math.Round(mediaPorcentajeDescuentos, 2, MidpointRounding.AwayFromZero).ToString("0.00", CultureInfo.InvariantCulture) + "%";
             lbl_gananciaValue.Text = "$" + totalGanancia.ToString("0.00", CultureInfo.InvariantCulture);
 
@@ -81,14 +84,14 @@ namespace FerreteriaSL.RegistroVentas
 
         }
 
-        private string BuildFilters()
+        private string buildFilters()
         {
             string dateFrom = dtp_dateFrom.Value.ToString("yyyy-MM-dd");
             string dateTo = dtp_dateTo.Value.AddDays(1).ToString("yyyy-MM-dd");
-            int userId = cb_user.SelectedIndex > 0 ? int.Parse((cb_user.SelectedItem as DataRowView)["id"].ToString()) : -1;
+            int user_id = cb_user.SelectedIndex > 0 ? int.Parse((cb_user.SelectedItem as DataRowView)["id"].ToString()) : -1;
 
             string dateFilter = "Fecha BETWEEN '" + dateFrom + "' AND '" + dateTo + "'";
-            string userFilter = userId != -1 ?  "AND usuario_id = " + userId : "";
+            string userFilter = user_id != -1 ?  "AND usuario_id = " + user_id : "";
 
             string fullFilter = dateFilter + userFilter;
 
@@ -108,15 +111,15 @@ namespace FerreteriaSL.RegistroVentas
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void dgv_caja_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1)
             {
-                CajasVerFactura cvf = new CajasVerFactura(int.Parse(dgv_caja.Rows[e.RowIndex].Cells["id"].Value.ToString()),dgv_caja.Rows[e.RowIndex].Cells["Nº Factura"].Value.ToString());
-                cvf.Show(this);
+                CajasVerFactura CVF = new CajasVerFactura(int.Parse(dgv_caja.Rows[e.RowIndex].Cells["id"].Value.ToString()),dgv_caja.Rows[e.RowIndex].Cells["Nº Factura"].Value.ToString());
+                CVF.Show(this);
             }
         }
 

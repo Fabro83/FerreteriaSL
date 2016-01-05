@@ -2,93 +2,92 @@
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
+using System.Globalization;
 
-namespace FerreteriaSL.Productos
+namespace FerreteriaSL
 {
     public partial class AplicarFuncionPrecio : Form
     {
-        DataGridViewSelectedRowCollection _targetRows;
-        string _precioOrigen, _precioDestino, _columnPrecioOrigen, _columnPrecioDestino;
-        double _precioDeMuestra;
-        int _result = 0;
-        BackgroundWorker _bgw;
-        string _query;
+        DataGridViewSelectedRowCollection targetRows;
+        string precioOrigen, precioDestino, columnPrecioOrigen, columnPrecioDestino;
+        double precioDeMuestra;
+        int result = 0;
+        BackgroundWorker BGW;
+        string query;
 
         public string Query
         {
-            get { return _query; }
+            get { return query; }
         }
 
         public int Result
         {
-            get { return _result; }
+            get { return result; }
         }
 
         public DataGridViewSelectedRowCollection TargetRows
         {
-            get { return _targetRows; }
+            get { return targetRows; }
         }
 
         public AplicarFuncionPrecio(DataGridViewSelectedRowCollection targetRows,string tipoPrecio)
         {
             InitializeComponent();
-            _targetRows = targetRows;
-            _precioOrigen = tipoPrecio;
-            _precioDestino = tipoPrecio.Contains("Venta") ? "Precio de Compra" : "Precio de Venta";
-            _precioDeMuestra = double.Parse(targetRows[targetRows.Count - 1].Cells[_precioOrigen].Value.ToString());
-            Inicializar();
+            this.targetRows = targetRows;
+            this.precioOrigen = tipoPrecio;
+            this.precioDestino = tipoPrecio.Contains("Venta") ? "Precio de Compra" : "Precio de Venta";
+            this.precioDeMuestra = double.Parse(targetRows[targetRows.Count - 1].Cells[precioOrigen].Value.ToString());
+            inicializar();
         }
 
         public AplicarFuncionPrecio(string tipoPrecio,double precioMuestra)
         {
             InitializeComponent();
-            _columnPrecioOrigen = tipoPrecio;
-            _columnPrecioDestino = tipoPrecio.Contains("venta") ? "precio_compra" : "precio_venta";
-            _precioOrigen = tipoPrecio.Contains("venta") ? "Precio de Venta" : "Precio de Compra";
-            _precioDestino = tipoPrecio.Contains("venta") ? "Precio de Compra" : "Precio de Venta";
-            _precioDeMuestra = precioMuestra;
-            Inicializar();
+            this.columnPrecioOrigen = tipoPrecio;
+            this.columnPrecioDestino = tipoPrecio.Contains("venta") ? "precio_compra" : "precio_venta";
+            this.precioOrigen = tipoPrecio.Contains("venta") ? "Precio de Venta" : "Precio de Compra";
+            this.precioDestino = tipoPrecio.Contains("venta") ? "Precio de Compra" : "Precio de Venta";
+            this.precioDeMuestra = precioMuestra;
+            inicializar();
         }
 
-        private void Inicializar()
+        private void inicializar()
         {
-            lbl_precioOrigen.Text = _precioOrigen + ": " + _precioDeMuestra.ToString("0.00",CultureInfo.InvariantCulture);
-            lbl_precioDestino.Text = _precioDestino + ": ";
+            lbl_precioOrigen.Text = precioOrigen + ": " + precioDeMuestra.ToString("0.00",CultureInfo.InvariantCulture);
+            lbl_precioDestino.Text = precioDestino + ": ";
             lbl_precioDestinoValor.Location = new Point(lbl_precioDestino.Width + lbl_precioDestino.Location.X - 8, lbl_precioDestino.Location.Y);
-            Text = "Aplicar Función | " + _precioOrigen + " > " + _precioDestino;
-            CargarComboBoxFunciones();          
+            this.Text = "Aplicar Función | " + this.precioOrigen + " > " + this.precioDestino;
+            cargarComboBoxFunciones();          
         }
 
-        private void CargarComboBoxFunciones()
+        private void cargarComboBoxFunciones()
         {
             int selectedIndex = cb_funcionesGuardas.SelectedIndex != -1 ? cb_funcionesGuardas.SelectedIndex : 0;
 
-            Bd dbCon = new Bd();
-            DataTable providerTable = dbCon.Read("SELECT id, CONCAT(`name`,\": [\",`function`,\"]\") as nombre, function FROM funcion");
-            DataRow defaultRow = providerTable.NewRow();
+            BD DBCon = new BD();
+            DataTable ProviderTable = DBCon.Read("SELECT id, CONCAT(`name`,\": [\",`function`,\"]\") as nombre, function FROM funcion");
+            DataRow defaultRow = ProviderTable.NewRow();
             defaultRow[0] = "-1";
             defaultRow[1] = "Funciones Guardadas";
             defaultRow[2] = "";
-            providerTable.Rows.Add(defaultRow);
-            providerTable.DefaultView.Sort = "id asc";
-            cb_funcionesGuardas.DataSource = providerTable;
+            ProviderTable.Rows.Add(defaultRow);
+            ProviderTable.DefaultView.Sort = "id asc";
+            cb_funcionesGuardas.DataSource = ProviderTable;
             cb_funcionesGuardas.DisplayMember = "nombre";
             cb_funcionesGuardas.SelectedIndex = selectedIndex > cb_funcionesGuardas.Items.Count - 1 ? 0 : selectedIndex;           
         }
 
         private void btn_cancelar_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        private void ProbarFuncion()
+        private void probarFuncion()
         {
             string funcion = tb_funcion.Text.Trim();
-            funcion = funcion.Replace("?P", _precioDeMuestra.ToString("0.00", CultureInfo.InvariantCulture));
-            string result = BdFunctions.TestFunction(funcion);
+            funcion = funcion.Replace("?P", precioDeMuestra.ToString("0.00", CultureInfo.InvariantCulture));
+            string result = BD_Functions.testFunction(funcion);
             double value = -1.00;
             try
             {
@@ -109,7 +108,7 @@ namespace FerreteriaSL.Productos
         private void btn_probarFuncion_Click(object sender, EventArgs e)
         {
             if(tb_funcion.Text != "")
-                ProbarFuncion();
+                probarFuncion();
         }
 
         private void btn_insertarFuncion_Click(object sender, EventArgs e)
@@ -130,16 +129,16 @@ namespace FerreteriaSL.Productos
 
         private void btn_guardar_Click(object sender, EventArgs e)
         {
-            NombrarFuncion nf = new NombrarFuncion();
-            nf.ShowDialog(this);
-            if (nf.Nombre != null)
+            NombrarFuncion NF = new NombrarFuncion();
+            NF.ShowDialog(this);
+            if (NF.Nombre != null)
             {
-                Bd dbCon = new Bd();
-                int result = dbCon.Write(String.Format("INSERT INTO funcion (name,function) VALUES ('{0}','{1}')",nf.Nombre,tb_funcion.Text.Trim()));
+                BD DBCon = new BD();
+                int result = DBCon.Write(String.Format("INSERT INTO funcion (name,function) VALUES ('{0}','{1}')",NF.Nombre,tb_funcion.Text.Trim()));
                 if (result == 1)
                 {
                     MessageBox.Show("La función fue guardada correctamente.","Función",MessageBoxButtons.OK);
-                    CargarComboBoxFunciones();
+                    cargarComboBoxFunciones();
                 }
             }
         }
@@ -151,10 +150,10 @@ namespace FerreteriaSL.Productos
             if (MessageBox.Show(this, "¿Desea eliminar la función guardada \"" + nombreFuncion + "\"?", "Eliminar Función", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 int id = int.Parse((cb_funcionesGuardas.SelectedItem as DataRowView)[0].ToString());
-                Bd dbCon = new Bd();
-                dbCon.Write("DELETE FROM funcion WHERE id = " + id);
+                BD DBCon = new BD();
+                DBCon.Write("DELETE FROM funcion WHERE id = " + id);
                 MessageBox.Show(this, "\"" + nombreFuncion + "\" fue eliminada.", "Eliminar Función", MessageBoxButtons.OK);
-                CargarComboBoxFunciones();
+                cargarComboBoxFunciones();
             }
             
 
@@ -162,23 +161,23 @@ namespace FerreteriaSL.Productos
 
         private void btn_aplicar_Click(object sender, EventArgs e)
         {
-            if (_targetRows == null)
+            if (targetRows == null)
             {
-                _query = String.Format("{0} = {1}",_columnPrecioDestino, tb_funcion.Text.Trim().Replace("?P", _columnPrecioOrigen));
-                Close();
+                this.query = String.Format("{0} = {1}",this.columnPrecioDestino, tb_funcion.Text.Trim().Replace("?P", this.columnPrecioOrigen));
+                this.Close();
             }
             else
             {
-                _bgw = new BackgroundWorker();
-                _bgw.DoWork += BGW_DoWork;
-                _bgw.RunWorkerCompleted += BGW_RunWorkerCompleted;
-                _bgw.WorkerReportsProgress = true;
-                _bgw.ProgressChanged += BGW_ProgressChanged;
-                Size = new Size(Size.Width, 280);
+                BGW = new BackgroundWorker();
+                BGW.DoWork += new DoWorkEventHandler(BGW_DoWork);
+                BGW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BGW_RunWorkerCompleted);
+                BGW.WorkerReportsProgress = true;
+                BGW.ProgressChanged += new ProgressChangedEventHandler(BGW_ProgressChanged);
+                this.Size = new Size(this.Size.Width, 280);
                 pb_aplicarFormula.Value = 0;
                 pb_aplicarFormula.Maximum = 100;
                 btn_aplicar.Enabled = btn_ayuda.Enabled = btn_cancelar.Enabled = btn_cargarFuncion.Enabled = btn_eliminarFuncion.Enabled = btn_guardar.Enabled = btn_probarFuncion.Enabled = false;
-                _bgw.RunWorkerAsync();
+                BGW.RunWorkerAsync();
             }      
         }
 
@@ -189,35 +188,35 @@ namespace FerreteriaSL.Productos
 
         void BGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         void BGW_DoWork(object sender, DoWorkEventArgs e)
         {
             string funcion = tb_funcion.Text.Trim();
             int rowCounter = 0;
-            foreach (DataGridViewRow singleRow in _targetRows)
+            foreach (DataGridViewRow singleRow in targetRows)
             {
-                string fullFuncion = funcion.Replace("?P", double.Parse(singleRow.Cells[_precioOrigen].Value.ToString()).ToString("0.00", CultureInfo.InvariantCulture));
-                string result = BdFunctions.TestFunction(fullFuncion);
-                singleRow.Cells[_precioDestino].Value = Math.Round(double.Parse(result), 2);
+                string fullFuncion = funcion.Replace("?P", double.Parse(singleRow.Cells[precioOrigen].Value.ToString()).ToString("0.00", CultureInfo.InvariantCulture));
+                string result = BD_Functions.testFunction(fullFuncion);
+                singleRow.Cells[precioDestino].Value = Math.Round(double.Parse(result), 2);
                 rowCounter++;
-                _bgw.ReportProgress((rowCounter * 100) / _targetRows.Count);
+                BGW.ReportProgress((rowCounter * 100) / targetRows.Count);
             }
         }
 
         private void btn_ayuda_Click(object sender, EventArgs e)
         {
-            Size currentSize = Size;
+            Size currentSize = this.Size;
 
             if (currentSize.Width == 390)
             {
-                Size = new Size(620, 260);
+                this.Size = new Size(620, 260);
                 btn_ayuda.Text = "<";
             }
             else
             {            
-                Size = new Size(390, 260);
+                this.Size = new Size(390, 260);
                 btn_ayuda.Text = "?";
             }
         }

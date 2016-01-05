@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Ventas
+﻿namespace FerreteriaSL
 {
     partial class BusquedaProducto
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -189,14 +186,14 @@ namespace FerreteriaSL.Ventas
 
         #endregion
 
-        private DataGridView dgv_productList;
-        private TextBox tb_filterWords;
-        private ComboBox cb_filterProvider;
-        private CheckBox chb_stock;
-        private Button btn_nextPage;
-        private Button btn_prevPage;
-        private Label lbl_pageInfo;
-        private Button btn_close;
-        private Label lbl_info;
+        private System.Windows.Forms.DataGridView dgv_productList;
+        private System.Windows.Forms.TextBox tb_filterWords;
+        private System.Windows.Forms.ComboBox cb_filterProvider;
+        private System.Windows.Forms.CheckBox chb_stock;
+        private System.Windows.Forms.Button btn_nextPage;
+        private System.Windows.Forms.Button btn_prevPage;
+        private System.Windows.Forms.Label lbl_pageInfo;
+        private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.Label lbl_info;
     }
 }

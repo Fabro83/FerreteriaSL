@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Productos
+﻿namespace FerreteriaSL
 {
     partial class NombrarFuncion
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -101,9 +98,9 @@ namespace FerreteriaSL.Productos
 
         #endregion
 
-        private Label lbl_instrucciones;
-        private TextBox tb_nombre;
-        private Button btn_guardar;
-        private Button btn_cancelar;
+        private System.Windows.Forms.Label lbl_instrucciones;
+        private System.Windows.Forms.TextBox tb_nombre;
+        private System.Windows.Forms.Button btn_guardar;
+        private System.Windows.Forms.Button btn_cancelar;
     }
 }

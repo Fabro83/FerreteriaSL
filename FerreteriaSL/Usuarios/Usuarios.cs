@@ -1,42 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL.Usuarios
+namespace FerreteriaSL
 {
     public partial class Usuarios : Form
     {
         public Usuarios()
         {
             InitializeComponent();
-            LoadEmployeComboBox();
-            LoadUserListBox();
-            LoadPermissionsCheckedListBox();
+            loadEmployeComboBox();
+            loadUserListBox();
+            loadPermissionsCheckedListBox();
         }
 
-        private void LoadEmployeComboBox()
+        private void loadEmployeComboBox()
         {
-            Bd dbCon = new Bd();
-            cb_employe.DataSource = dbCon.Read("SELECT id, CONCAT(nombre,' ',apellido) as name FROM empleado");
+            BD DBCon = new BD();
+            cb_employe.DataSource = DBCon.Read("SELECT id, CONCAT(nombre,' ',apellido) as name FROM empleado");
             cb_employe.DisplayMember = "name";
         }
 
-        private void LoadUserListBox()
+        private void loadUserListBox()
         {
-            Bd dbCon = new Bd();
+            BD DBCon = new BD();
 
-            lb_users.DataSource = dbCon.Read("SELECT id,user FROM usuario WHERE id > 0");
+            lb_users.DataSource = DBCon.Read("SELECT id,user FROM usuario WHERE id > 0");
             lb_users.DisplayMember = "user";
             lb_users.SelectedIndex = -1;
-            ClearAllFields();
+            clearAllFields();
         }
 
-        private void LoadPermissionsCheckedListBox()
+        private void loadPermissionsCheckedListBox()
         {
-            Bd dbCon = new Bd();
-            clb_permissions.DataSource = dbCon.Read("SELECT * FROM permiso");
+            BD DBCon = new BD();
+            clb_permissions.DataSource = DBCon.Read("SELECT * FROM permiso");
             clb_permissions.DisplayMember = "area";
             clb_permissions.ClearSelected();
         }
@@ -46,13 +49,13 @@ namespace FerreteriaSL.Usuarios
             if (lb_users.SelectedIndex != -1)
             {
                 gb_userData.Enabled = true;
-                int usuarioId = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
+                int usuario_id = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
                 gb_userData.Text = "Datos de " + (lb_users.SelectedItem as DataRowView)["user"].ToString();
 
-                Bd dbCon = new Bd();
-                DataRow data = dbCon.Read("SELECT * FROM vista_datosUsuario WHERE id =" + usuarioId).Rows[0];
+                BD DBCon = new BD();
+                DataRow data = DBCon.Read("SELECT * FROM vista_datosUsuario WHERE id =" + usuario_id).Rows[0];
 
-                LoadAllUserData(data);
+                loadAllUserData(data);
             }
             else
             {
@@ -60,7 +63,7 @@ namespace FerreteriaSL.Usuarios
             }           
         }
 
-        private void ClearAllFields()
+        private void clearAllFields()
         {
             gb_userData.Text = "";
             tb_userName.Text = "";
@@ -75,12 +78,12 @@ namespace FerreteriaSL.Usuarios
             
         }
 
-        private void LoadAllUserData(DataRow data)
+        private void loadAllUserData(DataRow data)
         {
-            ClearAllFields();
+            clearAllFields();
             tb_userName.Text = data["user"].ToString();
             tb_password.Text = data["pass"].ToString();
-            int[] permissions =  ParsePermissions(int.Parse(data["privilegio"].ToString()));
+            int[] permissions =  parsePermissions(int.Parse(data["privilegio"].ToString()));
             
             
             for(int i=0;i<clb_permissions.Items.Count;i++)
@@ -102,7 +105,7 @@ namespace FerreteriaSL.Usuarios
 
         }
 
-        private int[] ParsePermissions(int privilege)
+        private int[] parsePermissions(int privilege)
         { 
             int[] permissions = new int[0];
             int cont = 0;
@@ -125,8 +128,8 @@ namespace FerreteriaSL.Usuarios
 
         private void cb_employe_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int empleadoId = int.Parse((cb_employe.SelectedItem as DataRowView)["id"].ToString());
-            if (empleadoId == 0)
+            int empleado_id = int.Parse((cb_employe.SelectedItem as DataRowView)["id"].ToString());
+            if (empleado_id == 0)
             {
                 lbl_employeNameValue.Text = "N/A";
                 lbl_employeDNIValue.Text = "N/A";
@@ -136,8 +139,8 @@ namespace FerreteriaSL.Usuarios
             }
             else
             {
-                Bd dBcon = new Bd();
-                DataRow data = dBcon.Read("SELECT * FROM empleado WHERE id =" + empleadoId).Rows[0];
+                BD DBcon = new BD();
+                DataRow data = DBcon.Read("SELECT * FROM empleado WHERE id =" + empleado_id).Rows[0];
 
                 lbl_employeNameValue.Text = data["nombre"].ToString() + " " + data["apellido"].ToString();
                 lbl_employeDNIValue.Text = data["dni"].ToString();
@@ -149,7 +152,7 @@ namespace FerreteriaSL.Usuarios
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void btn_togglePassword_Click(object sender, EventArgs e)
@@ -171,30 +174,30 @@ namespace FerreteriaSL.Usuarios
 
             if (MessageBox.Show("¿Está seguro que desea eliminar este usuario?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                int usuarioId = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
-                Bd dBcon = new Bd();
-                dBcon.Write("DELETE FROM usuario WHERE id = " + usuarioId);
-                LoadUserListBox();
+                int usuario_id = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
+                BD DBcon = new BD();
+                DBcon.Write("DELETE FROM usuario WHERE id = " + usuario_id);
+                loadUserListBox();
             }
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            int usuId = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
-            string usuUser = tb_userName.Text.Trim();
-            string usuPass = tb_password.Text.Trim();
-            int usuEmpleadoId = int.Parse((cb_employe.SelectedItem as DataRowView)["id"].ToString());
-            int usuPrivilegio = CalculatePrivilege();
+            int usu_id = int.Parse((lb_users.SelectedItem as DataRowView)["id"].ToString());
+            string usu_user = tb_userName.Text.Trim();
+            string usu_pass = tb_password.Text.Trim();
+            int usu_empleado_id = int.Parse((cb_employe.SelectedItem as DataRowView)["id"].ToString());
+            int usu_privilegio = calculatePrivilege();
 
-            Bd dbCon = new Bd();
+            BD DBCon = new BD();
             string query = "UPDATE usuario SET user = '{0}',pass = '{1}', privilegio = {2}, empleado_id = {3} WHERE id = {4}";
-            query = String.Format(query, usuUser, usuPass, usuPrivilegio, usuEmpleadoId, usuId);
-            dbCon.Write(query);
+            query = String.Format(query, usu_user, usu_pass, usu_privilegio, usu_empleado_id, usu_id);
+            DBCon.Write(query);
 
-            LoadUserListBox();
+            loadUserListBox();
         }
 
-        private int CalculatePrivilege()
+        private int calculatePrivilege()
         {
             int privilege = 0;
 
@@ -209,14 +212,14 @@ namespace FerreteriaSL.Usuarios
 
         private void btn_addNewUSer_Click(object sender, EventArgs e)
         {
-            AgregarNuevoUsuario anu = new AgregarNuevoUsuario();
-            if (anu.ShowDialog(this) == DialogResult.OK)
+            AgregarNuevoUsuario ANU = new AgregarNuevoUsuario();
+            if (ANU.ShowDialog(this) == DialogResult.OK)
             {
-                string usuUser = anu.tb_userName.Text.Trim();
-                string usuPass = anu.tb_userPassword.Text.Trim();
-                Bd dbCon = new Bd();
-                dbCon.Write(String.Format("INSERT INTO usuario (user, pass) VALUES ('{0}','{1}')",usuUser,usuPass));
-                LoadUserListBox();
+                string usu_user = ANU.tb_userName.Text.Trim();
+                string usu_pass = ANU.tb_userPassword.Text.Trim();
+                BD DBCon = new BD();
+                DBCon.Write(String.Format("INSERT INTO usuario (user, pass) VALUES ('{0}','{1}')",usu_user,usu_pass));
+                loadUserListBox();
             }
         }
 

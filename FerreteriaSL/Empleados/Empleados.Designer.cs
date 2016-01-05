@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Empleados
+﻿namespace FerreteriaSL
 {
     partial class Empleados
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -370,33 +367,33 @@ namespace FerreteriaSL.Empleados
 
         #endregion
 
-        private ListBox lb_employe;
-        private GroupBox gb_employeData;
-        private Button btn_save;
-        private Label lbl_employePosition;
-        private Label lbl_employeDni;
-        private Label lbl_employePhone;
-        private Label lbl_employeAddress;
-        private Label lbl_employeFirstName;
-        private Button btn_close;
-        private Button btn_deleteEmploye;
-        private Button btn_addNewEmploye;
-        private Label lbl_employeLastName;
-        private TextBox tb_employeFirstName;
-        private TextBox tb_employeLastName;
-        private GroupBox gb_statistics;
-        private TextBox tb_employePosition;
-        private TextBox tb_employePhone;
-        private TextBox tb_employeAddress;
-        private TextBox tb_employeDni;
-        private GroupBox gb_payments;
-        private Button btn_registerPayment;
-        private Button btn_viewPayments;
-        private Label lbl_amountRecaudedValue;
-        private Label lbl_soldProductsValue;
-        private Label lbl_sellCountValue;
-        private Label lbl_amountRecauded;
-        private Label lbl_soldProducts;
-        private Label lbl_sellCount;
+        private System.Windows.Forms.ListBox lb_employe;
+        private System.Windows.Forms.GroupBox gb_employeData;
+        private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.Label lbl_employePosition;
+        private System.Windows.Forms.Label lbl_employeDni;
+        private System.Windows.Forms.Label lbl_employePhone;
+        private System.Windows.Forms.Label lbl_employeAddress;
+        private System.Windows.Forms.Label lbl_employeFirstName;
+        private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.Button btn_deleteEmploye;
+        private System.Windows.Forms.Button btn_addNewEmploye;
+        private System.Windows.Forms.Label lbl_employeLastName;
+        private System.Windows.Forms.TextBox tb_employeFirstName;
+        private System.Windows.Forms.TextBox tb_employeLastName;
+        private System.Windows.Forms.GroupBox gb_statistics;
+        private System.Windows.Forms.TextBox tb_employePosition;
+        private System.Windows.Forms.TextBox tb_employePhone;
+        private System.Windows.Forms.TextBox tb_employeAddress;
+        private System.Windows.Forms.TextBox tb_employeDni;
+        private System.Windows.Forms.GroupBox gb_payments;
+        private System.Windows.Forms.Button btn_registerPayment;
+        private System.Windows.Forms.Button btn_viewPayments;
+        private System.Windows.Forms.Label lbl_amountRecaudedValue;
+        private System.Windows.Forms.Label lbl_soldProductsValue;
+        private System.Windows.Forms.Label lbl_sellCountValue;
+        private System.Windows.Forms.Label lbl_amountRecauded;
+        private System.Windows.Forms.Label lbl_soldProducts;
+        private System.Windows.Forms.Label lbl_sellCount;
     }
 }

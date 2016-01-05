@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using FerreteriaSL.Caja_Diaria;
-using FerreteriaSL.Clases_Genericas;
-using FerreteriaSL.Productos;
-using FerreteriaSL.RegistroVentas;
-using FerreteriaSL.Ubicación;
 
 namespace FerreteriaSL
 {
@@ -13,25 +14,25 @@ namespace FerreteriaSL
         public MainWindow()
         {
             InitializeComponent();
-            Shown += MainWindow_Shown;
-            Usuario.UserChanged += UserHasChanged;
-            Usuario.UserLogedOut += Usuario_UserLogedOut;
+            this.Shown += new EventHandler(MainWindow_Shown);
+            Usuario.UserChanged += new Usuario.UserChangedHandler(userHasChanged);
+            Usuario.UserLogedOut += new EventHandler(Usuario_UserLogedOut);
         }
 
         void Usuario_UserLogedOut(object sender, EventArgs e)
         {
-            Enabled = false;
-            Text = "Ferreteria San Lorenzo";
+            this.Enabled = false;
+            this.Text = "Ferreteria San Lorenzo";
             MainWindow_Shown(null, EventArgs.Empty);
         }
 
-        private void UserHasChanged(object sender, EventArgs e)
+        private void userHasChanged(object sender, EventArgs e)
         {
-            Text = "[" + Usuario.Name + "]" + " - Ferreteria San Lorenzo";
-            ManagePrivilege();
+            this.Text = "[" + Usuario.Name + "]" + " - Ferreteria San Lorenzo";
+            managePrivilege();
         }
 
-        private void ManagePrivilege()
+        private void managePrivilege()
         {
             // CAMBIAR PARA QUE SE ADAPTER DINAMICAMENTE A LA CANTIDAD DE OPCIONES Y PRIVILEGIOS [MainWindow.cs:37 | Usuario.cs:60 | Usuarios.cs:112]
             ToolStripMenuItem[] maintenanceControls = {tsmi_mantenimientoClientes,tsmi_mantenimientoProductos,
@@ -39,50 +40,50 @@ namespace FerreteriaSL
                                                        tsmi_mantenimientoVentas,tsmi_mantenimientoUsuarios,
                                                        tsmi_mantenimientoEmpleados,tsmi_mantenimientoCajaDiaria,
                                                        tsmi_mantenimientoSecciones};
-            
-            Enabled = true;
+
+            this.Enabled = true;
 
             for (int i = 0; i < maintenanceControls.Length; i++)
             {
                 maintenanceControls[i].Enabled = Usuario.Permissions[i];
             }
-            OpenChild(new Ventas.Ventas());
+            OpenChild(new Ventas());
 
         }
 
         void MainWindow_Shown(object sender, EventArgs e)
         {
-            Inicio login = new Inicio(this);
-            login.Owner = this;
-            login.Show(this);
-            Enabled = false;
-            login.Focus();
+            Inicio Login = new Inicio(this);
+            Login.Owner = this;
+            Login.Show(this);
+            this.Enabled = false;
+            Login.Focus();
         }
 
         private void tsmi_mantenimientoClientes_Click(object sender, EventArgs e)
         {
-            OpenChild(new Clientes.Clientes());
+            OpenChild(new Clientes());
         }
 
         private void tsmi_mantenimientoProductos_Click(object sender, EventArgs e)
         {
-            OpenChild(new AdministrarStock());
+            OpenChild(new Administrar_Stock());
         }
 
         private void tsmi_mantenimientoProveedores_Click(object sender, EventArgs e)
         {
-            OpenChild(new Proveedores.Proveedores());
+            OpenChild(new Proveedores());
         }
 
         private void tsmi_mantenimientoPedidos_Click(object sender, EventArgs e)
         {
-            OpenChild(new Pedidos.Pedidos());
+            OpenChild(new Pedidos());
         }
 
-        private void OpenChild(Form winType)
+        private void OpenChild(Form WinType)
         {
-            winType.MdiParent = this;
-            winType.Show();
+            WinType.MdiParent = this;
+            WinType.Show();
         }
 
         private void tsmi_archivoSalir_Click(object sender, EventArgs e)
@@ -95,20 +96,20 @@ namespace FerreteriaSL
             FormCollection fc = Application.OpenForms;
             foreach (Form frm in fc)
             {
-                if (frm is Ventas.Ventas)
+                if (frm is Ventas)
                 {
                     frm.Focus();
                     return;
                 }
             }
-            OpenChild(new Ventas.Ventas());
+            OpenChild(new Ventas());
         }
 
         private void tsmi_cambiarUsuario_Click(object sender, EventArgs e)
         {
             Form[] formsToClose = new Form[0];
             int last = 0;
-            
+
             foreach (Form sForm in Application.OpenForms)
             {
                 if (!(sForm is MainWindow))
@@ -129,19 +130,19 @@ namespace FerreteriaSL
 
         private void cajasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Cajas c = new Cajas();
-            OpenChild(c);
+            Cajas C = new Cajas();
+            OpenChild(C);
         }
 
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Usuarios.Usuarios u = new Usuarios.Usuarios();
-            OpenChild(u);
+            Usuarios U = new Usuarios();
+            OpenChild(U);
         }
 
         private void empleadosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenChild(new Empleados.Empleados());
+            OpenChild(new Empleados());
         }
 
         private void tsmi_mantenimientoCajaDiaria_Click(object sender, EventArgs e)
@@ -156,7 +157,7 @@ namespace FerreteriaSL
 
         private void testPrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -165,3 +166,4 @@ namespace FerreteriaSL
         }
     }
 }
+    

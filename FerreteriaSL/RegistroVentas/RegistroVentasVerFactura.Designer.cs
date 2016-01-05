@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.RegistroVentas
+﻿namespace FerreteriaSL
 {
     partial class CajasVerFactura
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -91,7 +88,7 @@ namespace FerreteriaSL.RegistroVentas
 
         #endregion
 
-        private DataGridView dgv_factura;
-        private Button btn_close;
+        private System.Windows.Forms.DataGridView dgv_factura;
+        private System.Windows.Forms.Button btn_close;
     }
 }

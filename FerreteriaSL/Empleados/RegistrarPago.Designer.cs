@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
-
-namespace FerreteriaSL.Empleados
+﻿namespace FerreteriaSL
 {
     partial class RegistrarPago
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -225,17 +222,17 @@ namespace FerreteriaSL.Empleados
 
         #endregion
 
-        private Label lbl_registerDate;
-        private Label lbl_monthToPay;
-        private Label lbl_yearToPay;
-        private Label lbl_mountToPay;
-        private Button btn_register;
-        private Button btn_cancel;
-        public DateTimePicker dtp_registerDate;
-        public ComboBox cb_monthToPay;
-        public NumericUpDown nud_yearToPay;
-        public NumericUpDown nud_mountToPay;
-        private Label lbl_observation;
-        public TextBox tb_observation;
+        private System.Windows.Forms.Label lbl_registerDate;
+        private System.Windows.Forms.Label lbl_monthToPay;
+        private System.Windows.Forms.Label lbl_yearToPay;
+        private System.Windows.Forms.Label lbl_mountToPay;
+        private System.Windows.Forms.Button btn_register;
+        private System.Windows.Forms.Button btn_cancel;
+        public System.Windows.Forms.DateTimePicker dtp_registerDate;
+        public System.Windows.Forms.ComboBox cb_monthToPay;
+        public System.Windows.Forms.NumericUpDown nud_yearToPay;
+        public System.Windows.Forms.NumericUpDown nud_mountToPay;
+        private System.Windows.Forms.Label lbl_observation;
+        public System.Windows.Forms.TextBox tb_observation;
     }
 }
