@@ -1,4 +1,4 @@
-﻿namespace FerreteriaSL.Empleados
+﻿namespace FerreteriaSL
 {
     partial class EmpleadosVerPagos
     {

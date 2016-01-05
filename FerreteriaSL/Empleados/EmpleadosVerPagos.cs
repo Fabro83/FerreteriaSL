@@ -3,9 +3,9 @@ using System.Data;
 using System.Linq;
 using System.Management;
 using System.Windows.Forms;
-using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL.Empleados
+
+namespace FerreteriaSL
 {
     public partial class EmpleadosVerPagos : Form
     {
@@ -21,7 +21,7 @@ namespace FerreteriaSL.Empleados
 
         private void LoadDataGrid(int empId)
         {
-            Bd dbCon = new Bd();
+            BD dbCon = new BD();
             DataTable res = dbCon.Read("SELECT fecha_pago as Fecha,año as ano, type_mes.mes as Mes, monto as Monto, observacion as obs,empleado_pago.mes as ocultar "+
                                        "FROM empleado_pago LEFT JOIN type_mes ON empleado_pago.mes = type_mes.id WHERE empleado_id = " + empId + 
                                        " ORDER BY ano, empleado_pago.mes, empleado_pago.id");
