@@ -48,6 +48,7 @@ namespace FerreteriaSL.Empleados
             this.dgv_pagos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_pagos.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dgv_pagos.Location = new System.Drawing.Point(-3, -2);
+            this.dgv_pagos.MaximumSize = new System.Drawing.Size(636, 238);
             this.dgv_pagos.Name = "dgv_pagos";
             this.dgv_pagos.ReadOnly = true;
             this.dgv_pagos.RowHeadersVisible = false;

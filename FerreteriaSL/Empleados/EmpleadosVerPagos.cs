@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using System.Management;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
@@ -8,14 +9,14 @@ namespace FerreteriaSL.Empleados
 {
     public partial class EmpleadosVerPagos : Form
     {
-        int _windowHeightFill;
+        readonly int _windowHeightFill;
 
         public EmpleadosVerPagos(int empId, string empNombre)
         {
             InitializeComponent();
             _windowHeightFill = GetOsFriendlyName().Contains("XP") ? 56 : 58;
             LoadDataGrid(empId);        
-            Text = "Pagos a " + empNombre;
+            Text = @"Pagos a " + empNombre;
         }
 
         private void LoadDataGrid(int empId)
@@ -30,12 +31,9 @@ namespace FerreteriaSL.Empleados
             dgv_pagos.Columns["ano"].HeaderText = "Año";
             dgv_pagos.Columns["obs"].HeaderText = "Observación";
             dgv_pagos.Columns["ocultar"].Visible = false;
-            foreach (DataGridViewColumn sColumn in dgv_pagos.Columns)
+            foreach (var sColumn in dgv_pagos.Columns.Cast<DataGridViewColumn>().Where(sColumn => sColumn.Name != "obs"))
             {
-                if (sColumn.Name != "obs")
-                {
-                    sColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                }
+                sColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             }
             dgv_pagos.ScrollBars = ScrollBars.None;
             Height = _windowHeightFill + dgv_pagos.ColumnHeadersHeight + (dgv_pagos.Rows.Count * dgv_pagos.RowTemplate.Height);
