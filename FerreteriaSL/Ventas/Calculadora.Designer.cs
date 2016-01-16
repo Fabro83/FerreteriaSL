@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ventas
 {
     partial class Calculadora
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -182,16 +185,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_insert;
-        private System.Windows.Forms.Button btn_cancel;
-        private System.Windows.Forms.ComboBox cb_type;
-        private System.Windows.Forms.Label lbl_type;
-        private System.Windows.Forms.GroupBox gb_units;
-        private System.Windows.Forms.Label lbl_equivalentUnits;
-        private System.Windows.Forms.Label lbl_info3;
-        private System.Windows.Forms.TextBox tb_articleUnitsToSell;
-        private System.Windows.Forms.Label lbl_info2;
-        private System.Windows.Forms.TextBox tb_articleContains;
-        private System.Windows.Forms.Label lbl_info1;
+        private Button btn_insert;
+        private Button btn_cancel;
+        private ComboBox cb_type;
+        private Label lbl_type;
+        private GroupBox gb_units;
+        private Label lbl_equivalentUnits;
+        private Label lbl_info3;
+        private TextBox tb_articleUnitsToSell;
+        private Label lbl_info2;
+        private TextBox tb_articleContains;
+        private Label lbl_info1;
     }
 }

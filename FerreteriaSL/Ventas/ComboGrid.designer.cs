@@ -1,4 +1,4 @@
-﻿namespace FerreteriaSL
+﻿namespace FerreteriaSL.Ventas
 {
     partial class ComboGrid
     {

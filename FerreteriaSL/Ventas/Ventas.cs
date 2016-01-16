@@ -1,25 +1,21 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Collections;
-using System.Globalization;
-using Microsoft.Office.Interop;
+using FerreteriaSL.Clases_Base_de_Datos;
+using FerreteriaSL.Clases_Genericas;
+using Microsoft.Office.Interop.Excel;
+using Application = System.Windows.Forms.Application;
+using Button = System.Windows.Forms.Button;
+using DataTable = System.Data.DataTable;
 
-
-
-
-
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class Ventas : Form
     {
-        int _currentProduct = 0;
+        int _currentProduct;
         double _quantity = 1;
 
         public Ventas()
@@ -31,20 +27,20 @@ namespace FerreteriaSL
 
         private void btn_cerrar_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void comboGrid1_SelectionMade(object sender, int id_producto)
+        private void comboGrid1_SelectionMade(object sender, int idProducto)
         {
-            _currentProduct = id_producto;
+            _currentProduct = idProducto;
             nud_cantidad.Enabled = true;
             nud_cantidad.Focus();
         }
 
         private void AddItemToCart()
         {
-            BD BDCon = new BD();
-            DataRow result = BDCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + _currentProduct).Rows[0];
+            Bd bdCon = new Bd();
+            DataRow result = bdCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + _currentProduct).Rows[0];
 
             string codigo = result["Codigo"].ToString();
             string descripcion = result["Descripcion"].ToString();
@@ -64,13 +60,13 @@ namespace FerreteriaSL
                 double cantidad = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
                 dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
                 dgv_productosIngresados.Rows[alreadyExist].Cells["precio_subtotal"].Value = precio * cantidad;
-                calculateTotal();
+                CalculateTotal();
             }
             else
             {
                 dgv_productosIngresados.Rows.Add(codigo, descripcion, _quantity, precio, Convert.ToDouble(Math.Round(precio * _quantity, 2)),_currentProduct,proveedor,proveedorId);
             }           
-            cg_busqueda.clearTextBox();
+            cg_busqueda.ClearTextBox();
         }
 
         private void nud_cantidad_Enter(object sender, EventArgs e)
@@ -82,7 +78,7 @@ namespace FerreteriaSL
         {
             nud_cantidad.Enabled = false;
             nud_cantidad.Value = 1;
-            cg_busqueda.clearTextBox();
+            cg_busqueda.ClearTextBox();
         }
 
         private void nud_cantidad_KeyPress(object sender, KeyPressEventArgs e)
@@ -109,18 +105,14 @@ namespace FerreteriaSL
         private void dgv_productosIngresados_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             btn_imprimirTicket.Enabled = btn_disminuir.Enabled = btn_incrementar.Enabled = btn_remover.Enabled = btn_removerTodos.Enabled = dgv_productosIngresados.Rows.Count > 0;
-            calculateTotal();           
+            CalculateTotal();           
         }
 
-        private void calculateTotal()
+        private void CalculateTotal()
         {
-            double total = 0;
             double discount = Convert.ToDouble(nud_discountPercent.Value);
 
-            foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
-            {
-                total += Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value);
-            }
+            double total = dgv_productosIngresados.Rows.Cast<DataGridViewRow>().Sum(singleRow => Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value));
 
             if (dgv_productosIngresados.Rows.Count == 0)
             {
@@ -132,13 +124,13 @@ namespace FerreteriaSL
             {
                 total = total - ((total * discount) / 100);
                 lbl_totalMonto.Text = String.Format("{0:N2}", total);
-                calculateIVA(total);
+                CalculateIva(total);
             }
 
 
         }
 
-        private void calculateIVA(double total)
+        private void CalculateIva(double total)
         {
             lbl_ivaValue.Text = ((21 * total) / 121).ToString("0.00");
         }
@@ -175,63 +167,58 @@ namespace FerreteriaSL
                 productosIngresados.Rows.Add(dataRow);
             }
 
-            ConfirmacionVenta CF = new ConfirmacionVenta(double.Parse(lbl_totalMonto.Text), productosIngresados);
+            ConfirmacionVenta cf = new ConfirmacionVenta(double.Parse(lbl_totalMonto.Text), productosIngresados);
 
-            DialogResult CFDR = CF.ShowDialog(this);
+            DialogResult cfdr = cf.ShowDialog(this);
 
-            if (CFDR == DialogResult.OK)
+            if (cfdr == DialogResult.OK)
             {
-                doSell();
+                DoSell();
             }
-            else if (CFDR == DialogResult.No)
+            else if (cfdr == DialogResult.No)
             {
-                FormaDePago FdP = new FormaDePago();
-                FdP.ShowDialog();
+                FormaDePago fdP = new FormaDePago();
+                fdP.ShowDialog();
             }
         }
 
-        private void doSell()
+        private void DoSell()
         {
-            BD DBCon = new BD();
+            Bd dbCon = new Bd();
             int ultimoTalonario = -1;
-            DataTable res = DBCon.Read("SELECT numero_factura_talonario FROM ventas_caja ORDER BY numero_factura_talonario DESC LIMIT 1");
+            DataTable res = dbCon.Read("SELECT numero_factura_talonario FROM ventas_caja ORDER BY numero_factura_talonario DESC LIMIT 1");
             if (res.Rows.Count > 0)
             {
                 ultimoTalonario = int.Parse(res.Rows[0][0].ToString());
             }
 
-            double total_amount = 0;
+            double totalAmount = dgv_productosIngresados.Rows.Cast<DataGridViewRow>().Sum(singleRow => Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value));
 
-            foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
-            {
-                total_amount += Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value);
-            }
-
-            int cliente_id = 0; // IMPLEMENTAR CLIENTE    
+            int clienteId = 0; // IMPLEMENTAR CLIENTE    
             ultimoTalonario += 1;
-            double discount_percentage = Convert.ToDouble(nud_discountPercent.Value);
-            double discount_amount = (total_amount * discount_percentage) / 100;
-            total_amount -= discount_amount;
-            int usuario_id = Usuario.ID;
+            double discountPercentage = Convert.ToDouble(nud_discountPercent.Value);
+            double discountAmount = (totalAmount * discountPercentage) / 100;
+            totalAmount -= discountAmount;
+            int usuarioId = Usuario.Id;
 
             string query = String.Format("INSERT INTO ventas_caja (numero_factura_talonario,cliente_id,usuario_id,importe_total,descuento_monto,descuento_porcentaje) " +
-                                         "VALUES ({0},{1},{2},{3},{4},{5})", ultimoTalonario, cliente_id, usuario_id, total_amount.ToString("0.00", CultureInfo.InvariantCulture), 
-                                         discount_amount.ToString("0.00", CultureInfo.InvariantCulture), discount_percentage.ToString("0.00", CultureInfo.InvariantCulture));
-            DBCon.Write(query);
-            int ventas_caja_id = int.Parse(DBCon.Read("SELECT id FROM ventas_caja WHERE numero_factura_talonario = " + ultimoTalonario).Rows[0][0].ToString());
+                                         "VALUES ({0},{1},{2},{3},{4},{5})", ultimoTalonario, clienteId, usuarioId, totalAmount.ToString("0.00", CultureInfo.InvariantCulture), 
+                                         discountAmount.ToString("0.00", CultureInfo.InvariantCulture), discountPercentage.ToString("0.00", CultureInfo.InvariantCulture));
+            dbCon.Write(query);
+            int ventasCajaId = int.Parse(dbCon.Read("SELECT id FROM ventas_caja WHERE numero_factura_talonario = " + ultimoTalonario).Rows[0][0].ToString());
 
             foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
             {               
                 string cantidad = singleRow.Cells["cantidad"].Value.ToString().Replace(",",".");
                 string provider = singleRow.Cells["proveedor"].Value.ToString();
-                string producto_id = singleRow.Cells["id"].Value.ToString();
+                string productoId = singleRow.Cells["id"].Value.ToString();
 
-                query = String.Format("INSERT INTO venta_producto (ventas_caja_id,cantidad,proveedor,producto_id) VALUES ({0},{1},'{2}',{3})",ventas_caja_id,cantidad,provider,producto_id);
-                DBCon.Write(query);
+                query = String.Format("INSERT INTO venta_producto (ventas_caja_id,cantidad,proveedor,producto_id) VALUES ({0},{1},'{2}',{3})",ventasCajaId,cantidad,provider,productoId);
+                dbCon.Write(query);
             }
 
-            DBCon.Write("Call sp_substractStock(" + ventas_caja_id + ")");
-            DBCon.Write("Call sp_calculateGain(" + ventas_caja_id + ")");
+            dbCon.Write("Call sp_substractStock(" + ventasCajaId + ")");
+            dbCon.Write("Call sp_calculateGain(" + ventasCajaId + ")");
 
             dgv_productosIngresados.Rows.Clear();
         }
@@ -252,7 +239,7 @@ namespace FerreteriaSL
         private void dgv_productosIngresados_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             btn_imprimirTicket.Enabled = btn_disminuir.Enabled = btn_incrementar.Enabled = btn_remover.Enabled = btn_removerTodos.Enabled = dgv_productosIngresados.Rows.Count > 0;
-            calculateTotal();
+            CalculateTotal();
         }
 
         private void tm_fechaHora_Tick(object sender, EventArgs e)
@@ -270,7 +257,7 @@ namespace FerreteriaSL
                 singleRow.Cells["cantidad"].Value = newValue;
                 singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
             }
-            calculateTotal();
+            CalculateTotal();
         }
 
         private void btn_disminuir_Click(object sender, EventArgs e)
@@ -283,29 +270,29 @@ namespace FerreteriaSL
                 singleRow.Cells["cantidad"].Value = newValue;
                 singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
             }
-            calculateTotal();
+            CalculateTotal();
         }
 
         private void btn_search_Click(object sender, EventArgs e)
         {
             string searchPhrase = cg_busqueda.SearchPhrase;
-            cg_busqueda.clearTextBox();
-            BusquedaProducto BP = null;
+            cg_busqueda.ClearTextBox();
+            BusquedaProducto bp = null;
 
             foreach (Form frm in Application.OpenForms)
             {
                 if (frm is BusquedaProducto)
                 {
-                    BP = frm as BusquedaProducto;
+                    bp = frm as BusquedaProducto;
                 }
             }
-            BP = BP == null ? new BusquedaProducto(-1,searchPhrase) : BP;
-            BP.Show(this);
+            bp = bp ?? new BusquedaProducto(-1,searchPhrase);
+            bp.Show(this);
         }
 
-        public void addItemToCartFromSearchWindow(int producto_id,double cantidad)
+        public void AddItemToCartFromSearchWindow(int productoId,double cantidad)
         {
-            _currentProduct = producto_id;
+            _currentProduct = productoId;
             _quantity = cantidad;
             AddItemToCart();
         }
@@ -334,38 +321,29 @@ namespace FerreteriaSL
         private void nud_discountImport_ValueChanged(object sender, EventArgs e)
         {
             double discountValue = Convert.ToDouble(nud_discountImport.Value);
-            double total = 0;
-            foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
-            {
-                total += Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value);
-            }
+            double total = dgv_productosIngresados.Rows.Cast<DataGridViewRow>().Sum(singleRow => Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value));
             if (total == 0)
             {
                 return;
             }
             //double eq_discountPercent = Math.Round((discountValue * 100) / total,2,MidpointRounding.AwayFromZero);
-            double eq_discountPercent = (discountValue * 100) / total;
+            double eqDiscountPercent = (discountValue * 100) / total;
             nud_discountPercent.ValueChanged -= nud_discount_ValueChanged;
-            nud_discountPercent.Value = Convert.ToDecimal(eq_discountPercent.ToString());
+            nud_discountPercent.Value = Convert.ToDecimal(eqDiscountPercent.ToString());
             nud_discountPercent.ValueChanged += nud_discount_ValueChanged;
-            calculateTotal();
+            CalculateTotal();
         }
 
         private void nud_discount_ValueChanged(object sender, EventArgs e)
         {
             double discountPercentage = Convert.ToDouble(nud_discountPercent.Value);
-            double total = 0;
+            double total = dgv_productosIngresados.Rows.Cast<DataGridViewRow>().Sum(singleRow => Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value));
 
-            foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
-            {
-                total += Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value);
-            }
-
-            double eq_discountImport = Math.Round((discountPercentage * total) / 100, 2, MidpointRounding.AwayFromZero);
+            double eqDiscountImport = Math.Round((discountPercentage * total) / 100, 2, MidpointRounding.AwayFromZero);
             nud_discountImport.ValueChanged -= nud_discountImport_ValueChanged;
-            nud_discountImport.Value = Convert.ToDecimal(eq_discountImport.ToString());
+            nud_discountImport.Value = Convert.ToDecimal(eqDiscountImport.ToString());
             nud_discountImport.ValueChanged += nud_discountImport_ValueChanged;
-            calculateTotal();
+            CalculateTotal();
         }
 
         private void nud_discountImport_KeyPress(object sender, KeyPressEventArgs e)
@@ -395,7 +373,7 @@ namespace FerreteriaSL
                     singleRow.Cells["cantidad"].Value = newValue;
                     singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
                 }
-                calculateTotal();
+                CalculateTotal();
             }
             else if (e.KeyValue == 111) // / (Barra invertida | división) en teclado numérico.
             {
@@ -407,7 +385,7 @@ namespace FerreteriaSL
                     singleRow.Cells["cantidad"].Value = newValue;
                     singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
                 }
-                calculateTotal();
+                CalculateTotal();
             }
                 
         }
@@ -436,7 +414,7 @@ namespace FerreteriaSL
             info.AppendLine("[*] (teclado numérico): Incrementa en 0,1 la cantidad de el/los producto/s seleccionado/s.");
             info.AppendLine("[/] (teclado numérico): Reduce en 0,1 la cantidad de el/los producto/s seleccionado/s.");
             info.AppendLine("[Supr]: Remueve el/los producto/s seleccionado/s.");
-            tt_help.Show(info.ToString(), target, target.PointToClient(Cursor.Position));
+            if (target != null) tt_help.Show(info.ToString(), target, target.PointToClient(Cursor.Position));
         }
 
         
@@ -447,44 +425,40 @@ namespace FerreteriaSL
 
 
 
-        private Microsoft.Office.Interop.Excel.Application excelapp = new Microsoft.Office.Interop.Excel.ApplicationClass();
+        
         
 
         private void ExportarDataGridViewExcel(DataGridView grd)
         {
+            Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
             
-            string pathstring = (Application.StartupPath.ToString() + "\\template_p.xls").ToString();
+            string pathstring = (Application.StartupPath + "\\template_p.xls");
             string excelpath = @pathstring;
-            
 
-            SaveFileDialog fichero = new SaveFileDialog();
-            fichero.Filter = "Excel (*.xls)|*.xls";
+
+            SaveFileDialog fichero = new SaveFileDialog {Filter = "Excel (*.xls)|*.xls"};
             if (fichero.ShowDialog() == DialogResult.OK)
             {
-
-                Microsoft.Office.Interop.Excel.Application aplicacion;
-                Microsoft.Office.Interop.Excel.Workbook libros_trabajo;
-                Microsoft.Office.Interop.Excel.Worksheet hoja_trabajo;
-                aplicacion = new Microsoft.Office.Interop.Excel.Application();
+                var aplicacion = new Microsoft.Office.Interop.Excel.Application();
                 //libros_trabajo = aplicacion.Workbooks.Add();
 
                 
-                libros_trabajo = excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true);
+                var librosTrabajo = excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
                 
 
-                hoja_trabajo = (Microsoft.Office.Interop.Excel.Worksheet)libros_trabajo.Worksheets.get_Item(1);
+                var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
 
 
                 //hoja_trabajo.Cells[1, 3] = " Presupuesto                                        ";
-                hoja_trabajo.Cells[1, 5] = DateTime.Now.Date.ToString("dd/MM/yyyy");
-                hoja_trabajo.Cells[3, 1] = "Codigo              ";
-                hoja_trabajo.Cells[3, 2] = "Descripcion                             ";
-                hoja_trabajo.Cells[3, 3] = "Cantidad";
-                hoja_trabajo.Cells[3, 4] = "Precio unitario";
-                hoja_trabajo.Cells[3, 5] = "Precio Subtotal";
+                hojaTrabajo.Cells[1, 5] = DateTime.Now.Date.ToString("dd/MM/yyyy");
+                hojaTrabajo.Cells[3, 1] = "Codigo              ";
+                hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
+                hojaTrabajo.Cells[3, 3] = "Cantidad";
+                hojaTrabajo.Cells[3, 4] = "Precio unitario";
+                hojaTrabajo.Cells[3, 5] = "Precio Subtotal";
 
 
-                hoja_trabajo.Columns.AutoFit();
+                hojaTrabajo.Columns.AutoFit();
 
 
 
@@ -492,7 +466,7 @@ namespace FerreteriaSL
                 {
                     for (int j = 0; j < grd.Columns.Count - 3; j++)
                     {
-                        hoja_trabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
+                        hojaTrabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
 
                     }
                 }
@@ -502,15 +476,15 @@ namespace FerreteriaSL
                 //hoja_trabajo.Cells[grd.RowCount + 6, 6] = Math.Round((Convert.ToDouble(lbl_totalMonto.Text) / 1.21), 2).ToString();
                 //hoja_trabajo.Cells[grd.RowCount + 7, 5] = " IVA";
                 //hoja_trabajo.Cells[grd.RowCount + 7, 6] = lbl_ivaValue.Text;
-                hoja_trabajo.Cells[grd.RowCount + 8, 4] = "TOTAL";
-                hoja_trabajo.Cells[grd.RowCount + 8, 5] = lbl_totalMonto.Text;
+                hojaTrabajo.Cells[grd.RowCount + 8, 4] = "TOTAL";
+                hojaTrabajo.Cells[grd.RowCount + 8, 5] = lbl_totalMonto.Text;
 
 
                 try
                 {
-                    libros_trabajo.SaveAs(fichero.FileName,
-                    Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal);
-                    libros_trabajo.Close(true);
+                    librosTrabajo.SaveAs(fichero.FileName,
+                    XlFileFormat.xlWorkbookNormal);
+                    librosTrabajo.Close(true);
                     aplicacion.Quit();
                 }
                 catch { MessageBox.Show("Error al escribir el archivo"); }

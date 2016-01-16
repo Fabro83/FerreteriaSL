@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Ventas
 {
     partial class FacturaA
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -234,23 +237,23 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_print;
-        private System.Windows.Forms.Button btn_cancel;
-        private System.Windows.Forms.Label lbl_iva;
-        private System.Windows.Forms.Label lbl_subtotal2;
-        private System.Windows.Forms.Label lbl_impuestos;
-        private System.Windows.Forms.Label lbl_remito;
-        private System.Windows.Forms.Label lbl_cuit;
-        private System.Windows.Forms.Label lbl_domicilio;
-        private System.Windows.Forms.Label lbl_condiciones;
-        private System.Windows.Forms.Label lbl_nombre;
-        public System.Windows.Forms.TextBox txb_nombre;
-        public System.Windows.Forms.TextBox txb_domicilio;
-        public System.Windows.Forms.TextBox txb_cuit;
-        public System.Windows.Forms.TextBox txb_condiciones;
-        public System.Windows.Forms.TextBox txb_remito;
-        public System.Windows.Forms.TextBox txb_impuestos;
-        public System.Windows.Forms.TextBox txb_subtotal2;
-        public System.Windows.Forms.TextBox txb_iva;
+        private Button btn_print;
+        private Button btn_cancel;
+        private Label lbl_iva;
+        private Label lbl_subtotal2;
+        private Label lbl_impuestos;
+        private Label lbl_remito;
+        private Label lbl_cuit;
+        private Label lbl_domicilio;
+        private Label lbl_condiciones;
+        private Label lbl_nombre;
+        public TextBox txb_nombre;
+        public TextBox txb_domicilio;
+        public TextBox txb_cuit;
+        public TextBox txb_condiciones;
+        public TextBox txb_remito;
+        public TextBox txb_impuestos;
+        public TextBox txb_subtotal2;
+        public TextBox txb_iva;
     }
 }

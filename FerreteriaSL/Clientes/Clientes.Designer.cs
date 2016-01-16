@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Clientes
 {
     partial class Clientes
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -260,24 +263,24 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox lb_clients;
-        private System.Windows.Forms.GroupBox gb_clientData;
-        private System.Windows.Forms.Label lbl_employePositionValue;
-        private System.Windows.Forms.Button btn_save;
-        private System.Windows.Forms.Label lbl_clientAccount;
-        private System.Windows.Forms.Label lbl_clientPhone;
-        private System.Windows.Forms.Label lbl_clientAddress;
-        private System.Windows.Forms.TextBox tb_clientLastName;
-        private System.Windows.Forms.TextBox tb_clientFirstName;
-        private System.Windows.Forms.Label lbl_clientDni;
-        private System.Windows.Forms.Label lbl_clientLastName;
-        private System.Windows.Forms.Label lbl_clientFirstName;
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.Button btn_deleteClient;
-        private System.Windows.Forms.Button btn_addNewClient;
-        private System.Windows.Forms.TextBox tb_clientDni;
-        private System.Windows.Forms.TextBox tb_clientAccount;
-        private System.Windows.Forms.TextBox tb_clientPhone;
-        private System.Windows.Forms.TextBox tb_clientAddress;
+        private ListBox lb_clients;
+        private GroupBox gb_clientData;
+        private Label lbl_employePositionValue;
+        private Button btn_save;
+        private Label lbl_clientAccount;
+        private Label lbl_clientPhone;
+        private Label lbl_clientAddress;
+        private TextBox tb_clientLastName;
+        private TextBox tb_clientFirstName;
+        private Label lbl_clientDni;
+        private Label lbl_clientLastName;
+        private Label lbl_clientFirstName;
+        private Button btn_close;
+        private Button btn_deleteClient;
+        private Button btn_addNewClient;
+        private TextBox tb_clientDni;
+        private TextBox tb_clientAccount;
+        private TextBox tb_clientPhone;
+        private TextBox tb_clientAddress;
     }
 }

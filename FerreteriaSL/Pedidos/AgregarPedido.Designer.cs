@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Pedidos
 {
     partial class AgregarPedido
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -94,9 +97,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbl_fecha;
-        private System.Windows.Forms.Button btn_agregar;
-        private System.Windows.Forms.Button btn_cancelar;
-        public System.Windows.Forms.DateTimePicker dtp_fecha;
+        private Label lbl_fecha;
+        private Button btn_agregar;
+        private Button btn_cancelar;
+        public DateTimePicker dtp_fecha;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Settings>
 	<MySQL>
-		<Server>192.168.13.46</Server>
+		<Server>localhost</Server>
     <port>3306</port>
 		<Database>ferreteria_sl</Database>
 		<Uid>pitu</Uid>

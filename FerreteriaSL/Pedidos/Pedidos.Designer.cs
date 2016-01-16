@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Pedidos
 {
     partial class Pedidos
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -258,22 +261,22 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox lb_proveedores;
-        private System.Windows.Forms.ComboBox cb_tipoPedido;
-        private System.Windows.Forms.ListBox lb_pedidos;
-        private System.Windows.Forms.GroupBox gb_datosPedido;
-        private System.Windows.Forms.Button btn_eliminarPedido;
-        private System.Windows.Forms.Button btn_registrarIngreso;
-        private System.Windows.Forms.Button btn_cambiarFecha;
-        private System.Windows.Forms.DataGridView dgv_pedido;
-        private System.Windows.Forms.Button btn_agregarNuevoPedido;
-        private System.Windows.Forms.Button btn_cerrar;
-        private System.Windows.Forms.Label lbl_fecha;
-        private System.Windows.Forms.DateTimePicker dtp_fechaPedido;
-        private System.Windows.Forms.Button btn_agregarProductos;
-        private System.Windows.Forms.Label lbl_costoTotalValue;
-        private System.Windows.Forms.Label lbl_costoTotal;
-        private System.Windows.Forms.Label lbl_fechaArrivoValue;
-        private System.Windows.Forms.Label lbl_fechaArrivo;
+        private ListBox lb_proveedores;
+        private ComboBox cb_tipoPedido;
+        private ListBox lb_pedidos;
+        private GroupBox gb_datosPedido;
+        private Button btn_eliminarPedido;
+        private Button btn_registrarIngreso;
+        private Button btn_cambiarFecha;
+        private DataGridView dgv_pedido;
+        private Button btn_agregarNuevoPedido;
+        private Button btn_cerrar;
+        private Label lbl_fecha;
+        private DateTimePicker dtp_fechaPedido;
+        private Button btn_agregarProductos;
+        private Label lbl_costoTotalValue;
+        private Label lbl_costoTotal;
+        private Label lbl_fechaArrivoValue;
+        private Label lbl_fechaArrivo;
     }
 }

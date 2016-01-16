@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.ubicacion
 {
     partial class Ubicacion
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -109,10 +112,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TreeView tv_sections;
-        private System.Windows.Forms.Button btn_addSection;
-        private System.Windows.Forms.Button btn_deleteSection;
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.Button btn_addItems;
+        private TreeView tv_sections;
+        private Button btn_addSection;
+        private Button btn_deleteSection;
+        private Button btn_close;
+        private Button btn_addItems;
     }
 }

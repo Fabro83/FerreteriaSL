@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Proveedores
 {
     partial class AgregarNuevoProveedor
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -159,15 +162,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbl_name;
-        private System.Windows.Forms.Label lbl_cuit;
-        private System.Windows.Forms.Label lbl_phone;
-        private System.Windows.Forms.Label lbl_address;
-        private System.Windows.Forms.Button btn_add;
-        private System.Windows.Forms.Button btn_cancel;
-        public System.Windows.Forms.TextBox tb_name;
-        public System.Windows.Forms.TextBox tb_phone;
-        public System.Windows.Forms.TextBox tb_cuit;
-        public System.Windows.Forms.TextBox tb_address;
+        private Label lbl_name;
+        private Label lbl_cuit;
+        private Label lbl_phone;
+        private Label lbl_address;
+        private Button btn_add;
+        private Button btn_cancel;
+        public TextBox tb_name;
+        public TextBox tb_phone;
+        public TextBox tb_cuit;
+        public TextBox tb_address;
     }
 }

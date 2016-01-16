@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class Calculadora : Form
     {
-        double precio;
-        double resultado = -1;
+        readonly double _precio;
+        double _resultado = -1;
 
         public double Resultado
         {
-            get { return resultado; }
+            get { return _resultado; }
         }
 
         public Calculadora(double precio)
         {
             InitializeComponent();
-            this.precio = precio;
+            _precio = precio;
             cb_type.SelectedIndex = 0;
         }
 
@@ -89,12 +84,12 @@ namespace FerreteriaSL
 
         private void tb_TextChanged(object sender, EventArgs e)
         {
-            resultado = -1;
+            _resultado = -1;
             lbl_equivalentUnits.Text = "N/A";
-            calculateUnits();
+            CalculateUnits();
         }
 
-        void calculateUnits()
+        void CalculateUnits()
         {
             if (cb_type.SelectedIndex == 0 && tb_articleContains.Text.Length > 0 && tb_articleUnitsToSell.Text.Length > 0)
             {
@@ -102,21 +97,27 @@ namespace FerreteriaSL
                 {
                     double aQuantity = double.Parse(tb_articleContains.Text);
                     double tQuantity = double.Parse(tb_articleUnitsToSell.Text);
-                    double parc = (tQuantity * precio) / aQuantity;
-                    resultado = parc / precio;
-                    lbl_equivalentUnits.Text = resultado.ToString("0.00");
+                    double parc = (tQuantity * _precio) / aQuantity;
+                    _resultado = parc / _precio;
+                    lbl_equivalentUnits.Text = _resultado.ToString("0.00");
                 }
-                catch{}
+                catch
+                {
+                    // ignored
+                }
             }
             else if(cb_type.SelectedIndex == 1 && tb_articleContains.Text.Length > 1)
             {
                 try
                 {
                     double tPrice = double.Parse(tb_articleContains.Text);
-                    resultado = tPrice / precio;
-                    lbl_equivalentUnits.Text = resultado.ToString("0.00");
+                    _resultado = tPrice / _precio;
+                    lbl_equivalentUnits.Text = _resultado.ToString("0.00");
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
 
 
@@ -124,10 +125,9 @@ namespace FerreteriaSL
 
         private void btn_insert_Click(object sender, EventArgs e)
         {
-            if (resultado == -1)
+            if (_resultado == -1)
             {
-                this.DialogResult = DialogResult.None;
-                return;
+                DialogResult = DialogResult.None;
             }
         }
 

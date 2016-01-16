@@ -1,11 +1,14 @@
-﻿namespace FerreteriaSL
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace FerreteriaSL.Caja_Diaria
 {
     partial class CajaDiaria
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -468,34 +471,34 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox gb_filterType;
-        private System.Windows.Forms.ComboBox cb_filterType;
-        private System.Windows.Forms.GroupBox gb_dateRanges;
-        private System.Windows.Forms.DateTimePicker dtp_dateFrom;
-        private System.Windows.Forms.Label lbl_dateFrom;
-        private System.Windows.Forms.DateTimePicker dtp_dateTo;
-        private System.Windows.Forms.Label lbl_dateTo;
-        private System.Windows.Forms.DataGridView dgv_caja;
-        private System.Windows.Forms.RadioButton rb_dateRage;
-        private System.Windows.Forms.DateTimePicker dtp_singleDay;
-        private System.Windows.Forms.RadioButton rb_singleDay;
-        private System.Windows.Forms.TabControl tb_caja;
-        private System.Windows.Forms.TabPage tp_resumen;
-        private System.Windows.Forms.TabPage tb_detalle;
-        private System.Windows.Forms.Button btn_close;
-        private System.Windows.Forms.GroupBox gb_informacionParcial;
-        private System.Windows.Forms.GroupBox gb_values;
-        private System.Windows.Forms.DataGridView dgv_moneyValues;
-        private System.Windows.Forms.GroupBox gb_dailyInfo;
-        private System.Windows.Forms.Label lbl_moneyValuesDiferenceValue;
-        private System.Windows.Forms.Label lbl_moneyValuesDiference;
-        private System.Windows.Forms.Label lbl_moneyValuesTotalValue;
-        private System.Windows.Forms.Label lbl_moneyValuesTotal;
-        private System.Windows.Forms.Label lbl_cajaTurnoTardeValue;
-        private System.Windows.Forms.Label lbl_cajaTurnoMananaValue;
-        private System.Windows.Forms.Label lbl_cajaTurnoTarde;
-        private System.Windows.Forms.Label lbl_cajaTurnoManana;
-        private System.Windows.Forms.Label lbl_totalEnCajaValue;
-        private System.Windows.Forms.Label lbl_totalEnCaja;
+        private GroupBox gb_filterType;
+        private ComboBox cb_filterType;
+        private GroupBox gb_dateRanges;
+        private DateTimePicker dtp_dateFrom;
+        private Label lbl_dateFrom;
+        private DateTimePicker dtp_dateTo;
+        private Label lbl_dateTo;
+        private DataGridView dgv_caja;
+        private RadioButton rb_dateRage;
+        private DateTimePicker dtp_singleDay;
+        private RadioButton rb_singleDay;
+        private TabControl tb_caja;
+        private TabPage tp_resumen;
+        private TabPage tb_detalle;
+        private Button btn_close;
+        private GroupBox gb_informacionParcial;
+        private GroupBox gb_values;
+        private DataGridView dgv_moneyValues;
+        private GroupBox gb_dailyInfo;
+        private Label lbl_moneyValuesDiferenceValue;
+        private Label lbl_moneyValuesDiference;
+        private Label lbl_moneyValuesTotalValue;
+        private Label lbl_moneyValuesTotal;
+        private Label lbl_cajaTurnoTardeValue;
+        private Label lbl_cajaTurnoMananaValue;
+        private Label lbl_cajaTurnoTarde;
+        private Label lbl_cajaTurnoManana;
+        private Label lbl_totalEnCajaValue;
+        private Label lbl_totalEnCaja;
     }
 }

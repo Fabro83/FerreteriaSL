@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace FerreteriaSL
 {
 
-    public static class afldbg
+    public static class Afldbg
     {
-        static afldbg()
+        static Afldbg()
         {
 #if DEBUG
             const string filename = @"C:\Wamp\www\csTrace\afliw.log";
@@ -20,11 +17,11 @@ namespace FerreteriaSL
             Trace.AutoFlush = true;
             Trace.Indent();
             //asd
-            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+            Application.ApplicationExit += Application_ApplicationExit;
 #endif
         }
 
-        public static void log(object sender, string msg, string color = "black")
+        public static void Log(object sender, string msg, string color = "black")
         {
 #if DEBUG
             //string Class = sender.GetType().Name;

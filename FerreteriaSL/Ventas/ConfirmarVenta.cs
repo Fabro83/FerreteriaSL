@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing.Printing;
 using System.Windows.Forms;
+using FerreteriaSL.Clases_Genericas;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Ventas
 {
     public partial class ConfirmacionVenta : Form
     {
         readonly double _monto;
         double _vuelto;
-        private DataTable _productosTable;
+        private readonly DataTable _productosTable;
 
         public ConfirmacionVenta(double monto, DataTable productosIngresadosTable)
         {
             InitializeComponent();
-            this._monto = monto;
+            _monto = monto;
             SetValues();
             _productosTable = productosIngresadosTable;
         }
@@ -45,7 +45,7 @@ namespace FerreteriaSL
 
         private void tb_pagaConMonto_TextChanged(object sender, EventArgs e)
         {
-            double pagaCon = 0;
+            double pagaCon;
             if (double.TryParse(tb_pagaConMonto.Text, out pagaCon) && pagaCon > _monto)
             {
                 _vuelto = Math.Round(pagaCon - _monto, 2, MidpointRounding.AwayFromZero);
@@ -60,49 +60,41 @@ namespace FerreteriaSL
         private void btn_finalizar_Click(object sender, EventArgs e)
         {
             FacturaA facturaA = new FacturaA();
-            if (facturaA.ShowDialog() == DialogResult.OK)
+            if (facturaA.ShowDialog() != DialogResult.OK) return;
+            Dictionary<string, object> fieldsDictionary = new Dictionary<string, object>
             {
-                Dictionary<string, object> fieldsDictionary = new Dictionary<string, object>();
-                fieldsDictionary.Add("nombre", facturaA.txb_nombre.Text);
-                fieldsDictionary.Add("domicilio", facturaA.txb_domicilio.Text);
-                fieldsDictionary.Add("iva", facturaA.txb_iva.Text);
-                fieldsDictionary.Add("cuit", facturaA.txb_cuit.Text);
-                fieldsDictionary.Add("condiciones", facturaA.txb_condiciones.Text);
-                fieldsDictionary.Add("impuestos", facturaA.txb_impuestos.Text);
-                fieldsDictionary.Add("subtotal2", facturaA.txb_subtotal2.Text);
-                fieldsDictionary.Add("subtotal", string.Format("${0:N2}", Math.Truncate((_monto / 1.21) * 100) / 100));
-                fieldsDictionary.Add("ivainscripto", string.Format("${0:N2}", Math.Truncate((_monto * 0.21) * 100) / 100));
-                fieldsDictionary.Add("total", string.Format("${0:N2}", Math.Truncate(_monto * 100) / 100));
+                {"nombre", facturaA.txb_nombre.Text},
+                {"domicilio", facturaA.txb_domicilio.Text},
+                {"iva", facturaA.txb_iva.Text},
+                {"cuit", facturaA.txb_cuit.Text},
+                {"condiciones", facturaA.txb_condiciones.Text},
+                {"impuestos", facturaA.txb_impuestos.Text},
+                {"subtotal2", facturaA.txb_subtotal2.Text},
+                {"subtotal", string.Format("${0:N2}", Math.Truncate((_monto/1.21)*100)/100)},
+                {"ivainscripto", string.Format("${0:N2}", Math.Truncate((_monto*0.21)*100)/100)},
+                {"total", string.Format("${0:N2}", Math.Truncate(_monto*100)/100)}
+            };
 
-                List<Dictionary<string, object>> gridList = new List<Dictionary<string, object>>();
+            List<Dictionary<string, object>> gridList = new List<Dictionary<string, object>>();
 
-                foreach (DataRow dataRow in _productosTable.Rows)
+            foreach (DataRow dataRow in _productosTable.Rows)
+            {
+                Dictionary<string, object> gridRowDictionary = new Dictionary<string, object>();
+
+                for (int i = 0; i < _productosTable.Columns.Count; i++)
                 {
-                    Dictionary<string, object> gridRowDictionary = new Dictionary<string, object>();
-
-                    for (int i = 0; i < _productosTable.Columns.Count; i++)
-                    {
-                        string columnName = _productosTable.Columns[i].ColumnName;
-                        if (columnName.Contains("precio"))
-                        {
-                            gridRowDictionary.Add(columnName, string.Format("${0:N2}", float.Parse(dataRow[i].ToString())));
-                        }
-                        else
-                        {
-                            gridRowDictionary.Add(columnName, dataRow[i]);
-                        }
-
-                    }
-
-                    gridList.Add(gridRowDictionary);
+                    string columnName = _productosTable.Columns[i].ColumnName;
+                    gridRowDictionary.Add(columnName,
+                        columnName.Contains("precio")
+                            ? string.Format("${0:N2}", float.Parse(dataRow[i].ToString()))
+                            : dataRow[i]);
                 }
 
-                Impresion objImpresion = new Impresion(fieldsDictionary, gridList, "facturaA");
-                objImpresion.StartPrinting();
+                gridList.Add(gridRowDictionary);
             }
 
-
-            
+            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, "facturaA");
+            objImpresion.StartPrinting();
         }
 
     }

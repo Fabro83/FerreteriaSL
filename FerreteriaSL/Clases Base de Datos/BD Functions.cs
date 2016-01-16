@@ -1,71 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
-using System.Windows.Forms;
+using FerreteriaSL.Clases_Genericas;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Clases_Base_de_Datos
 {
-    public static class BD_Functions
+    public static class BdFunctions
     {
-        private static BD DataBase = null;
+        private static Bd _dataBase;
 
         public static int Login(string usuario, string contraseña)
         {
-            DataBase = new BD();
+            _dataBase = new Bd();
             string queryString = String.Format("SELECT id,pass, privilegio FROM usuario WHERE user = '{0}'", usuario);
-            DataTable result = DataBase.Read(queryString);
+            DataTable result = _dataBase.Read(queryString);
 
             if (result.Rows.Count > 0)
             {
-                DataRow UserData = result.Rows[0];
-                if (UserData["pass"].ToString() == contraseña)
+                DataRow userData = result.Rows[0];
+                if (userData["pass"].ToString() == contraseña)
                 {
-                    Usuario.ChangeUser(int.Parse(UserData["id"].ToString()), usuario, int.Parse(UserData["privilegio"].ToString()));
-                    DataBase.CloseConnection();
-                    DataBase = null;
+                    Usuario.ChangeUser(int.Parse(userData["id"].ToString()), usuario, int.Parse(userData["privilegio"].ToString()));
+                    _dataBase.CloseConnection();
+                    _dataBase = null;
                     return 1;
                 }
                 else
                 {
-                    DataBase.CloseConnection();
-                    DataBase = null;
+                    _dataBase.CloseConnection();
+                    _dataBase = null;
                     return 12;
                 }
             }
             else
             {
-                DataBase.CloseConnection();
-                DataBase = null;
+                _dataBase.CloseConnection();
+                _dataBase = null;
                 return 11;
             }
             
         }
 
-        public static DataTable bringTableProducto()
+        public static DataTable BringTableProducto()
         {
-            DataBase = new BD();
-            System.Data.DataTable ProductTable = DataBase.Read("SELECT codigo, proveedor.nombre, tipo.descripcion, producto.nombre, stock, precio_venta, precio_compra FROM producto LEFT JOIN proveedor ON id_proveedor = proveedor.id LEFT JOIN tipo ON id_tipo = tipo.id");
-            ProductTable.Columns[0].ColumnName = "Codigo";
-            ProductTable.Columns[1].ColumnName = "Proveedor";
-            ProductTable.Columns[2].ColumnName = "Tipo";
-            ProductTable.Columns[3].ColumnName = "Nombre";
-            ProductTable.Columns[4].ColumnName = "Stock";
-            ProductTable.Columns[5].ColumnName = "Precio Venta";
-            ProductTable.Columns[6].ColumnName = "Precio Costo";
-            DataBase.CloseConnection();
-            DataBase = null;
-            return ProductTable;
+            _dataBase = new Bd();
+            DataTable productTable = _dataBase.Read("SELECT codigo, proveedor.nombre, tipo.descripcion, producto.nombre, stock, precio_venta, precio_compra FROM producto LEFT JOIN proveedor ON id_proveedor = proveedor.id LEFT JOIN tipo ON id_tipo = tipo.id");
+            productTable.Columns[0].ColumnName = "Codigo";
+            productTable.Columns[1].ColumnName = "Proveedor";
+            productTable.Columns[2].ColumnName = "Tipo";
+            productTable.Columns[3].ColumnName = "Nombre";
+            productTable.Columns[4].ColumnName = "Stock";
+            productTable.Columns[5].ColumnName = "Precio Venta";
+            productTable.Columns[6].ColumnName = "Precio Costo";
+            _dataBase.CloseConnection();
+            _dataBase = null;
+            return productTable;
         }
 
-        public static string testFunction(string function)
+        public static string TestFunction(string function)
         {
-            DataBase = new BD();
-            string result = "";
+            _dataBase = new Bd();
+            string result;
             try
             {
-                result = DataBase.Read(String.Format("SELECT ({0})", function)).Rows[0][0].ToString();
+                result = _dataBase.Read(String.Format("SELECT ({0})", function)).Rows[0][0].ToString();
             }
             catch (Exception e)
             {

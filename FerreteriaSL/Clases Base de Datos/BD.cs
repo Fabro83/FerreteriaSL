@@ -1,26 +1,21 @@
 ﻿using System;
-using MySql.Data.MySqlClient;
 using System.Data;
-using System.Xml;
 using System.Windows.Forms;
+using System.Xml;
+using MySql.Data.MySqlClient;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Clases_Base_de_Datos
 {
-    class BD
+    class Bd
     {
-        private MySqlConnection bdConection = null;
+        public MySqlConnection Connection { get; set; }
 
-        public MySqlConnection Connection
+        public Bd()
         {
-            get { return bdConection; }
-            set { bdConection = value; }
-        }
-        
-        public BD()
-        {
-            XmlDocument XMLDoc = new XmlDocument();
-            XMLDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "Settings.xml");
-            XmlNode mySqlSettings = XMLDoc["Settings"]["MySQL"];
+            Connection = null;
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "Settings.xml");
+            XmlNode mySqlSettings = xmlDoc["Settings"]["MySQL"];
             string[] servers = mySqlSettings["Server"].InnerText.Split(',');
             string port = mySqlSettings["port"].InnerText;
             string dataBase = mySqlSettings["Database"].InnerText;
@@ -28,26 +23,25 @@ namespace FerreteriaSL
             string pwd = mySqlSettings["Pwd"].InnerText;            
             string connectionString = "Port="+port+";Database="+dataBase+";Uid="+uid+";Pwd="+pwd;
 
-            while (Program.workingServer == "")
+            while (Program.WorkingServer == "")
             {
                 foreach (string sServer in servers)
                 {
                     string fullConnectionString = "Server=" + sServer.Trim() + ";" + connectionString;
-                    bdConection = new MySqlConnection(fullConnectionString);
+                    Connection = new MySqlConnection(fullConnectionString);
                     try
                     {
-                        bdConection.Open();
-                        bdConection.Close();
-                        Program.workingServer = sServer;
+                        Connection.Open();
+                        Connection.Close();
+                        Program.WorkingServer = sServer;
                         break;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        // ignored
                     }
-
                 }
-                if (Program.workingServer == String.Empty)
+                if (Program.WorkingServer == String.Empty)
                 {
                     DialogResult retry = MessageBox.Show("No se ha podido conectar con la base de datos, intentelo nuevamente.", "Error de Conexión", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                     if (retry != DialogResult.Retry)
@@ -57,28 +51,28 @@ namespace FerreteriaSL
                 }         
             }
             
-            if (Program.workingServer == "")
+            if (Program.WorkingServer == "")
             {
                 Environment.Exit(-1);
             }
             else
             {
-                string fullConnectionString = "Server=" + Program.workingServer + ";" + connectionString;
-                bdConection = new MySqlConnection(fullConnectionString);      
+                string fullConnectionString = "Server=" + Program.WorkingServer + ";" + connectionString;
+                Connection = new MySqlConnection(fullConnectionString);      
             }
                     
         }
 
         public DataTable Read(string query)
         {
-            if(bdConection.State != ConnectionState.Open)
+            if(Connection.State != ConnectionState.Open)
                 OpenConnection();            
-            MySqlCommand cmd = new MySqlCommand(query, bdConection);
+            MySqlCommand cmd = new MySqlCommand(query, Connection);
             MySqlDataReader reader = cmd.ExecuteReader();
             DataTable result = new DataTable();
             result.Load(reader);
             reader.Close();
-            bdConection.Close();
+            Connection.Close();
             //afldbg.log(this, query, "gray");
             return result;
         }
@@ -86,11 +80,11 @@ namespace FerreteriaSL
         public int Write(string query)
         {
             //afldbg.log(this, query, "gray");
-            if (bdConection.State != ConnectionState.Open)
+            if (Connection.State != ConnectionState.Open)
                 OpenConnection();
-            MySqlCommand cmd = new MySqlCommand(query, bdConection);
+            MySqlCommand cmd = new MySqlCommand(query, Connection);
             int result = cmd.ExecuteNonQuery();
-            bdConection.Close();
+            Connection.Close();
             return result;
         }
 
@@ -98,7 +92,7 @@ namespace FerreteriaSL
         {
             try
             {
-                bdConection.Open();
+                Connection.Open();
                 return true;
             }
             catch (MySqlException mysqle)
@@ -113,7 +107,7 @@ namespace FerreteriaSL
 
         public void CloseConnection()
         {
-            bdConection.Close();
+            Connection.Close();
         }
     }
 }

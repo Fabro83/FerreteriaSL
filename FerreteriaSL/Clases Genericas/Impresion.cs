@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
+using System.Linq;
+using FerreteriaSL.Clases_Base_de_Datos;
 
-namespace FerreteriaSL
+namespace FerreteriaSL.Clases_Genericas
 {
     public class Impresion
     {
-        private PrintDocument _printDocument = new PrintDocument();
-        private Dictionary<string, object> _printingFieldsDictionary;
-        private List<Dictionary<string, object>> _printingGridList; 
+        private readonly PrintDocument _printDocument = new PrintDocument();
+        private readonly Dictionary<string, object> _printingFieldsDictionary;
+        private readonly List<Dictionary<string, object>> _printingGridList; 
         private int _totalPages,_currentPage;
         private ModelPage _pageModel;
 
@@ -73,7 +74,7 @@ namespace FerreteriaSL
                         else
                         {
                             fieldParameters.CalculateFontSize(fieldValue.Value.ToString(),e);
-                            fieldParameters.CenterText(fieldValue.Value.ToString(), e, false, true);
+                            fieldParameters.CenterText(fieldValue.Value.ToString(), e, false);
                             e.Graphics.DrawString(fieldValue.Value.ToString(), fieldParameters.CalculatedFont, Brushes.Black, fieldParameters.CenteredPosX, fieldParameters.CenteredPosY + (fieldParameters.Height + fieldParameters.VerticalMargin*2) * i);
                         }
 
@@ -106,27 +107,27 @@ namespace FerreteriaSL
 
         public ModelPage(string documentType)
         {
-            BD db = new BD();
+            Bd db = new Bd();
             DataTable dt = db.Read("SELECT * FROM print_page WHERE scope = '"+documentType+"'");
 
             _modelPageSize = new PointF(float.Parse(dt.Rows[0]["model_page_width"].ToString()), float.Parse(dt.Rows[0]["model_page_height"].ToString()));
             GridRows = int.Parse(dt.Rows[0]["grid_rows"].ToString());
 
             dt = db.Read("SELECT * FROM print_field WHERE scope = 'facturaA'");
-            foreach (DataRow sRow in dt.Rows)
+            foreach (PrintField pf in from DataRow sRow in dt.Rows select new PrintField
             {
-
-                PrintField pf = new PrintField();
-                pf.Field = sRow["field"].ToString();
-                pf.DefaultValue = sRow["default_string"].ToString();
-                pf.FontFamily = sRow["font_family"].ToString();
-                pf.X = float.Parse(sRow["pos_x"].ToString());
-                pf.Y = float.Parse(sRow["pos_y"].ToString());
-                pf.Width = float.Parse(sRow["size_width"].ToString());
-                pf.Height = float.Parse(sRow["size_height"].ToString());
-                pf.HorizontalMargin = float.Parse(sRow["margin_horizontal"].ToString());
-                pf.VerticalMargin = float.Parse(sRow["margin_vertical"].ToString());
-                pf.FontSize = float.Parse(sRow["font_size"].ToString());
+                Field = sRow["field"].ToString(),
+                DefaultValue = sRow["default_string"].ToString(),
+                FontFamily = sRow["font_family"].ToString(),
+                X = float.Parse(sRow["pos_x"].ToString()),
+                Y = float.Parse(sRow["pos_y"].ToString()),
+                Width = float.Parse(sRow["size_width"].ToString()),
+                Height = float.Parse(sRow["size_height"].ToString()),
+                HorizontalMargin = float.Parse(sRow["margin_horizontal"].ToString()),
+                VerticalMargin = float.Parse(sRow["margin_vertical"].ToString()),
+                FontSize = float.Parse(sRow["font_size"].ToString())
+            })
+            {
                 _fields.Add(pf.Field, pf);
             }
             dt.Dispose();
