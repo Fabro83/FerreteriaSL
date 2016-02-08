@@ -180,12 +180,7 @@ namespace FerreteriaSL.Ventas
                 case 13:                    
                     if (dgv_vistaResultados.CurrentCell != null)
                     {
-                        SelectionMadeCall(this, Convert.ToInt32(dgv_vistaResultados.Rows[dgv_vistaResultados.CurrentCell.RowIndex].Cells["id"].Value));
-                        tb_cuadroBusqueda.TextChanged -= tb_cuadroBusqueda_TextChanged;
-                        tb_cuadroBusqueda.Text = dgv_vistaResultados.Rows[dgv_vistaResultados.CurrentCell.RowIndex].Cells["Descripcion"].Value.ToString();
-                        tb_cuadroBusqueda.TextChanged += tb_cuadroBusqueda_TextChanged;
-                        lbl_moreInfo.Visible = false;
-                        dgv_vistaResultados.DataSource = null;
+                        ItemSelected();
                     }
                     e.Handled = true;
                     e.SuppressKeyPress = true;
@@ -220,8 +215,16 @@ namespace FerreteriaSL.Ventas
 
         private void dgv_vistaResultados_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            ItemSelected();
+        }
+
+        private void ItemSelected()
+        {
             SelectionMadeCall(this, Convert.ToInt32(dgv_vistaResultados.Rows[dgv_vistaResultados.CurrentCell.RowIndex].Cells["id"].Value));
+            tb_cuadroBusqueda.TextChanged -= tb_cuadroBusqueda_TextChanged;
             tb_cuadroBusqueda.Text = dgv_vistaResultados.Rows[dgv_vistaResultados.CurrentCell.RowIndex].Cells["Descripcion"].Value.ToString();
+            tb_cuadroBusqueda.TextChanged += tb_cuadroBusqueda_TextChanged;
+            lbl_moreInfo.Visible = false;
             dgv_vistaResultados.DataSource = null;
         }
 
