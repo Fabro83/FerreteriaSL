@@ -83,6 +83,7 @@ namespace FerreteriaSL.Pedidos
             this.lb_pedidos.Size = new System.Drawing.Size(166, 407);
             this.lb_pedidos.TabIndex = 2;
             this.lb_pedidos.SelectedIndexChanged += new System.EventHandler(this.lb_pedidos_SelectedIndexChanged);
+            this.lb_pedidos.DataSourceChanged += new System.EventHandler(this.lb_pedidos_DataSourceChanged);
             // 
             // gb_datosPedido
             // 
