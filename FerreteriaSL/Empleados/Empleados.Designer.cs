@@ -33,17 +33,10 @@ namespace FerreteriaSL.Empleados
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Empleados));
             this.lb_employe = new System.Windows.Forms.ListBox();
-            this.gb_employeData = new System.Windows.Forms.GroupBox();
-            this.gb_payments = new System.Windows.Forms.GroupBox();
-            this.btn_registerPayment = new System.Windows.Forms.Button();
-            this.btn_viewPayments = new System.Windows.Forms.Button();
-            this.gb_statistics = new System.Windows.Forms.GroupBox();
-            this.lbl_amountRecaudedValue = new System.Windows.Forms.Label();
-            this.lbl_soldProductsValue = new System.Windows.Forms.Label();
-            this.lbl_sellCountValue = new System.Windows.Forms.Label();
-            this.lbl_amountRecauded = new System.Windows.Forms.Label();
-            this.lbl_soldProducts = new System.Windows.Forms.Label();
-            this.lbl_sellCount = new System.Windows.Forms.Label();
+            this.btn_close = new System.Windows.Forms.Button();
+            this.btn_addNewEmploye = new System.Windows.Forms.Button();
+            this.tc_employee = new System.Windows.Forms.TabControl();
+            this.tp_general = new System.Windows.Forms.TabPage();
             this.tb_employePosition = new System.Windows.Forms.TextBox();
             this.tb_employePhone = new System.Windows.Forms.TextBox();
             this.tb_employeAddress = new System.Windows.Forms.TextBox();
@@ -58,10 +51,28 @@ namespace FerreteriaSL.Empleados
             this.lbl_employePhone = new System.Windows.Forms.Label();
             this.lbl_employeAddress = new System.Windows.Forms.Label();
             this.lbl_employeFirstName = new System.Windows.Forms.Label();
-            this.btn_close = new System.Windows.Forms.Button();
-            this.btn_addNewEmploye = new System.Windows.Forms.Button();
-            this.gb_employeData.SuspendLayout();
-            this.gb_payments.SuspendLayout();
+            this.tp_payments = new System.Windows.Forms.TabPage();
+            this.lbl_paysTotalValue = new System.Windows.Forms.Label();
+            this.lbl_paysTotal = new System.Windows.Forms.Label();
+            this.lbl_paysDateTo = new System.Windows.Forms.Label();
+            this.lbl_paysDateFrom = new System.Windows.Forms.Label();
+            this.dtp_paysDateTo = new System.Windows.Forms.DateTimePicker();
+            this.dtp_paysDateFrom = new System.Windows.Forms.DateTimePicker();
+            this.dgv_employeePayments = new System.Windows.Forms.DataGridView();
+            this.btn_registerPayment = new System.Windows.Forms.Button();
+            this.tp_statistics = new System.Windows.Forms.TabPage();
+            this.gb_statistics = new System.Windows.Forms.GroupBox();
+            this.lbl_amountRecaudedValue = new System.Windows.Forms.Label();
+            this.lbl_soldProductsValue = new System.Windows.Forms.Label();
+            this.lbl_sellCountValue = new System.Windows.Forms.Label();
+            this.lbl_amountRecauded = new System.Windows.Forms.Label();
+            this.lbl_soldProducts = new System.Windows.Forms.Label();
+            this.lbl_sellCount = new System.Windows.Forms.Label();
+            this.tc_employee.SuspendLayout();
+            this.tp_general.SuspendLayout();
+            this.tp_payments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_employeePayments)).BeginInit();
+            this.tp_statistics.SuspendLayout();
             this.gb_statistics.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,50 +81,286 @@ namespace FerreteriaSL.Empleados
             this.lb_employe.FormattingEnabled = true;
             this.lb_employe.Location = new System.Drawing.Point(12, 12);
             this.lb_employe.Name = "lb_employe";
-            this.lb_employe.Size = new System.Drawing.Size(191, 342);
+            this.lb_employe.Size = new System.Drawing.Size(191, 381);
             this.lb_employe.TabIndex = 0;
             this.lb_employe.SelectedIndexChanged += new System.EventHandler(this.lb_users_SelectedIndexChanged);
             // 
-            // gb_employeData
+            // btn_close
             // 
-            this.gb_employeData.Controls.Add(this.gb_payments);
-            this.gb_employeData.Controls.Add(this.gb_statistics);
-            this.gb_employeData.Controls.Add(this.tb_employePosition);
-            this.gb_employeData.Controls.Add(this.tb_employePhone);
-            this.gb_employeData.Controls.Add(this.tb_employeAddress);
-            this.gb_employeData.Controls.Add(this.tb_employeDni);
-            this.gb_employeData.Controls.Add(this.tb_employeLastName);
-            this.gb_employeData.Controls.Add(this.lbl_employeLastName);
-            this.gb_employeData.Controls.Add(this.tb_employeFirstName);
-            this.gb_employeData.Controls.Add(this.btn_deleteEmploye);
-            this.gb_employeData.Controls.Add(this.btn_save);
-            this.gb_employeData.Controls.Add(this.lbl_employePosition);
-            this.gb_employeData.Controls.Add(this.lbl_employeDni);
-            this.gb_employeData.Controls.Add(this.lbl_employePhone);
-            this.gb_employeData.Controls.Add(this.lbl_employeAddress);
-            this.gb_employeData.Controls.Add(this.lbl_employeFirstName);
-            this.gb_employeData.Enabled = false;
-            this.gb_employeData.Location = new System.Drawing.Point(209, 12);
-            this.gb_employeData.Name = "gb_employeData";
-            this.gb_employeData.Size = new System.Drawing.Size(367, 341);
-            this.gb_employeData.TabIndex = 1;
-            this.gb_employeData.TabStop = false;
-            this.gb_employeData.Text = "Datos de";
+            this.btn_close.Location = new System.Drawing.Point(543, 407);
+            this.btn_close.Name = "btn_close";
+            this.btn_close.Size = new System.Drawing.Size(75, 23);
+            this.btn_close.TabIndex = 2;
+            this.btn_close.Text = "Cerrar";
+            this.btn_close.UseVisualStyleBackColor = true;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
-            // gb_payments
+            // btn_addNewEmploye
             // 
-            this.gb_payments.Controls.Add(this.btn_registerPayment);
-            this.gb_payments.Controls.Add(this.btn_viewPayments);
-            this.gb_payments.Location = new System.Drawing.Point(12, 250);
-            this.gb_payments.Name = "gb_payments";
-            this.gb_payments.Size = new System.Drawing.Size(349, 55);
-            this.gb_payments.TabIndex = 29;
-            this.gb_payments.TabStop = false;
-            this.gb_payments.Text = "Pagos";
+            this.btn_addNewEmploye.Location = new System.Drawing.Point(12, 407);
+            this.btn_addNewEmploye.Name = "btn_addNewEmploye";
+            this.btn_addNewEmploye.Size = new System.Drawing.Size(191, 23);
+            this.btn_addNewEmploye.TabIndex = 3;
+            this.btn_addNewEmploye.Text = "Agregar Nuevo Empleado";
+            this.btn_addNewEmploye.UseVisualStyleBackColor = true;
+            this.btn_addNewEmploye.Click += new System.EventHandler(this.btn_addNewEmploye_Click);
+            // 
+            // tc_employee
+            // 
+            this.tc_employee.Controls.Add(this.tp_general);
+            this.tc_employee.Controls.Add(this.tp_payments);
+            this.tc_employee.Controls.Add(this.tp_statistics);
+            this.tc_employee.Enabled = false;
+            this.tc_employee.HotTrack = true;
+            this.tc_employee.Location = new System.Drawing.Point(209, 12);
+            this.tc_employee.Name = "tc_employee";
+            this.tc_employee.SelectedIndex = 0;
+            this.tc_employee.Size = new System.Drawing.Size(409, 381);
+            this.tc_employee.TabIndex = 4;
+            // 
+            // tp_general
+            // 
+            this.tp_general.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.tp_general.Controls.Add(this.tb_employePosition);
+            this.tp_general.Controls.Add(this.tb_employePhone);
+            this.tp_general.Controls.Add(this.tb_employeAddress);
+            this.tp_general.Controls.Add(this.tb_employeDni);
+            this.tp_general.Controls.Add(this.tb_employeLastName);
+            this.tp_general.Controls.Add(this.lbl_employeLastName);
+            this.tp_general.Controls.Add(this.tb_employeFirstName);
+            this.tp_general.Controls.Add(this.btn_deleteEmploye);
+            this.tp_general.Controls.Add(this.btn_save);
+            this.tp_general.Controls.Add(this.lbl_employePosition);
+            this.tp_general.Controls.Add(this.lbl_employeDni);
+            this.tp_general.Controls.Add(this.lbl_employePhone);
+            this.tp_general.Controls.Add(this.lbl_employeAddress);
+            this.tp_general.Controls.Add(this.lbl_employeFirstName);
+            this.tp_general.Location = new System.Drawing.Point(4, 22);
+            this.tp_general.Name = "tp_general";
+            this.tp_general.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_general.Size = new System.Drawing.Size(401, 355);
+            this.tp_general.TabIndex = 0;
+            this.tp_general.Text = "General";
+            // 
+            // tb_employePosition
+            // 
+            this.tb_employePosition.Location = new System.Drawing.Point(94, 208);
+            this.tb_employePosition.Name = "tb_employePosition";
+            this.tb_employePosition.Size = new System.Drawing.Size(275, 20);
+            this.tb_employePosition.TabIndex = 41;
+            // 
+            // tb_employePhone
+            // 
+            this.tb_employePhone.Location = new System.Drawing.Point(94, 186);
+            this.tb_employePhone.Name = "tb_employePhone";
+            this.tb_employePhone.Size = new System.Drawing.Size(275, 20);
+            this.tb_employePhone.TabIndex = 40;
+            // 
+            // tb_employeAddress
+            // 
+            this.tb_employeAddress.Location = new System.Drawing.Point(94, 164);
+            this.tb_employeAddress.Name = "tb_employeAddress";
+            this.tb_employeAddress.Size = new System.Drawing.Size(275, 20);
+            this.tb_employeAddress.TabIndex = 39;
+            // 
+            // tb_employeDni
+            // 
+            this.tb_employeDni.Location = new System.Drawing.Point(94, 142);
+            this.tb_employeDni.Name = "tb_employeDni";
+            this.tb_employeDni.Size = new System.Drawing.Size(275, 20);
+            this.tb_employeDni.TabIndex = 38;
+            // 
+            // tb_employeLastName
+            // 
+            this.tb_employeLastName.Location = new System.Drawing.Point(94, 120);
+            this.tb_employeLastName.Name = "tb_employeLastName";
+            this.tb_employeLastName.Size = new System.Drawing.Size(275, 20);
+            this.tb_employeLastName.TabIndex = 37;
+            this.tb_employeLastName.TextChanged += new System.EventHandler(this.tb_employeFirstName_TextChanged);
+            // 
+            // lbl_employeLastName
+            // 
+            this.lbl_employeLastName.AutoSize = true;
+            this.lbl_employeLastName.Location = new System.Drawing.Point(40, 124);
+            this.lbl_employeLastName.Name = "lbl_employeLastName";
+            this.lbl_employeLastName.Size = new System.Drawing.Size(47, 13);
+            this.lbl_employeLastName.TabIndex = 36;
+            this.lbl_employeLastName.Text = "Apellido:";
+            // 
+            // tb_employeFirstName
+            // 
+            this.tb_employeFirstName.Location = new System.Drawing.Point(94, 98);
+            this.tb_employeFirstName.Name = "tb_employeFirstName";
+            this.tb_employeFirstName.Size = new System.Drawing.Size(275, 20);
+            this.tb_employeFirstName.TabIndex = 35;
+            this.tb_employeFirstName.TextChanged += new System.EventHandler(this.tb_employeFirstName_TextChanged);
+            // 
+            // btn_deleteEmploye
+            // 
+            this.btn_deleteEmploye.ForeColor = System.Drawing.Color.DarkRed;
+            this.btn_deleteEmploye.Location = new System.Drawing.Point(94, 234);
+            this.btn_deleteEmploye.Name = "btn_deleteEmploye";
+            this.btn_deleteEmploye.Size = new System.Drawing.Size(106, 23);
+            this.btn_deleteEmploye.TabIndex = 34;
+            this.btn_deleteEmploye.Text = "Eliminar Empleado";
+            this.btn_deleteEmploye.UseVisualStyleBackColor = true;
+            this.btn_deleteEmploye.Click += new System.EventHandler(this.btn_deleteUser_Click);
+            // 
+            // btn_save
+            // 
+            this.btn_save.Enabled = false;
+            this.btn_save.Location = new System.Drawing.Point(206, 234);
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(106, 23);
+            this.btn_save.TabIndex = 33;
+            this.btn_save.Text = "Guardar Cambios";
+            this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
+            // 
+            // lbl_employePosition
+            // 
+            this.lbl_employePosition.AutoSize = true;
+            this.lbl_employePosition.Location = new System.Drawing.Point(37, 212);
+            this.lbl_employePosition.Name = "lbl_employePosition";
+            this.lbl_employePosition.Size = new System.Drawing.Size(50, 13);
+            this.lbl_employePosition.TabIndex = 32;
+            this.lbl_employePosition.Text = "Posición:";
+            // 
+            // lbl_employeDni
+            // 
+            this.lbl_employeDni.AutoSize = true;
+            this.lbl_employeDni.Location = new System.Drawing.Point(58, 146);
+            this.lbl_employeDni.Name = "lbl_employeDni";
+            this.lbl_employeDni.Size = new System.Drawing.Size(29, 13);
+            this.lbl_employeDni.TabIndex = 31;
+            this.lbl_employeDni.Text = "DNI:";
+            // 
+            // lbl_employePhone
+            // 
+            this.lbl_employePhone.AutoSize = true;
+            this.lbl_employePhone.Location = new System.Drawing.Point(35, 190);
+            this.lbl_employePhone.Name = "lbl_employePhone";
+            this.lbl_employePhone.Size = new System.Drawing.Size(52, 13);
+            this.lbl_employePhone.TabIndex = 30;
+            this.lbl_employePhone.Text = "Teléfono:";
+            // 
+            // lbl_employeAddress
+            // 
+            this.lbl_employeAddress.AutoSize = true;
+            this.lbl_employeAddress.Location = new System.Drawing.Point(32, 168);
+            this.lbl_employeAddress.Name = "lbl_employeAddress";
+            this.lbl_employeAddress.Size = new System.Drawing.Size(55, 13);
+            this.lbl_employeAddress.TabIndex = 29;
+            this.lbl_employeAddress.Text = "Dirección:";
+            // 
+            // lbl_employeFirstName
+            // 
+            this.lbl_employeFirstName.AutoSize = true;
+            this.lbl_employeFirstName.Location = new System.Drawing.Point(40, 102);
+            this.lbl_employeFirstName.Name = "lbl_employeFirstName";
+            this.lbl_employeFirstName.Size = new System.Drawing.Size(47, 13);
+            this.lbl_employeFirstName.TabIndex = 28;
+            this.lbl_employeFirstName.Text = "Nombre:";
+            // 
+            // tp_payments
+            // 
+            this.tp_payments.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.tp_payments.Controls.Add(this.lbl_paysTotalValue);
+            this.tp_payments.Controls.Add(this.lbl_paysTotal);
+            this.tp_payments.Controls.Add(this.lbl_paysDateTo);
+            this.tp_payments.Controls.Add(this.lbl_paysDateFrom);
+            this.tp_payments.Controls.Add(this.dtp_paysDateTo);
+            this.tp_payments.Controls.Add(this.dtp_paysDateFrom);
+            this.tp_payments.Controls.Add(this.dgv_employeePayments);
+            this.tp_payments.Controls.Add(this.btn_registerPayment);
+            this.tp_payments.Location = new System.Drawing.Point(4, 22);
+            this.tp_payments.Name = "tp_payments";
+            this.tp_payments.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_payments.Size = new System.Drawing.Size(401, 355);
+            this.tp_payments.TabIndex = 1;
+            this.tp_payments.Text = "Pagos";
+            // 
+            // lbl_paysTotalValue
+            // 
+            this.lbl_paysTotalValue.AutoEllipsis = true;
+            this.lbl_paysTotalValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_paysTotalValue.Location = new System.Drawing.Point(51, 329);
+            this.lbl_paysTotalValue.Name = "lbl_paysTotalValue";
+            this.lbl_paysTotalValue.Size = new System.Drawing.Size(249, 16);
+            this.lbl_paysTotalValue.TabIndex = 8;
+            this.lbl_paysTotalValue.Text = "$0,0";
+            // 
+            // lbl_paysTotal
+            // 
+            this.lbl_paysTotal.AutoSize = true;
+            this.lbl_paysTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_paysTotal.Location = new System.Drawing.Point(7, 329);
+            this.lbl_paysTotal.Name = "lbl_paysTotal";
+            this.lbl_paysTotal.Size = new System.Drawing.Size(52, 16);
+            this.lbl_paysTotal.TabIndex = 7;
+            this.lbl_paysTotal.Text = "Total: ";
+            // 
+            // lbl_paysDateTo
+            // 
+            this.lbl_paysDateTo.AutoSize = true;
+            this.lbl_paysDateTo.Location = new System.Drawing.Point(210, 9);
+            this.lbl_paysDateTo.Name = "lbl_paysDateTo";
+            this.lbl_paysDateTo.Size = new System.Drawing.Size(38, 13);
+            this.lbl_paysDateTo.TabIndex = 6;
+            this.lbl_paysDateTo.Text = "Hasta:";
+            // 
+            // lbl_paysDateFrom
+            // 
+            this.lbl_paysDateFrom.AutoSize = true;
+            this.lbl_paysDateFrom.Location = new System.Drawing.Point(48, 9);
+            this.lbl_paysDateFrom.Name = "lbl_paysDateFrom";
+            this.lbl_paysDateFrom.Size = new System.Drawing.Size(41, 13);
+            this.lbl_paysDateFrom.TabIndex = 5;
+            this.lbl_paysDateFrom.Text = "Desde:";
+            // 
+            // dtp_paysDateTo
+            // 
+            this.dtp_paysDateTo.Checked = false;
+            this.dtp_paysDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_paysDateTo.Location = new System.Drawing.Point(253, 5);
+            this.dtp_paysDateTo.Name = "dtp_paysDateTo";
+            this.dtp_paysDateTo.ShowCheckBox = true;
+            this.dtp_paysDateTo.Size = new System.Drawing.Size(104, 20);
+            this.dtp_paysDateTo.TabIndex = 4;
+            this.dtp_paysDateTo.ValueChanged += new System.EventHandler(this.dtp_paysDate_Change);
+            // 
+            // dtp_paysDateFrom
+            // 
+            this.dtp_paysDateFrom.Checked = false;
+            this.dtp_paysDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_paysDateFrom.Location = new System.Drawing.Point(94, 5);
+            this.dtp_paysDateFrom.Name = "dtp_paysDateFrom";
+            this.dtp_paysDateFrom.ShowCheckBox = true;
+            this.dtp_paysDateFrom.Size = new System.Drawing.Size(100, 20);
+            this.dtp_paysDateFrom.TabIndex = 3;
+            this.dtp_paysDateFrom.ValueChanged += new System.EventHandler(this.dtp_paysDate_Change);
+            // 
+            // dgv_employeePayments
+            // 
+            this.dgv_employeePayments.AllowUserToAddRows = false;
+            this.dgv_employeePayments.AllowUserToDeleteRows = false;
+            this.dgv_employeePayments.AllowUserToOrderColumns = true;
+            this.dgv_employeePayments.AllowUserToResizeRows = false;
+            this.dgv_employeePayments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_employeePayments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_employeePayments.Location = new System.Drawing.Point(6, 32);
+            this.dgv_employeePayments.Name = "dgv_employeePayments";
+            this.dgv_employeePayments.ReadOnly = true;
+            this.dgv_employeePayments.RowHeadersVisible = false;
+            this.dgv_employeePayments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv_employeePayments.ShowEditingIcon = false;
+            this.dgv_employeePayments.Size = new System.Drawing.Size(389, 288);
+            this.dgv_employeePayments.TabIndex = 2;
+            this.dgv_employeePayments.SelectionChanged += new System.EventHandler(this.dgv_employeePayments_SelectionChanged);
             // 
             // btn_registerPayment
             // 
-            this.btn_registerPayment.Location = new System.Drawing.Point(193, 19);
+            this.btn_registerPayment.Location = new System.Drawing.Point(306, 326);
             this.btn_registerPayment.Name = "btn_registerPayment";
             this.btn_registerPayment.Size = new System.Drawing.Size(92, 23);
             this.btn_registerPayment.TabIndex = 1;
@@ -121,15 +368,16 @@ namespace FerreteriaSL.Empleados
             this.btn_registerPayment.UseVisualStyleBackColor = true;
             this.btn_registerPayment.Click += new System.EventHandler(this.btn_registerPayment_Click);
             // 
-            // btn_viewPayments
+            // tp_statistics
             // 
-            this.btn_viewPayments.Location = new System.Drawing.Point(63, 19);
-            this.btn_viewPayments.Name = "btn_viewPayments";
-            this.btn_viewPayments.Size = new System.Drawing.Size(124, 23);
-            this.btn_viewPayments.TabIndex = 0;
-            this.btn_viewPayments.Text = "Ver Pagos Realizados";
-            this.btn_viewPayments.UseVisualStyleBackColor = true;
-            this.btn_viewPayments.Click += new System.EventHandler(this.btn_viewPayments_Click);
+            this.tp_statistics.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.tp_statistics.Controls.Add(this.gb_statistics);
+            this.tp_statistics.Location = new System.Drawing.Point(4, 22);
+            this.tp_statistics.Name = "tp_statistics";
+            this.tp_statistics.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_statistics.Size = new System.Drawing.Size(401, 355);
+            this.tp_statistics.TabIndex = 2;
+            this.tp_statistics.Text = "Estadisticas";
             // 
             // gb_statistics
             // 
@@ -139,10 +387,10 @@ namespace FerreteriaSL.Empleados
             this.gb_statistics.Controls.Add(this.lbl_amountRecauded);
             this.gb_statistics.Controls.Add(this.lbl_soldProducts);
             this.gb_statistics.Controls.Add(this.lbl_sellCount);
-            this.gb_statistics.Location = new System.Drawing.Point(12, 159);
+            this.gb_statistics.Location = new System.Drawing.Point(26, 135);
             this.gb_statistics.Name = "gb_statistics";
             this.gb_statistics.Size = new System.Drawing.Size(349, 85);
-            this.gb_statistics.TabIndex = 28;
+            this.gb_statistics.TabIndex = 29;
             this.gb_statistics.TabStop = false;
             this.gb_statistics.Text = "Estadísticas";
             // 
@@ -197,160 +445,15 @@ namespace FerreteriaSL.Empleados
             this.lbl_sellCount.TabIndex = 0;
             this.lbl_sellCount.Text = "Cantidad de Ventas Realizadas:";
             // 
-            // tb_employePosition
-            // 
-            this.tb_employePosition.Location = new System.Drawing.Point(70, 130);
-            this.tb_employePosition.Name = "tb_employePosition";
-            this.tb_employePosition.Size = new System.Drawing.Size(292, 20);
-            this.tb_employePosition.TabIndex = 27;
-            this.tb_employePosition.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // tb_employePhone
-            // 
-            this.tb_employePhone.Location = new System.Drawing.Point(70, 108);
-            this.tb_employePhone.Name = "tb_employePhone";
-            this.tb_employePhone.Size = new System.Drawing.Size(292, 20);
-            this.tb_employePhone.TabIndex = 26;
-            this.tb_employePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // tb_employeAddress
-            // 
-            this.tb_employeAddress.Location = new System.Drawing.Point(70, 86);
-            this.tb_employeAddress.Name = "tb_employeAddress";
-            this.tb_employeAddress.Size = new System.Drawing.Size(292, 20);
-            this.tb_employeAddress.TabIndex = 25;
-            this.tb_employeAddress.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // tb_employeDni
-            // 
-            this.tb_employeDni.Location = new System.Drawing.Point(70, 64);
-            this.tb_employeDni.Name = "tb_employeDni";
-            this.tb_employeDni.Size = new System.Drawing.Size(292, 20);
-            this.tb_employeDni.TabIndex = 24;
-            this.tb_employeDni.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // tb_employeLastName
-            // 
-            this.tb_employeLastName.Location = new System.Drawing.Point(70, 42);
-            this.tb_employeLastName.Name = "tb_employeLastName";
-            this.tb_employeLastName.Size = new System.Drawing.Size(292, 20);
-            this.tb_employeLastName.TabIndex = 23;
-            this.tb_employeLastName.TextChanged += new System.EventHandler(this.tb_employeFirstName_TextChanged);
-            this.tb_employeLastName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // lbl_employeLastName
-            // 
-            this.lbl_employeLastName.AutoSize = true;
-            this.lbl_employeLastName.Location = new System.Drawing.Point(16, 46);
-            this.lbl_employeLastName.Name = "lbl_employeLastName";
-            this.lbl_employeLastName.Size = new System.Drawing.Size(47, 13);
-            this.lbl_employeLastName.TabIndex = 22;
-            this.lbl_employeLastName.Text = "Apellido:";
-            // 
-            // tb_employeFirstName
-            // 
-            this.tb_employeFirstName.Location = new System.Drawing.Point(70, 20);
-            this.tb_employeFirstName.Name = "tb_employeFirstName";
-            this.tb_employeFirstName.Size = new System.Drawing.Size(292, 20);
-            this.tb_employeFirstName.TabIndex = 21;
-            this.tb_employeFirstName.TextChanged += new System.EventHandler(this.tb_employeFirstName_TextChanged);
-            this.tb_employeFirstName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_employeData_KeyPress);
-            // 
-            // btn_deleteEmploye
-            // 
-            this.btn_deleteEmploye.Location = new System.Drawing.Point(174, 311);
-            this.btn_deleteEmploye.Name = "btn_deleteEmploye";
-            this.btn_deleteEmploye.Size = new System.Drawing.Size(106, 23);
-            this.btn_deleteEmploye.TabIndex = 20;
-            this.btn_deleteEmploye.Text = "Eliminar Empleado";
-            this.btn_deleteEmploye.UseVisualStyleBackColor = true;
-            this.btn_deleteEmploye.Click += new System.EventHandler(this.btn_deleteUser_Click);
-            // 
-            // btn_save
-            // 
-            this.btn_save.Enabled = false;
-            this.btn_save.Location = new System.Drawing.Point(286, 311);
-            this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(75, 23);
-            this.btn_save.TabIndex = 14;
-            this.btn_save.Text = "Guardar";
-            this.btn_save.UseVisualStyleBackColor = true;
-            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
-            // 
-            // lbl_employePosition
-            // 
-            this.lbl_employePosition.AutoSize = true;
-            this.lbl_employePosition.Location = new System.Drawing.Point(13, 134);
-            this.lbl_employePosition.Name = "lbl_employePosition";
-            this.lbl_employePosition.Size = new System.Drawing.Size(50, 13);
-            this.lbl_employePosition.TabIndex = 13;
-            this.lbl_employePosition.Text = "Posición:";
-            // 
-            // lbl_employeDni
-            // 
-            this.lbl_employeDni.AutoSize = true;
-            this.lbl_employeDni.Location = new System.Drawing.Point(34, 68);
-            this.lbl_employeDni.Name = "lbl_employeDni";
-            this.lbl_employeDni.Size = new System.Drawing.Size(29, 13);
-            this.lbl_employeDni.TabIndex = 12;
-            this.lbl_employeDni.Text = "DNI:";
-            // 
-            // lbl_employePhone
-            // 
-            this.lbl_employePhone.AutoSize = true;
-            this.lbl_employePhone.Location = new System.Drawing.Point(11, 112);
-            this.lbl_employePhone.Name = "lbl_employePhone";
-            this.lbl_employePhone.Size = new System.Drawing.Size(52, 13);
-            this.lbl_employePhone.TabIndex = 11;
-            this.lbl_employePhone.Text = "Teléfono:";
-            // 
-            // lbl_employeAddress
-            // 
-            this.lbl_employeAddress.AutoSize = true;
-            this.lbl_employeAddress.Location = new System.Drawing.Point(8, 90);
-            this.lbl_employeAddress.Name = "lbl_employeAddress";
-            this.lbl_employeAddress.Size = new System.Drawing.Size(55, 13);
-            this.lbl_employeAddress.TabIndex = 10;
-            this.lbl_employeAddress.Text = "Dirección:";
-            // 
-            // lbl_employeFirstName
-            // 
-            this.lbl_employeFirstName.AutoSize = true;
-            this.lbl_employeFirstName.Location = new System.Drawing.Point(16, 24);
-            this.lbl_employeFirstName.Name = "lbl_employeFirstName";
-            this.lbl_employeFirstName.Size = new System.Drawing.Size(47, 13);
-            this.lbl_employeFirstName.TabIndex = 9;
-            this.lbl_employeFirstName.Text = "Nombre:";
-            // 
-            // btn_close
-            // 
-            this.btn_close.Location = new System.Drawing.Point(257, 359);
-            this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(75, 23);
-            this.btn_close.TabIndex = 2;
-            this.btn_close.Text = "Cerrar";
-            this.btn_close.UseVisualStyleBackColor = true;
-            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
-            // 
-            // btn_addNewEmploye
-            // 
-            this.btn_addNewEmploye.Location = new System.Drawing.Point(12, 359);
-            this.btn_addNewEmploye.Name = "btn_addNewEmploye";
-            this.btn_addNewEmploye.Size = new System.Drawing.Size(191, 23);
-            this.btn_addNewEmploye.TabIndex = 3;
-            this.btn_addNewEmploye.Text = "Agregar Nuevo Empleado";
-            this.btn_addNewEmploye.UseVisualStyleBackColor = true;
-            this.btn_addNewEmploye.Click += new System.EventHandler(this.btn_addNewEmploye_Click);
-            // 
             // Empleados
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.ClientSize = new System.Drawing.Size(592, 400);
+            this.ClientSize = new System.Drawing.Size(630, 442);
+            this.Controls.Add(this.tc_employee);
             this.Controls.Add(this.btn_addNewEmploye);
             this.Controls.Add(this.btn_close);
-            this.Controls.Add(this.gb_employeData);
             this.Controls.Add(this.lb_employe);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -359,9 +462,13 @@ namespace FerreteriaSL.Empleados
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Empleados";
-            this.gb_employeData.ResumeLayout(false);
-            this.gb_employeData.PerformLayout();
-            this.gb_payments.ResumeLayout(false);
+            this.tc_employee.ResumeLayout(false);
+            this.tp_general.ResumeLayout(false);
+            this.tp_general.PerformLayout();
+            this.tp_payments.ResumeLayout(false);
+            this.tp_payments.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_employeePayments)).EndInit();
+            this.tp_statistics.ResumeLayout(false);
             this.gb_statistics.ResumeLayout(false);
             this.gb_statistics.PerformLayout();
             this.ResumeLayout(false);
@@ -371,32 +478,40 @@ namespace FerreteriaSL.Empleados
         #endregion
 
         private ListBox lb_employe;
-        private GroupBox gb_employeData;
+        private Button btn_close;
+        private Button btn_addNewEmploye;
+        private TabControl tc_employee;
+        private TabPage tp_general;
+        private TextBox tb_employePosition;
+        private TextBox tb_employePhone;
+        private TextBox tb_employeAddress;
+        private TextBox tb_employeDni;
+        private TextBox tb_employeLastName;
+        private Label lbl_employeLastName;
+        private TextBox tb_employeFirstName;
+        private Button btn_deleteEmploye;
         private Button btn_save;
         private Label lbl_employePosition;
         private Label lbl_employeDni;
         private Label lbl_employePhone;
         private Label lbl_employeAddress;
         private Label lbl_employeFirstName;
-        private Button btn_close;
-        private Button btn_deleteEmploye;
-        private Button btn_addNewEmploye;
-        private Label lbl_employeLastName;
-        private TextBox tb_employeFirstName;
-        private TextBox tb_employeLastName;
-        private GroupBox gb_statistics;
-        private TextBox tb_employePosition;
-        private TextBox tb_employePhone;
-        private TextBox tb_employeAddress;
-        private TextBox tb_employeDni;
-        private GroupBox gb_payments;
+        private TabPage tp_payments;
         private Button btn_registerPayment;
-        private Button btn_viewPayments;
+        private TabPage tp_statistics;
+        private GroupBox gb_statistics;
         private Label lbl_amountRecaudedValue;
         private Label lbl_soldProductsValue;
         private Label lbl_sellCountValue;
         private Label lbl_amountRecauded;
         private Label lbl_soldProducts;
         private Label lbl_sellCount;
+        private DataGridView dgv_employeePayments;
+        private Label lbl_paysDateTo;
+        private Label lbl_paysDateFrom;
+        private DateTimePicker dtp_paysDateTo;
+        private DateTimePicker dtp_paysDateFrom;
+        private Label lbl_paysTotalValue;
+        private Label lbl_paysTotal;
     }
 }

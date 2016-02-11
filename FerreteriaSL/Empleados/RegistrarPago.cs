@@ -14,15 +14,20 @@ namespace FerreteriaSL.Empleados
 
         private void cb_monthToPay_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btn_register.Enabled = cb_monthToPay.SelectedIndex != -1 && nud_yearToPay.Value > 1900 && nud_mountToPay.Value > 0;
+            validate();
         }
 
         private void nud_yearToPay_ValueChanged(object sender, EventArgs e)
         {
-            btn_register.Enabled = cb_monthToPay.SelectedIndex != -1 && nud_yearToPay.Value > 1900 && nud_mountToPay.Value > 0;
+            validate();
         }
 
         private void nud_mountToPay_ValueChanged(object sender, EventArgs e)
+        {
+            validate();
+        }
+
+        private void validate()
         {
             btn_register.Enabled = cb_monthToPay.SelectedIndex != -1 && nud_yearToPay.Value > 1900 && nud_mountToPay.Value > 0;
         }

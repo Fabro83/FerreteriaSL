@@ -37,7 +37,7 @@ namespace FerreteriaSL.Empleados
             }
             dgv_pagos.ScrollBars = ScrollBars.None;
             Height = _windowHeightFill + dgv_pagos.ColumnHeadersHeight + (dgv_pagos.Rows.Count * dgv_pagos.RowTemplate.Height);
-
+            
         }
 
         private void btn_close_Click(object sender, EventArgs e)
@@ -49,9 +49,8 @@ namespace FerreteriaSL.Empleados
         {
             string result = string.Empty;
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem");
-            foreach (var o in searcher.Get())
+            foreach (var os in searcher.Get().Cast<ManagementObject>())
             {
-                var os = (ManagementObject) o;
                 result = os["Caption"].ToString();
                 break;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
 
@@ -8,10 +9,21 @@ namespace FerreteriaSL.Empleados
 {
     public partial class Empleados : Form
     {
+        private int _empId = -1;
+
         public Empleados()
         {
             InitializeComponent();
-            LoadEmployeListBox();            
+            LoadEmployeListBox(); 
+            SetTextBoxEvent();
+        }
+
+        private void SetTextBoxEvent()
+        {
+            foreach (TextBox control in tp_general.Controls.OfType<TextBox>())
+            {
+                control.KeyPress += tb_employeData_KeyPress;
+            }
         }
 
         private void LoadEmployeListBox()
@@ -28,24 +40,22 @@ namespace FerreteriaSL.Empleados
         {
             if (lb_employe.SelectedIndex != -1)
             {
-                gb_employeData.Enabled = true;
-                int empId = int.Parse((lb_employe.SelectedItem as DataRowView)["id"].ToString());
-                gb_employeData.Text = "Datos de " + (lb_employe.SelectedItem as DataRowView)["nombre"];
+                tc_employee.Enabled = true;
+                _empId = int.Parse((lb_employe.SelectedItem as DataRowView)["id"].ToString());
 
                 Bd dbCon = new Bd();
-                DataRow data = dbCon.Read("SELECT * FROM empleado WHERE id =" + empId).Rows[0];
+                DataRow data = dbCon.Read("SELECT * FROM empleado WHERE id =" + _empId).Rows[0];
 
                 LoadAllUserData(data);
             }
             else
             {
-                gb_employeData.Enabled = false;
+                tc_employee.Enabled = false;
             }           
         }
 
         private void ClearAllFields()
         {
-            gb_employeData.Text = "";
             tb_employeFirstName.Text = "";
             tb_employeLastName.Text = "";
             tb_employeDni.Text = "";
@@ -66,17 +76,53 @@ namespace FerreteriaSL.Empleados
             tb_employePhone.Text = data["telefono"].ToString();
             tb_employePosition.Text = data["cargo"].ToString();
 
-            LoadEmployeStatistics(int.Parse(data["id"].ToString()));
+            LoadEmployeStatistics();
+            LoadEmployeePays();
 
         }
 
-        private void LoadEmployeStatistics(int empId)
+        private string BuildPaymentFilters()
+        {
+            var dateFrom = dtp_paysDateFrom.Checked ? String.Format("fecha_pago >= '{0:yyyy-MM-dd}'", dtp_paysDateFrom.Value) : "";
+            var dateTo = dtp_paysDateTo.Checked ? String.Format("fecha_pago <= '{0:yyyy-MM-dd}'", dtp_paysDateTo.Value) : "";
+            var connector = dateFrom != "" && dateTo != "" ? " AND " : "";
+            return (dateFrom != "" || dateTo != "" ? " AND " : " ") + dateFrom + connector + dateTo + " ";
+        }
+
+
+
+        private void LoadEmployeePays()
+        {
+
+
+            Bd dbCon = new Bd();
+            DataTable res = dbCon.Read("SELECT fecha_pago as Fecha,año as ano, type_mes.mes as Mes, monto as Monto, observacion as obs,empleado_pago.mes as ocultar " +
+                                       "FROM empleado_pago LEFT JOIN type_mes ON empleado_pago.mes = type_mes.id WHERE empleado_id = " + _empId + BuildPaymentFilters() +
+                                       " ORDER BY ano, empleado_pago.mes, empleado_pago.id DESC");
+
+            dgv_employeePayments.DataSource = res;
+            dgv_employeePayments.Columns["Monto"].DefaultCellStyle.Format = "$0.00";
+            dgv_employeePayments.Columns["Fecha"].DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgv_employeePayments.Columns["ano"].HeaderText = "Año";
+            dgv_employeePayments.Columns["obs"].HeaderText = "Observación";
+            dgv_employeePayments.Columns["ocultar"].Visible = false;
+            foreach (var sColumn in dgv_employeePayments.Columns.Cast<DataGridViewColumn>().Where(sColumn => sColumn.Name != "obs"))
+            {
+                sColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            }
+
+            lbl_paysTotalValue.Text = String.Format("${0:N2}",
+                dgv_employeePayments.Rows.Cast<DataGridViewRow>()
+                    .Sum(s => double.Parse(s.Cells["Monto"].Value.ToString())));
+        }
+
+        private void LoadEmployeStatistics()
         {
             Bd dbCon = new Bd();
 
             string query = "SELECT ventas_caja.id as ID,ventas_caja.importe_total as Importe FROM usuario \n" +
                            "LEFT JOIN ventas_caja ON ventas_caja.usuario_id = usuario.id\n" +
-                           "WHERE usuario.empleado_id = " + empId;
+                           "WHERE usuario.empleado_id = " + _empId;
 
             DataTable res = dbCon.Read(query);
 
@@ -156,38 +202,40 @@ namespace FerreteriaSL.Empleados
             btn_save.Enabled = tb_employeFirstName.Text.Trim().Length > 3 && tb_employeLastName.Text.Trim().Length > 3;
         }
 
-        private void btn_viewPayments_Click(object sender, EventArgs e)
-        {
-            int empId = int.Parse((lb_employe.SelectedItem as DataRowView)["id"].ToString());
-            string empNombre = (lb_employe.SelectedItem as DataRowView)["nombre"].ToString();
-            EmpleadosVerPagos evp = new EmpleadosVerPagos(empId, empNombre);
-            evp.Show(this);
-        }
-
         private void btn_registerPayment_Click(object sender, EventArgs e)
         {
             RegistrarPago rp = new RegistrarPago();
-            if (rp.ShowDialog(this) == DialogResult.OK)
-            {
-                int empId = int.Parse((lb_employe.SelectedItem as DataRowView)["id"].ToString());
-                string empPagFechaPago = rp.dtp_registerDate.Value.ToString("yyyy-MM-dd");
-                double empPagMonto = Convert.ToDouble(rp.nud_mountToPay.Value);
-                int empPagMes = rp.cb_monthToPay.SelectedIndex;
-                int empPagAño = int.Parse(rp.nud_yearToPay.Value.ToString());
-                string empPagObservacion = rp.tb_observation.Text.Trim();
+            if (rp.ShowDialog(this) != DialogResult.OK) return;
+            int empId = int.Parse((lb_employe.SelectedItem as DataRowView)["id"].ToString());
+            string empPagFechaPago = rp.dtp_registerDate.Value.ToString("yyyy-MM-dd");
+            double empPagMonto = Convert.ToDouble(rp.nud_mountToPay.Value);
+            int empPagMes = rp.cb_monthToPay.SelectedIndex;
+            int empPagAño = int.Parse(rp.nud_yearToPay.Value.ToString());
+            string empPagObservacion = rp.tb_observation.Text.Trim();
 
-                Bd dbCon = new Bd();
+            Bd dbCon = new Bd();
  
-                const string query = "INSERT INTO empleado_pago (empleado_id,monto,fecha_pago,mes,año,observacion) VALUES ({0},{1},'{2}',{3},{4},'{5}')";
-                dbCon.Write(String.Format(query, empId, empPagMonto.ToString("0.00",CultureInfo.InvariantCulture), empPagFechaPago, empPagMes, empPagAño, empPagObservacion));
-
-            }
+            const string query = "INSERT INTO empleado_pago (empleado_id,monto,fecha_pago,mes,año,observacion) VALUES ({0},{1},'{2}',{3},{4},'{5}')";
+            dbCon.Write(String.Format(query, empId, empPagMonto.ToString("0.00",CultureInfo.InvariantCulture), empPagFechaPago, empPagMes, empPagAño, empPagObservacion));
+            LoadEmployeePays();
         }
 
         private void tb_employeData_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r')
                 btn_save.PerformClick();
+        }
+
+        private void dtp_paysDate_Change(object sender, EventArgs e)
+        {
+            LoadEmployeePays();
+        }
+
+        private void dgv_employeePayments_SelectionChanged(object sender, EventArgs e)
+        {
+            
+            if (dgv_employeePayments.SelectedRows.Count <= 1) return;
+            lbl_paysTotalValue.Text = String.Format("${0:F}", dgv_employeePayments.SelectedRows.Cast<DataGridViewRow>().Sum(s => float.Parse(s.Cells["Monto"].Value.ToString())));
         }
 
     }
