@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace FerreteriaSL.Ventas
 
         private void AddItemToCart()
         {
+            if (_quantity <= 0) return;
             Bd bdCon = new Bd();
             DataRow result = bdCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + _currentProduct).Rows[0];
 
@@ -104,7 +106,7 @@ namespace FerreteriaSL.Ventas
 
         private void dgv_productosIngresados_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            btn_imprimirTicket.Enabled = btn_disminuir.Enabled = btn_incrementar.Enabled = btn_remover.Enabled = btn_removerTodos.Enabled = dgv_productosIngresados.Rows.Count > 0;
+            btn_imprimirTicket.Enabled = btn_disminuir.Enabled = btn_incrementar.Enabled = btn_remover.Enabled = btn_removerTodos.Enabled = btn_exportar.Enabled = dgv_productosIngresados.Rows.Count > 0;
             CalculateTotal();           
         }
 
@@ -149,9 +151,9 @@ namespace FerreteriaSL.Ventas
         {
             DataTable productosIngresados = new DataTable();
 
-            foreach (DataGridViewColumn dataGridViewColumn in dgv_productosIngresados.Columns)
+            foreach (DataGridViewColumn dataGridViewColumn in dgv_productosIngresados.Columns.Cast<DataGridViewColumn>().Where(dataGridViewColumn => dataGridViewColumn.Visible))
             {
-                if (dataGridViewColumn.Visible) productosIngresados.Columns.Add(dataGridViewColumn.Name);
+                productosIngresados.Columns.Add(dataGridViewColumn.Name);
             }
 
             foreach (DataGridViewRow dataGridViewRow in dgv_productosIngresados.Rows)
@@ -420,16 +422,76 @@ namespace FerreteriaSL.Ventas
         
         private void btn_exportar_Click(object sender, EventArgs e)
         {
-            ExportarDataGridViewExcel(dgv_productosIngresados);
+            var presupuestoMenuStrip = new ContextMenuStrip();
+            presupuestoMenuStrip.Items.Add("Imprimir...").Click += Presupuesto_Imprimir_OnClick;
+            presupuestoMenuStrip.Items.Add("Exportar a Excel").Click += Presupuesto_ExportarAExcel_OnClick;
+
+            presupuestoMenuStrip.Show(MousePosition);
         }
 
-
-
-        
-        
-
-        private void ExportarDataGridViewExcel(DataGridView grd)
+        private void Presupuesto_Imprimir_OnClick(object sender, EventArgs e)
         {
+            var presupuestoImprimirWindow = new Presupuesto();
+            if (presupuestoImprimirWindow.ShowDialog() != DialogResult.OK) return;
+
+            Dictionary<string, object> fieldsDictionary = new Dictionary<string, object>
+            {
+                {"nombre", "Señor/a: "+presupuestoImprimirWindow.txb_nombre.Text},
+                {"domicilio", "Domicilio: " + presupuestoImprimirWindow.txb_domicilio.Text},
+                {"fecha", presupuestoImprimirWindow.dtp_fecha.Text},
+                {"codigo_barra","fre3of9x,30,Regular,0&&"+"*000000001*".ToUpper()}
+            };
+
+            List<Dictionary<string, object>> gridList = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>()
+                {
+                    {"cantidad", "Arial,10,Bold,0&&" + "Cantidad"},
+                    {"descripcion", "Arial,10,Bold,0&&" + "Descripción"},
+                    {"precio_unitario", "Arial,10,Bold,0&&" + "Precio Unitario"},
+                    {"precio_subtotal", "Arial,10,Bold,0&&" + "Importe"}
+                }
+            };
+
+
+            foreach (DataGridViewRow dataRow in dgv_productosIngresados.Rows)
+            {
+                Dictionary<string, object> gridRowDictionary = new Dictionary<string, object>();
+                
+                for (int i = 0; i < dgv_productosIngresados.Columns.Count; i++)
+                {
+                    string columnName = dgv_productosIngresados.Columns[i].Name;
+                    gridRowDictionary.Add(columnName,
+                        columnName.Contains("precio")
+                            ? string.Format("${0:N2}", float.Parse(dataRow.Cells[i].Value.ToString()))
+                            : dataRow.Cells[i].Value);
+                }
+
+                gridList.Add(gridRowDictionary);
+            }
+
+            gridList.Add(new Dictionary<string, object>()
+            {
+                {"cantidad",""},
+                {"descripcion",""},
+                {"precio_unitario","Arial,14,Bold,20&&"+"Total:"},
+                {"precio_subtotal","Arial,14,Bold,20&&"+string.Format("${0:N2}",float.Parse(lbl_totalMonto.Text))}
+            });
+
+            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, 2);
+            objImpresion.StartPrinting();
+            //dgv_productosIngresados.Rows.Clear();
+            
+        }
+
+        private void Presupuesto_ExportarAExcel_OnClick(object sender, EventArgs e)
+        {
+            ExportarDataGridViewExcel();
+        }      
+
+        private void ExportarDataGridViewExcel()
+        {
+            var grd = dgv_productosIngresados;
             Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
             
             string pathstring = (Application.StartupPath + "\\template_p.xls");

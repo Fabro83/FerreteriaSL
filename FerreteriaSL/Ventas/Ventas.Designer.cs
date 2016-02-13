@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
+using FerreteriaSL.Componentes;
 
 namespace FerreteriaSL.Ventas
 {
@@ -507,12 +508,13 @@ namespace FerreteriaSL.Ventas
             // 
             // btn_exportar
             // 
+            this.btn_exportar.Enabled = false;
             this.btn_exportar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_exportar.Location = new System.Drawing.Point(327, 424);
             this.btn_exportar.Name = "btn_exportar";
             this.btn_exportar.Size = new System.Drawing.Size(95, 43);
             this.btn_exportar.TabIndex = 40;
-            this.btn_exportar.Text = "Exportar a Excel";
+            this.btn_exportar.Text = "Generar Presupuesto";
             this.btn_exportar.UseVisualStyleBackColor = true;
             this.btn_exportar.Click += new System.EventHandler(this.btn_exportar_Click);
             // 

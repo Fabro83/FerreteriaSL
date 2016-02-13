@@ -117,29 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Key.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="carrito_ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\carrito_ico.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Arrow_Left" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Arrow2 Left.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Arrow_Right" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Arrow2 Right.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Logo_GIF" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Logo SL Recortado.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Logo_PNG" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Logo SL Recortado.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fre3of9x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fre3of9x.ttf;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="free3of9" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\free3of9.ttf;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using FerreteriaSL.Clases_Base_de_Datos;
+using Net.SourceForge.Koogra.Excel.ValueTypes;
 
 namespace FerreteriaSL.Clases_Genericas
 {
@@ -15,14 +19,15 @@ namespace FerreteriaSL.Clases_Genericas
         private readonly Dictionary<string, object> _printingFieldsDictionary;
         private readonly List<Dictionary<string, object>> _printingGridList; 
         private int _totalPages,_currentPage;
-        private ModelPage _pageModel;
+        private readonly ModelPage _pageModel;
 
-        public Impresion(Dictionary<string, object> printingFields,List<Dictionary<string,object>> printingGrid ,string documentType)
+        public Impresion(Dictionary<string, object> printingFields,List<Dictionary<string,object>> printingGrid ,int documentType)
         {
             _printingFieldsDictionary = printingFields;
             _pageModel = new ModelPage(documentType);
             _printingGridList = printingGrid;
-            var pageSize = new PointF(_printDocument.DefaultPageSettings.Bounds.Size.Width, _printDocument.DefaultPageSettings.Bounds.Size.Height);
+            var pageSize = new PointF(_printDocument.DefaultPageSettings.PaperSize.Width,
+                                      _printDocument.DefaultPageSettings.PaperSize.Height);
             _pageModel.TranslateRectangles(pageSize);
             _totalPages = CalculatePages();
             _printDocument.PrintPage += OnPrint;
@@ -36,53 +41,98 @@ namespace FerreteriaSL.Clases_Genericas
 
         private void OnPrint(object sender, PrintPageEventArgs e)
         {
-            _pageModel = new ModelPage("facturaA");
-
-            PrinterResolution printerResolution = new PrinterResolution
+            e.PageSettings.Margins.Top = 0;
+            e.PageSettings.Margins.Left = 0;
+            e.PageSettings.Margins.Bottom = 0;
+            e.PageSettings.Margins.Right = 0;
+            e.PageSettings.Landscape = false;
+            
+            e.PageSettings.PrinterResolution = new PrinterResolution
             {
                 X = 600,
                 Y = 600,
                 Kind = PrinterResolutionKind.Custom
             };
-            e.PageSettings.PrinterResolution = printerResolution;
 
+            var hmx = (e.PageSettings.HardMarginX / 100) * 96;
+            var hmy = (e.PageSettings.HardMarginY / 100) * 96;
 
-            var pageSize = new PointF(e.PageSettings.PrintableArea.Width - e.MarginBounds.X, e.PageSettings.PrintableArea.Height - e.MarginBounds.Y);
-            _pageModel.TranslateRectangles(pageSize);
-            foreach (KeyValuePair<string, object> fieldValue in _printingFieldsDictionary)
+            foreach (KeyValuePair<string, object> fieldValue in _printingFieldsDictionary.Where(fieldValue => _pageModel.Fields.ContainsKey(fieldValue.Key)))
             {
                 using (PrintField fieldParameters = _pageModel.Fields[fieldValue.Key])
                 {
-                    fieldParameters.CalculateFontSize(fieldValue.Value.ToString(), e);
-                    fieldParameters.CenterText(fieldValue.Value.ToString(), e);
-                    e.Graphics.DrawString(fieldValue.Value.ToString(), fieldParameters.CalculatedFont, Brushes.Black, fieldParameters.CenteredPosX, fieldParameters.CenteredPosY);                
+                    var text = fieldValue.Value.ToString();
+                    var customVerticalMargin = 0F;
+                    if (text.Contains("&&"))
+                    {
+                        var customFontParts = text.Split(new[] { "&&" }, StringSplitOptions.None)[0].Split(',');
+                        text = text.Split(new[] { "&&" }, StringSplitOptions.None)[1];
+                        var fontFamily = customFontParts[0];
+                        var fontSize = float.Parse(customFontParts[1]);
+                        var fontStyle = (FontStyle)Enum.Parse(typeof(FontStyle), customFontParts[2], true);
+                        var customFont = fontFamily == "fre3of9x" ? CodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
+                        
+                        customVerticalMargin = float.Parse(customFontParts[3]);
+                        fieldParameters.Height = fieldParameters.Height * 2;
+                        fieldParameters.Width = fieldParameters.Width * 2;
+                        fieldParameters.CalculateFontSize(text, e, customFont);
+                        fieldParameters.Height = fieldParameters.Height / 2;
+                        fieldParameters.Width = fieldParameters.Width / 2;
+                    }
+                    else
+                    {
+                        fieldParameters.CalculateFontSize(text, e);
+                    }         
+                    fieldParameters.CenterText(text, e);
+                    var coordX = fieldParameters.CenteredPosX - hmx;
+                    var coordY = fieldParameters.CenteredPosY - hmy + customVerticalMargin;
+                    e.Graphics.DrawString(text, fieldParameters.CalculatedFont, Brushes.Black, coordX,coordY);
                 }
             }
 
             for (int i = 0; i < _printingGridList.Count; i++)
             {
-                foreach (KeyValuePair<string, object> fieldValue in _printingGridList[i])
+                foreach (KeyValuePair<string, object> fieldValue in _printingGridList[i].Where(fieldValue => _pageModel.Fields.ContainsKey("grid_" + fieldValue.Key.ToLower())))
                 {
-                    using (PrintField fieldParameters = _pageModel.Fields["grid_"+fieldValue.Key.ToLower()])
+                    using (PrintField fieldParameters = _pageModel.Fields["grid_" + fieldValue.Key.ToLower()])
                     {
-                        if (fieldValue.Key.ToLower() != "descripcion")
+                        var text = fieldValue.Value.ToString();
+                        var customVerticalMargin = 0F;
+                        if (text.Contains("&&"))
                         {
-                            fieldParameters.CalculateFontSize(fieldValue.Value.ToString(), e);
-                            fieldParameters.CenterText(fieldValue.Value.ToString(), e);
-                            e.Graphics.DrawString(fieldValue.Value.ToString(), fieldParameters.CalculatedFont, Brushes.Black, fieldParameters.CenteredPosX, fieldParameters.CenteredPosY + (fieldParameters.Height + fieldParameters.VerticalMargin * 2) * i);
-                        }
+                            var customFontParts = text.Split(new[] {"&&"}, StringSplitOptions.None)[0].Split(',');
+                            text = text.Split(new[] { "&&" }, StringSplitOptions.None)[1];
+                            var fontFamily = customFontParts[0];
+                            var fontSize = float.Parse(customFontParts[1]);
+                            var fontStyle = (FontStyle) Enum.Parse(typeof (FontStyle), customFontParts[2], true);
+                            var customFont = fontFamily == "fre3of9x" ? CodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
+                                                   
+                            customVerticalMargin = float.Parse(customFontParts[3]);
+                            fieldParameters.Height = fieldParameters.Height * 2;
+                            fieldParameters.Width = fieldParameters.Width * 2;
+                            fieldParameters.CalculateFontSize(text,e,customFont);
+                            fieldParameters.Height = fieldParameters.Height / 2;
+                            fieldParameters.Width = fieldParameters.Width / 2;                               
+                        }                       
                         else
                         {
-                            fieldParameters.CalculateFontSize(fieldValue.Value.ToString(),e);
-                            fieldParameters.CenterText(fieldValue.Value.ToString(), e, false);
-                            e.Graphics.DrawString(fieldValue.Value.ToString(), fieldParameters.CalculatedFont, Brushes.Black, fieldParameters.CenteredPosX, fieldParameters.CenteredPosY + (fieldParameters.Height + fieldParameters.VerticalMargin*2) * i);
-                        }
-
-
+                            fieldParameters.CalculateFontSize(text, e);
+                        }                      
+                        fieldParameters.CenterText(text, e);
+                        var coordX = fieldParameters.CenteredPosX - hmx;
+                        var coordY = (fieldParameters.CenteredPosY + (fieldParameters.Height + (fieldParameters.VerticalMargin) * 2) * i) - hmy + customVerticalMargin;
+                        e.Graphics.DrawString(text, fieldParameters.CalculatedFont, Brushes.Black,coordX, coordY);
                     }
                 }
             }
 
+        }
+
+        private Font CodeFont(float fontSize)
+        {
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile(@"C:\Users\TestingVM\Desktop\Ferreteria Source\Fonts\fre3of9x.ttf");
+            return new Font(pfc.Families[0],fontSize);
         }
 
         private int CalculatePages()
@@ -105,15 +155,15 @@ namespace FerreteriaSL.Clases_Genericas
             set { _fields = value; }
         }
 
-        public ModelPage(string documentType)
+        public ModelPage(int documentType)
         {
             Bd db = new Bd();
-            DataTable dt = db.Read("SELECT * FROM print_page WHERE scope = '"+documentType+"'");
+            DataTable dt = db.Read("SELECT * FROM print_page WHERE id = '"+documentType+"'");
 
             _modelPageSize = new PointF(float.Parse(dt.Rows[0]["model_page_width"].ToString()), float.Parse(dt.Rows[0]["model_page_height"].ToString()));
             GridRows = int.Parse(dt.Rows[0]["grid_rows"].ToString());
 
-            dt = db.Read("SELECT * FROM print_field WHERE scope = 'facturaA'");
+            dt = db.Read("SELECT * FROM print_field WHERE print_page_id = '" + documentType + "'");
             foreach (PrintField pf in from DataRow sRow in dt.Rows select new PrintField
             {
                 Field = sRow["field"].ToString(),
@@ -125,7 +175,9 @@ namespace FerreteriaSL.Clases_Genericas
                 Height = float.Parse(sRow["size_height"].ToString()),
                 HorizontalMargin = float.Parse(sRow["margin_horizontal"].ToString()),
                 VerticalMargin = float.Parse(sRow["margin_vertical"].ToString()),
-                FontSize = float.Parse(sRow["font_size"].ToString())
+                FontSize = float.Parse(sRow["font_size"].ToString()),
+                CenterHorizontally =  (bool)sRow["center_h"],
+                CenterVertically = (bool)sRow["center_v"]
             })
             {
                 _fields.Add(pf.Field, pf);
@@ -167,6 +219,8 @@ namespace FerreteriaSL.Clases_Genericas
         public float X { get; set; }
         public string Field { get; set; }
         public string DefaultValue { get; set; }
+        public bool CenterHorizontally { get; set; }
+        public bool CenterVertically { get; set; }
 
         public float FontSize
         {
@@ -190,33 +244,24 @@ namespace FerreteriaSL.Clases_Genericas
         #endregion
 
         #region Methods
-        public void CenterText(string text, PrintPageEventArgs printer, bool horizontal = true, bool vertical = true)
+        public void CenterText(string text, PrintPageEventArgs printer, bool overrideCenterH = true, bool overrideCenterV = true )
         {
             Font fontToTest = CalculatedFont ?? FieldFont;
-
             SizeF textSize = printer.Graphics.MeasureString(text, fontToTest);
-            if (horizontal)
-                CenteredPosX = X + (Width/2) - ((textSize.Width - HorizontalMargin)/2);
-            else
-                CenteredPosX = X;
-
-            if (vertical) 
-                CenteredPosY = Y + (Height / 2) - ((textSize.Height - VerticalMargin) / 2);
-            else
-                CenteredPosY = Y;
-
+            CenteredPosX = CenterHorizontally && overrideCenterH ? X + (Width/2) - ((textSize.Width - HorizontalMargin)/2) : X;
+            CenteredPosY = CenterVertically && overrideCenterV ? Y + (Height / 2) - ((textSize.Height - VerticalMargin) / 2) : Y;
         }
 
-        public void CalculateFontSize(string text, PrintPageEventArgs printer)
+        public void CalculateFontSize(string text, PrintPageEventArgs printer, Font overrideFont = null)
         {
             SizeF textSize = printer.Graphics.MeasureString(text, FieldFont);
-            Font testFont = FieldFont;
+            Font testFont = overrideFont ?? FieldFont;
 
             if (textSize.Width < Width || textSize.Height < Height)
             {
                 for (float i = testFont.Size; i > 1; i-=0.3F)
                 {
-                    testFont = new Font(testFont.FontFamily, i);
+                    testFont = new Font(testFont.FontFamily, i,testFont.Style);
                     textSize = printer.Graphics.MeasureString(text, testFont);
                     if (textSize.Width < Width && textSize.Height < Height) break;
                 }

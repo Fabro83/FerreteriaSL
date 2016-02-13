@@ -93,6 +93,12 @@
   <ItemGroup>
     <Compile Include="afldbg.cs" />
     <Compile Include="Clases Genericas\Impresion.cs" />
+    <Compile Include="Componentes\ComboGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\ComboGrid.designer.cs">
+      <DependentUpon>ComboGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="ubicacion\ABM_Articulos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -246,17 +252,11 @@
     <Compile Include="Ventas\BusquedaProducto.Designer.cs">
       <DependentUpon>BusquedaProducto.cs</DependentUpon>
     </Compile>
-    <Compile Include="Ventas\ComboGrid.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Ventas\ComboGrid.designer.cs">
-      <DependentUpon>ComboGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Productos\Administrar_Stock.cs">
+    <Compile Include="Productos\AdministrarStock.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Productos\Administrar_Stock.Designer.cs">
-      <DependentUpon>Administrar_Stock.cs</DependentUpon>
+    <Compile Include="Productos\AdministrarStock.Designer.cs">
+      <DependentUpon>AdministrarStock.cs</DependentUpon>
     </Compile>
     <Compile Include="Productos\AplicarFuncionPrecio.cs">
       <SubType>Form</SubType>
@@ -292,6 +292,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Clientes\AgregarNuevoCliente.resx">
       <DependentUpon>AgregarNuevoCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Componentes\ComboGrid.resx">
+      <DependentUpon>ComboGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Empleados\EmpleadosVerPagos.resx">
       <DependentUpon>EmpleadosVerPagos.cs</DependentUpon>
@@ -359,11 +362,8 @@
     <EmbeddedResource Include="Ventas\Calculadora.resx">
       <DependentUpon>Calculadora.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Ventas\ComboGrid.resx">
-      <DependentUpon>ComboGrid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Productos\Administrar_Stock.resx">
-      <DependentUpon>Administrar_Stock.cs</DependentUpon>
+    <EmbeddedResource Include="Productos\AdministrarStock.resx">
+      <DependentUpon>AdministrarStock.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Productos\AplicarFuncionPrecio.resx">
@@ -386,6 +386,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Ventas\ConfirmarVenta.resx">
       <DependentUpon>ConfirmarVenta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ventas\Presupuesto.resx">
+      <DependentUpon>Presupuesto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ventas\Ventas.resx">
       <DependentUpon>Ventas.cs</DependentUpon>
@@ -413,6 +416,12 @@
     </Compile>
     <Compile Include="Ventas\ConfirmarVenta.Designer.cs">
       <DependentUpon>ConfirmarVenta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ventas\Presupuesto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ventas\Presupuesto.Designer.cs">
+      <DependentUpon>Presupuesto.cs</DependentUpon>
     </Compile>
     <Compile Include="Ventas\Ventas.cs">
       <SubType>Form</SubType>
@@ -467,6 +476,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\fre3of9x.ttf" />
+    <None Include="Resources\free3of9.ttf" />
     <None Include="Resources\Key.png" />
     <Content Include="Ferreteria San Lorenzo.ico" />
     <None Include="Resources\carrito_ico.ico" />

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Genericas;
+using Microsoft.Reporting.WinForms;
 
 namespace FerreteriaSL.Ventas
 {
@@ -68,6 +71,7 @@ namespace FerreteriaSL.Ventas
                 {"iva", facturaA.txb_iva.Text},
                 {"cuit", facturaA.txb_cuit.Text},
                 {"condiciones", facturaA.txb_condiciones.Text},
+                {"remito", facturaA.txb_remito.Text},
                 {"impuestos", facturaA.txb_impuestos.Text},
                 {"subtotal2", facturaA.txb_subtotal2.Text},
                 {"subtotal", string.Format("${0:N2}", Math.Truncate((_monto/1.21)*100)/100)},
@@ -93,7 +97,7 @@ namespace FerreteriaSL.Ventas
                 gridList.Add(gridRowDictionary);
             }
 
-            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, "facturaA");
+            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, 1);
             objImpresion.StartPrinting();
         }
 

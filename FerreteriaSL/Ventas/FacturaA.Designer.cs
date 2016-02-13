@@ -229,6 +229,7 @@ namespace FerreteriaSL.Ventas
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.btn_print);
             this.Name = "FacturaA";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Datos de Factura";
             this.ResumeLayout(false);
             this.PerformLayout();
