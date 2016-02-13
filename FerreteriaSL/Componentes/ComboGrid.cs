@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
 
-namespace FerreteriaSL.Ventas
+namespace FerreteriaSL.Componentes
 {
     public delegate void SelectionMadeHandler(object sender, int idProducto);
 
