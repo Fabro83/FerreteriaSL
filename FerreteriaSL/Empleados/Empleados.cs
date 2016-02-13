@@ -11,11 +11,28 @@ namespace FerreteriaSL.Empleados
     {
         private int _empId = -1;
 
+        private static readonly string[] statisticsTypes = {
+            "Ventas",
+            "Articulos",
+            "Recaudacion"
+        };
+
+
         public Empleados()
         {
             InitializeComponent();
-            LoadEmployeListBox(); 
+            LoadEmployeListBox();
+            FillStatisticsYearComboBox();
             SetTextBoxEvent();
+        }
+
+        private void FillStatisticsYearComboBox()
+        {
+            int currentYear = DateTime.Today.Year;
+            for (int i = currentYear; i >= 2013; i--)
+            {
+                cb_estadisticaAnio.Items.Add(i);
+            }
         }
 
         private void SetTextBoxEvent()
@@ -62,9 +79,6 @@ namespace FerreteriaSL.Empleados
             tb_employeAddress.Text = "";
             tb_employePhone.Text = "";
             tb_employePosition.Text = "";
-            lbl_sellCountValue.Text = "";
-            lbl_soldProductsValue.Text = "";
-            lbl_amountRecaudedValue.Text = "";
         }
 
         private void LoadAllUserData(DataRow data)
@@ -75,10 +89,7 @@ namespace FerreteriaSL.Empleados
             tb_employeAddress.Text = data["direccion"].ToString();
             tb_employePhone.Text = data["telefono"].ToString();
             tb_employePosition.Text = data["cargo"].ToString();
-
-            LoadEmployeStatistics();
             LoadEmployeePays();
-
         }
 
         private string BuildPaymentFilters()
@@ -116,35 +127,20 @@ namespace FerreteriaSL.Empleados
                     .Sum(s => double.Parse(s.Cells["Monto"].Value.ToString())));
         }
 
-        private void LoadEmployeStatistics()
+        private void LoadEmployeStatistics(object sender, EventArgs e)
         {
+            if (cb_estadisticaTipo.SelectedIndex == -1 || cb_estadisticaAnio.SelectedIndex == -1) return;
+            string type = statisticsTypes[cb_estadisticaTipo.SelectedIndex];
+            int year = (int)cb_estadisticaAnio.SelectedItem;
+            bool allYears = chk_estadisticaTodos.Checked && chk_estadisticaTodos.Enabled; // NOT USED YET
+            
             Bd dbCon = new Bd();
-
-            string query = "SELECT ventas_caja.id as ID,ventas_caja.importe_total as Importe FROM usuario \n" +
-                           "LEFT JOIN ventas_caja ON ventas_caja.usuario_id = usuario.id\n" +
-                           "WHERE usuario.empleado_id = " + _empId;
-
+            var query = "SELECT Mes, Total FROM vista_estadisticaEmpleado_{0} WHERE empleado_id = {1} {2} ORDER BY y desc, m desc";
+            query = String.Format(query, type, _empId, allYears ? "" : "AND y = " + year);
             DataTable res = dbCon.Read(query);
 
-            int sellCountValue = res.Rows.Count;
-            double amountRecauded = 0;
-            int soldProducts = 0;
-
-            foreach(DataRow sRow in res.Rows)
-            {
-                amountRecauded += double.Parse(sRow["Importe"].ToString());
-                try
-                {
-                    soldProducts += int.Parse(dbCon.Read("SELECT SUM(cantidad) FROM venta_producto WHERE ventas_caja_id = "+sRow["ID"]).Rows[0][0].ToString());
-                }
-                catch(FormatException)
-                {
-                    
-                }
-            }
-            lbl_sellCountValue.Text = sellCountValue.ToString();
-            lbl_amountRecaudedValue.Text = amountRecauded.ToString("$0.00");
-            lbl_soldProductsValue.Text = soldProducts.ToString();
+            dgv_estadistica.DataSource = res;
+            dgv_estadistica.Columns["Total"].DefaultCellStyle.Format = type == statisticsTypes[2] ? "$0.00" : "0";
         }
 
         private void btn_close_Click(object sender, EventArgs e)
@@ -232,8 +228,7 @@ namespace FerreteriaSL.Empleados
         }
 
         private void dgv_employeePayments_SelectionChanged(object sender, EventArgs e)
-        {
-            
+        {         
             if (dgv_employeePayments.SelectedRows.Count <= 1) return;
             lbl_paysTotalValue.Text = String.Format("${0:F}", dgv_employeePayments.SelectedRows.Cast<DataGridViewRow>().Sum(s => float.Parse(s.Cells["Monto"].Value.ToString())));
         }

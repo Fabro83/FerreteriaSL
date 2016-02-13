@@ -61,19 +61,16 @@ namespace FerreteriaSL.Empleados
             this.dgv_employeePayments = new System.Windows.Forms.DataGridView();
             this.btn_registerPayment = new System.Windows.Forms.Button();
             this.tp_statistics = new System.Windows.Forms.TabPage();
-            this.gb_statistics = new System.Windows.Forms.GroupBox();
-            this.lbl_amountRecaudedValue = new System.Windows.Forms.Label();
-            this.lbl_soldProductsValue = new System.Windows.Forms.Label();
-            this.lbl_sellCountValue = new System.Windows.Forms.Label();
-            this.lbl_amountRecauded = new System.Windows.Forms.Label();
-            this.lbl_soldProducts = new System.Windows.Forms.Label();
-            this.lbl_sellCount = new System.Windows.Forms.Label();
+            this.dgv_estadistica = new System.Windows.Forms.DataGridView();
+            this.cb_estadisticaTipo = new System.Windows.Forms.ComboBox();
+            this.cb_estadisticaAnio = new System.Windows.Forms.ComboBox();
+            this.chk_estadisticaTodos = new System.Windows.Forms.CheckBox();
             this.tc_employee.SuspendLayout();
             this.tp_general.SuspendLayout();
             this.tp_payments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_employeePayments)).BeginInit();
             this.tp_statistics.SuspendLayout();
-            this.gb_statistics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_estadistica)).BeginInit();
             this.SuspendLayout();
             // 
             // lb_employe
@@ -371,7 +368,10 @@ namespace FerreteriaSL.Empleados
             // tp_statistics
             // 
             this.tp_statistics.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.tp_statistics.Controls.Add(this.gb_statistics);
+            this.tp_statistics.Controls.Add(this.chk_estadisticaTodos);
+            this.tp_statistics.Controls.Add(this.cb_estadisticaAnio);
+            this.tp_statistics.Controls.Add(this.cb_estadisticaTipo);
+            this.tp_statistics.Controls.Add(this.dgv_estadistica);
             this.tp_statistics.Location = new System.Drawing.Point(4, 22);
             this.tp_statistics.Name = "tp_statistics";
             this.tp_statistics.Padding = new System.Windows.Forms.Padding(3);
@@ -379,71 +379,56 @@ namespace FerreteriaSL.Empleados
             this.tp_statistics.TabIndex = 2;
             this.tp_statistics.Text = "Estadisticas";
             // 
-            // gb_statistics
+            // dgv_estadistica
             // 
-            this.gb_statistics.Controls.Add(this.lbl_amountRecaudedValue);
-            this.gb_statistics.Controls.Add(this.lbl_soldProductsValue);
-            this.gb_statistics.Controls.Add(this.lbl_sellCountValue);
-            this.gb_statistics.Controls.Add(this.lbl_amountRecauded);
-            this.gb_statistics.Controls.Add(this.lbl_soldProducts);
-            this.gb_statistics.Controls.Add(this.lbl_sellCount);
-            this.gb_statistics.Location = new System.Drawing.Point(26, 135);
-            this.gb_statistics.Name = "gb_statistics";
-            this.gb_statistics.Size = new System.Drawing.Size(349, 85);
-            this.gb_statistics.TabIndex = 29;
-            this.gb_statistics.TabStop = false;
-            this.gb_statistics.Text = "Estadísticas";
+            this.dgv_estadistica.AllowUserToAddRows = false;
+            this.dgv_estadistica.AllowUserToDeleteRows = false;
+            this.dgv_estadistica.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_estadistica.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_estadistica.Location = new System.Drawing.Point(6, 34);
+            this.dgv_estadistica.Name = "dgv_estadistica";
+            this.dgv_estadistica.ReadOnly = true;
+            this.dgv_estadistica.RowHeadersVisible = false;
+            this.dgv_estadistica.ShowEditingIcon = false;
+            this.dgv_estadistica.Size = new System.Drawing.Size(389, 315);
+            this.dgv_estadistica.TabIndex = 0;
             // 
-            // lbl_amountRecaudedValue
+            // cb_estadisticaTipo
             // 
-            this.lbl_amountRecaudedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_amountRecaudedValue.Location = new System.Drawing.Point(173, 61);
-            this.lbl_amountRecaudedValue.Name = "lbl_amountRecaudedValue";
-            this.lbl_amountRecaudedValue.Size = new System.Drawing.Size(166, 13);
-            this.lbl_amountRecaudedValue.TabIndex = 5;
+            this.cb_estadisticaTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_estadisticaTipo.FormattingEnabled = true;
+            this.cb_estadisticaTipo.Items.AddRange(new object[] {
+            "Cantdidad de Ventas",
+            "Articulos Vendidos",
+            "Dinero Recaudado"});
+            this.cb_estadisticaTipo.Location = new System.Drawing.Point(7, 7);
+            this.cb_estadisticaTipo.Name = "cb_estadisticaTipo";
+            this.cb_estadisticaTipo.Size = new System.Drawing.Size(227, 21);
+            this.cb_estadisticaTipo.TabIndex = 1;
+            this.cb_estadisticaTipo.SelectedIndexChanged += new System.EventHandler(this.LoadEmployeStatistics);
             // 
-            // lbl_soldProductsValue
+            // cb_estadisticaAnio
             // 
-            this.lbl_soldProductsValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_soldProductsValue.Location = new System.Drawing.Point(173, 40);
-            this.lbl_soldProductsValue.Name = "lbl_soldProductsValue";
-            this.lbl_soldProductsValue.Size = new System.Drawing.Size(166, 13);
-            this.lbl_soldProductsValue.TabIndex = 4;
+            this.cb_estadisticaAnio.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_estadisticaAnio.FormattingEnabled = true;
+            this.cb_estadisticaAnio.Location = new System.Drawing.Point(242, 7);
+            this.cb_estadisticaAnio.Name = "cb_estadisticaAnio";
+            this.cb_estadisticaAnio.Size = new System.Drawing.Size(90, 21);
+            this.cb_estadisticaAnio.TabIndex = 2;
+            this.cb_estadisticaAnio.SelectedIndexChanged += new System.EventHandler(this.LoadEmployeStatistics);
             // 
-            // lbl_sellCountValue
+            // chk_estadisticaTodos
             // 
-            this.lbl_sellCountValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_sellCountValue.Location = new System.Drawing.Point(173, 19);
-            this.lbl_sellCountValue.Name = "lbl_sellCountValue";
-            this.lbl_sellCountValue.Size = new System.Drawing.Size(166, 13);
-            this.lbl_sellCountValue.TabIndex = 3;
-            // 
-            // lbl_amountRecauded
-            // 
-            this.lbl_amountRecauded.AutoSize = true;
-            this.lbl_amountRecauded.Location = new System.Drawing.Point(11, 61);
-            this.lbl_amountRecauded.Name = "lbl_amountRecauded";
-            this.lbl_amountRecauded.Size = new System.Drawing.Size(160, 13);
-            this.lbl_amountRecauded.TabIndex = 2;
-            this.lbl_amountRecauded.Text = "Cantidad de Dinero Recaudado:";
-            // 
-            // lbl_soldProducts
-            // 
-            this.lbl_soldProducts.AutoSize = true;
-            this.lbl_soldProducts.Location = new System.Drawing.Point(12, 40);
-            this.lbl_soldProducts.Name = "lbl_soldProducts";
-            this.lbl_soldProducts.Size = new System.Drawing.Size(159, 13);
-            this.lbl_soldProducts.TabIndex = 1;
-            this.lbl_soldProducts.Text = "Cantidad de Artículos Vendidos:";
-            // 
-            // lbl_sellCount
-            // 
-            this.lbl_sellCount.AutoSize = true;
-            this.lbl_sellCount.Location = new System.Drawing.Point(13, 19);
-            this.lbl_sellCount.Name = "lbl_sellCount";
-            this.lbl_sellCount.Size = new System.Drawing.Size(158, 13);
-            this.lbl_sellCount.TabIndex = 0;
-            this.lbl_sellCount.Text = "Cantidad de Ventas Realizadas:";
+            this.chk_estadisticaTodos.AutoSize = true;
+            this.chk_estadisticaTodos.Enabled = false;
+            this.chk_estadisticaTodos.Location = new System.Drawing.Point(339, 9);
+            this.chk_estadisticaTodos.Name = "chk_estadisticaTodos";
+            this.chk_estadisticaTodos.Size = new System.Drawing.Size(56, 17);
+            this.chk_estadisticaTodos.TabIndex = 3;
+            this.chk_estadisticaTodos.Text = "Todos";
+            this.chk_estadisticaTodos.UseVisualStyleBackColor = true;
+            this.chk_estadisticaTodos.Visible = false;
+            this.chk_estadisticaTodos.CheckedChanged += new System.EventHandler(this.LoadEmployeStatistics);
             // 
             // Empleados
             // 
@@ -469,8 +454,8 @@ namespace FerreteriaSL.Empleados
             this.tp_payments.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_employeePayments)).EndInit();
             this.tp_statistics.ResumeLayout(false);
-            this.gb_statistics.ResumeLayout(false);
-            this.gb_statistics.PerformLayout();
+            this.tp_statistics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_estadistica)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -499,13 +484,6 @@ namespace FerreteriaSL.Empleados
         private TabPage tp_payments;
         private Button btn_registerPayment;
         private TabPage tp_statistics;
-        private GroupBox gb_statistics;
-        private Label lbl_amountRecaudedValue;
-        private Label lbl_soldProductsValue;
-        private Label lbl_sellCountValue;
-        private Label lbl_amountRecauded;
-        private Label lbl_soldProducts;
-        private Label lbl_sellCount;
         private DataGridView dgv_employeePayments;
         private Label lbl_paysDateTo;
         private Label lbl_paysDateFrom;
@@ -513,5 +491,9 @@ namespace FerreteriaSL.Empleados
         private DateTimePicker dtp_paysDateFrom;
         private Label lbl_paysTotalValue;
         private Label lbl_paysTotal;
+        private CheckBox chk_estadisticaTodos;
+        private ComboBox cb_estadisticaAnio;
+        private ComboBox cb_estadisticaTipo;
+        private DataGridView dgv_estadistica;
     }
 }
