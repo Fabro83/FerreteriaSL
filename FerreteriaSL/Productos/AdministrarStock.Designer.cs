@@ -165,7 +165,7 @@ namespace FerreteriaSL.Productos
             // btn_cerrarVentana
             // 
             this.btn_cerrarVentana.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_cerrarVentana.Location = new System.Drawing.Point(12, 438);
+            this.btn_cerrarVentana.Location = new System.Drawing.Point(12, 447);
             this.btn_cerrarVentana.Name = "btn_cerrarVentana";
             this.btn_cerrarVentana.Size = new System.Drawing.Size(75, 23);
             this.btn_cerrarVentana.TabIndex = 20;
@@ -194,7 +194,7 @@ namespace FerreteriaSL.Productos
             this.tb_listarProductos.Location = new System.Drawing.Point(4, 22);
             this.tb_listarProductos.Name = "tb_listarProductos";
             this.tb_listarProductos.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_listarProductos.Size = new System.Drawing.Size(1162, 394);
+            this.tb_listarProductos.Size = new System.Drawing.Size(1201, 403);
             this.tb_listarProductos.TabIndex = 4;
             this.tb_listarProductos.Text = "Ver/Modificar Productos";
             this.tb_listarProductos.Enter += new System.EventHandler(this.tb_listarProductos_Enter);
@@ -208,11 +208,11 @@ namespace FerreteriaSL.Productos
             this.tlp_productProgressInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlp_productProgressInfo.Controls.Add(this.pb_productProgress, 1, 0);
             this.tlp_productProgressInfo.Controls.Add(this.lbl_estado, 0, 0);
-            this.tlp_productProgressInfo.Location = new System.Drawing.Point(13, 343);
+            this.tlp_productProgressInfo.Location = new System.Drawing.Point(13, 352);
             this.tlp_productProgressInfo.Name = "tlp_productProgressInfo";
             this.tlp_productProgressInfo.RowCount = 1;
             this.tlp_productProgressInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_productProgressInfo.Size = new System.Drawing.Size(458, 23);
+            this.tlp_productProgressInfo.Size = new System.Drawing.Size(533, 23);
             this.tlp_productProgressInfo.TabIndex = 21;
             // 
             // pb_productProgress
@@ -220,7 +220,7 @@ namespace FerreteriaSL.Productos
             this.pb_productProgress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pb_productProgress.Location = new System.Drawing.Point(100, 3);
             this.pb_productProgress.Name = "pb_productProgress";
-            this.pb_productProgress.Size = new System.Drawing.Size(413, 17);
+            this.pb_productProgress.Size = new System.Drawing.Size(430, 17);
             this.pb_productProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pb_productProgress.TabIndex = 21;
             // 
@@ -239,7 +239,7 @@ namespace FerreteriaSL.Productos
             this.lbl_pages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_pages.AutoEllipsis = true;
             this.lbl_pages.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_pages.Location = new System.Drawing.Point(1040, 344);
+            this.lbl_pages.Location = new System.Drawing.Point(1115, 353);
             this.lbl_pages.Name = "lbl_pages";
             this.lbl_pages.Size = new System.Drawing.Size(85, 21);
             this.lbl_pages.TabIndex = 20;
@@ -250,7 +250,7 @@ namespace FerreteriaSL.Productos
             // 
             this.lbl_limitItems.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_limitItems.AutoSize = true;
-            this.lbl_limitItems.Location = new System.Drawing.Point(760, 348);
+            this.lbl_limitItems.Location = new System.Drawing.Point(835, 357);
             this.lbl_limitItems.Name = "lbl_limitItems";
             this.lbl_limitItems.Size = new System.Drawing.Size(103, 13);
             this.lbl_limitItems.TabIndex = 16;
@@ -265,7 +265,7 @@ namespace FerreteriaSL.Productos
             this.btn_prevPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_prevPage.FlatAppearance.BorderSize = 0;
             this.btn_prevPage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_prevPage.Location = new System.Drawing.Point(1013, 344);
+            this.btn_prevPage.Location = new System.Drawing.Point(1088, 353);
             this.btn_prevPage.Name = "btn_prevPage";
             this.btn_prevPage.Size = new System.Drawing.Size(21, 21);
             this.btn_prevPage.TabIndex = 19;
@@ -286,7 +286,7 @@ namespace FerreteriaSL.Productos
             "500",
             "1000",
             "Todos"});
-            this.cb_itemsPerPage.Location = new System.Drawing.Point(863, 344);
+            this.cb_itemsPerPage.Location = new System.Drawing.Point(938, 353);
             this.cb_itemsPerPage.Name = "cb_itemsPerPage";
             this.cb_itemsPerPage.Size = new System.Drawing.Size(71, 21);
             this.cb_itemsPerPage.TabIndex = 15;
@@ -296,7 +296,7 @@ namespace FerreteriaSL.Productos
             // 
             this.lbl_filtroMostrar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_filtroMostrar.AutoSize = true;
-            this.lbl_filtroMostrar.Location = new System.Drawing.Point(537, 348);
+            this.lbl_filtroMostrar.Location = new System.Drawing.Point(612, 357);
             this.lbl_filtroMostrar.Name = "lbl_filtroMostrar";
             this.lbl_filtroMostrar.Size = new System.Drawing.Size(87, 13);
             this.lbl_filtroMostrar.TabIndex = 14;
@@ -311,7 +311,7 @@ namespace FerreteriaSL.Productos
             this.btn_nextPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_nextPage.FlatAppearance.BorderSize = 0;
             this.btn_nextPage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_nextPage.Location = new System.Drawing.Point(1131, 344);
+            this.btn_nextPage.Location = new System.Drawing.Point(1206, 353);
             this.btn_nextPage.Name = "btn_nextPage";
             this.btn_nextPage.Size = new System.Drawing.Size(21, 21);
             this.btn_nextPage.TabIndex = 18;
@@ -327,7 +327,7 @@ namespace FerreteriaSL.Productos
             "Visibles",
             "Ocultos",
             "Ambos"});
-            this.cb_filtroArticulosAMostrar.Location = new System.Drawing.Point(631, 344);
+            this.cb_filtroArticulosAMostrar.Location = new System.Drawing.Point(706, 353);
             this.cb_filtroArticulosAMostrar.Name = "cb_filtroArticulosAMostrar";
             this.cb_filtroArticulosAMostrar.Size = new System.Drawing.Size(121, 21);
             this.cb_filtroArticulosAMostrar.TabIndex = 13;
@@ -339,9 +339,9 @@ namespace FerreteriaSL.Productos
             this.gb_filtrosFechaModificacion.Controls.Add(this.dtp_filtrosFechaModificacionDespues);
             this.gb_filtrosFechaModificacion.Controls.Add(this.lbl_filtrosFechaModificacionAntes);
             this.gb_filtrosFechaModificacion.Controls.Add(this.lbl_filtrosFechaModificacionDespues);
-            this.gb_filtrosFechaModificacion.Location = new System.Drawing.Point(938, 7);
+            this.gb_filtrosFechaModificacion.Location = new System.Drawing.Point(956, 7);
             this.gb_filtrosFechaModificacion.Name = "gb_filtrosFechaModificacion";
-            this.gb_filtrosFechaModificacion.Size = new System.Drawing.Size(212, 66);
+            this.gb_filtrosFechaModificacion.Size = new System.Drawing.Size(234, 66);
             this.gb_filtrosFechaModificacion.TabIndex = 11;
             this.gb_filtrosFechaModificacion.TabStop = false;
             this.gb_filtrosFechaModificacion.Text = "Fecha de Ultima Modificacion";
@@ -353,7 +353,7 @@ namespace FerreteriaSL.Productos
             this.dtp_filtrosFechaModificacionAntes.Location = new System.Drawing.Point(72, 36);
             this.dtp_filtrosFechaModificacionAntes.Name = "dtp_filtrosFechaModificacionAntes";
             this.dtp_filtrosFechaModificacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(136, 20);
+            this.dtp_filtrosFechaModificacionAntes.Size = new System.Drawing.Size(146, 20);
             this.dtp_filtrosFechaModificacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaModificacionAntes.ValueChanged += new System.EventHandler(this.FilterTrigger);
             this.dtp_filtrosFechaModificacionAntes.EnabledChanged += new System.EventHandler(this.FilterTrigger);
@@ -365,7 +365,7 @@ namespace FerreteriaSL.Productos
             this.dtp_filtrosFechaModificacionDespues.Location = new System.Drawing.Point(72, 13);
             this.dtp_filtrosFechaModificacionDespues.Name = "dtp_filtrosFechaModificacionDespues";
             this.dtp_filtrosFechaModificacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(136, 20);
+            this.dtp_filtrosFechaModificacionDespues.Size = new System.Drawing.Size(146, 20);
             this.dtp_filtrosFechaModificacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaModificacionDespues.ValueChanged += new System.EventHandler(this.FilterTrigger);
             this.dtp_filtrosFechaModificacionDespues.EnabledChanged += new System.EventHandler(this.FilterTrigger);
@@ -394,9 +394,9 @@ namespace FerreteriaSL.Productos
             this.gb_filtrosFechaCreacion.Controls.Add(this.dtp_filtrosFechaCreacionDespues);
             this.gb_filtrosFechaCreacion.Controls.Add(this.lbl_filtrosFechaCreacionAntes);
             this.gb_filtrosFechaCreacion.Controls.Add(this.lbl_filtrosFechaCreacionDespues);
-            this.gb_filtrosFechaCreacion.Location = new System.Drawing.Point(720, 7);
+            this.gb_filtrosFechaCreacion.Location = new System.Drawing.Point(716, 7);
             this.gb_filtrosFechaCreacion.Name = "gb_filtrosFechaCreacion";
-            this.gb_filtrosFechaCreacion.Size = new System.Drawing.Size(212, 66);
+            this.gb_filtrosFechaCreacion.Size = new System.Drawing.Size(234, 66);
             this.gb_filtrosFechaCreacion.TabIndex = 10;
             this.gb_filtrosFechaCreacion.TabStop = false;
             this.gb_filtrosFechaCreacion.Text = "Fecha de Creación";
@@ -408,7 +408,7 @@ namespace FerreteriaSL.Productos
             this.dtp_filtrosFechaCreacionAntes.Location = new System.Drawing.Point(70, 36);
             this.dtp_filtrosFechaCreacionAntes.Name = "dtp_filtrosFechaCreacionAntes";
             this.dtp_filtrosFechaCreacionAntes.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(138, 20);
+            this.dtp_filtrosFechaCreacionAntes.Size = new System.Drawing.Size(146, 20);
             this.dtp_filtrosFechaCreacionAntes.TabIndex = 4;
             this.dtp_filtrosFechaCreacionAntes.ValueChanged += new System.EventHandler(this.FilterTrigger);
             this.dtp_filtrosFechaCreacionAntes.EnabledChanged += new System.EventHandler(this.FilterTrigger);
@@ -420,7 +420,7 @@ namespace FerreteriaSL.Productos
             this.dtp_filtrosFechaCreacionDespues.Location = new System.Drawing.Point(70, 13);
             this.dtp_filtrosFechaCreacionDespues.Name = "dtp_filtrosFechaCreacionDespues";
             this.dtp_filtrosFechaCreacionDespues.ShowCheckBox = true;
-            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(138, 20);
+            this.dtp_filtrosFechaCreacionDespues.Size = new System.Drawing.Size(146, 20);
             this.dtp_filtrosFechaCreacionDespues.TabIndex = 2;
             this.dtp_filtrosFechaCreacionDespues.ValueChanged += new System.EventHandler(this.FilterTrigger);
             this.dtp_filtrosFechaCreacionDespues.EnabledChanged += new System.EventHandler(this.FilterTrigger);
@@ -449,7 +449,7 @@ namespace FerreteriaSL.Productos
             this.gb_filtroStock.Controls.Add(this.nud_stockMayor);
             this.gb_filtroStock.Controls.Add(this.lbl_filtrosStockMenor);
             this.gb_filtroStock.Controls.Add(this.lbl_filtrosStockMayor);
-            this.gb_filtroStock.Location = new System.Drawing.Point(578, 7);
+            this.gb_filtroStock.Location = new System.Drawing.Point(575, 7);
             this.gb_filtroStock.Name = "gb_filtroStock";
             this.gb_filtroStock.Size = new System.Drawing.Size(135, 66);
             this.gb_filtroStock.TabIndex = 9;
@@ -506,7 +506,7 @@ namespace FerreteriaSL.Productos
             this.gb_filtrosPrecioFinal.Controls.Add(this.nud_precioFinalMayor);
             this.gb_filtrosPrecioFinal.Controls.Add(this.lbl_filtrosPreciodeCompraMenor);
             this.gb_filtrosPrecioFinal.Controls.Add(this.lbl_filtrosPreciodeCompraMayor);
-            this.gb_filtrosPrecioFinal.Location = new System.Drawing.Point(412, 7);
+            this.gb_filtrosPrecioFinal.Location = new System.Drawing.Point(410, 7);
             this.gb_filtrosPrecioFinal.Name = "gb_filtrosPrecioFinal";
             this.gb_filtrosPrecioFinal.Size = new System.Drawing.Size(159, 66);
             this.gb_filtrosPrecioFinal.TabIndex = 8;
@@ -565,7 +565,7 @@ namespace FerreteriaSL.Productos
             this.gb_filtrosPrecio.Controls.Add(this.nud_precioMayor);
             this.gb_filtrosPrecio.Controls.Add(this.lbl_filtrosPreciodeVentaMenor);
             this.gb_filtrosPrecio.Controls.Add(this.lbl_filtrosPreciodeVentaMayor);
-            this.gb_filtrosPrecio.Location = new System.Drawing.Point(246, 7);
+            this.gb_filtrosPrecio.Location = new System.Drawing.Point(245, 7);
             this.gb_filtrosPrecio.Name = "gb_filtrosPrecio";
             this.gb_filtrosPrecio.Size = new System.Drawing.Size(159, 66);
             this.gb_filtrosPrecio.TabIndex = 7;
@@ -685,7 +685,7 @@ namespace FerreteriaSL.Productos
             this.dgv_listaProductos.Name = "dgv_listaProductos";
             this.dgv_listaProductos.RowHeadersVisible = false;
             this.dgv_listaProductos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_listaProductos.Size = new System.Drawing.Size(1139, 247);
+            this.dgv_listaProductos.Size = new System.Drawing.Size(1214, 256);
             this.dgv_listaProductos.TabIndex = 0;
             this.dgv_listaProductos.DataSourceChanged += new System.EventHandler(this.dgv_listaProductos_DataSourceChanged);
             this.dgv_listaProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgv_listaProductos_CellFormatting);
@@ -853,7 +853,7 @@ namespace FerreteriaSL.Productos
             this.tp_agregarProductos.Location = new System.Drawing.Point(4, 22);
             this.tp_agregarProductos.Name = "tp_agregarProductos";
             this.tp_agregarProductos.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_agregarProductos.Size = new System.Drawing.Size(1126, 394);
+            this.tp_agregarProductos.Size = new System.Drawing.Size(1201, 394);
             this.tp_agregarProductos.TabIndex = 2;
             this.tp_agregarProductos.Text = "Agregar Producto";
             this.tp_agregarProductos.Enter += new System.EventHandler(this.tp_agregarProductos_Enter);
@@ -1048,7 +1048,7 @@ namespace FerreteriaSL.Productos
             this.tc_productos.Location = new System.Drawing.Point(12, 12);
             this.tc_productos.Name = "tc_productos";
             this.tc_productos.SelectedIndex = 0;
-            this.tc_productos.Size = new System.Drawing.Size(1134, 420);
+            this.tc_productos.Size = new System.Drawing.Size(1209, 429);
             this.tc_productos.TabIndex = 0;
             // 
             // tp_importarProductos
@@ -1072,7 +1072,7 @@ namespace FerreteriaSL.Productos
             this.tp_importarProductos.Location = new System.Drawing.Point(4, 22);
             this.tp_importarProductos.Name = "tp_importarProductos";
             this.tp_importarProductos.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_importarProductos.Size = new System.Drawing.Size(1162, 394);
+            this.tp_importarProductos.Size = new System.Drawing.Size(1201, 394);
             this.tp_importarProductos.TabIndex = 5;
             this.tp_importarProductos.Text = "Importar desde Excel";
             this.tp_importarProductos.Enter += new System.EventHandler(this.tp_importarProductos_Enter);
@@ -1253,7 +1253,7 @@ namespace FerreteriaSL.Productos
             // bt_exportar
             // 
             this.bt_exportar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.bt_exportar.Location = new System.Drawing.Point(93, 438);
+            this.bt_exportar.Location = new System.Drawing.Point(130, 447);
             this.bt_exportar.Name = "bt_exportar";
             this.bt_exportar.Size = new System.Drawing.Size(75, 23);
             this.bt_exportar.TabIndex = 21;
@@ -1261,12 +1261,12 @@ namespace FerreteriaSL.Productos
             this.bt_exportar.UseVisualStyleBackColor = true;
             this.bt_exportar.Click += new System.EventHandler(this.bt_exportar_Click);
             // 
-            // Administrar_Stock
+            // AdministrarStock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1156, 473);
+            this.ClientSize = new System.Drawing.Size(1231, 482);
             this.Controls.Add(this.bt_exportar);
             this.Controls.Add(this.tc_productos);
             this.Controls.Add(this.btn_cerrarVentana);

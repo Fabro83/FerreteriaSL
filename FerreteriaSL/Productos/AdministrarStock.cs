@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
@@ -19,8 +20,8 @@ namespace FerreteriaSL.Productos
     public partial class AdministrarStock : Form
     {
 
-        private int _winLastWidth = 1200;
-        private int _winLastHeight = 450;
+        private int _winLastWidth = 1247;
+        private int _winLastHeight = 520;
         FormWindowState _winLastState = FormWindowState.Normal;
         public DataTable TablaFiltrada;
 
@@ -59,11 +60,9 @@ namespace FerreteriaSL.Productos
 
         private void Administrar_Stock_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((_bgwActualizarProducto != null && _bgwActualizarProducto.IsBusy) || (_bgwTransferToDb != null && _bgwTransferToDb.IsBusy))
-            {
-                MessageBox.Show("Hay una operación ejecutandose, aguarde a que finalice.", "Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                e.Cancel = true;
-            }
+            if ((_bgwActualizarProducto == null || !_bgwActualizarProducto.IsBusy) && (_bgwTransferToDb == null || !_bgwTransferToDb.IsBusy)) return;
+            MessageBox.Show("Hay una operación ejecutandose, aguarde a que finalice.", "Operacion en progreso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            e.Cancel = true;
         }
 
         #region Tab Agregar Producto
@@ -328,20 +327,16 @@ namespace FerreteriaSL.Productos
 
             if (dgv_listaProductos.Columns["nombre"].Visible)
             {
-                foreach (DataGridViewColumn sCol in dgv_listaProductos.Columns)
+                foreach (DataGridViewColumn sCol in dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Where(sCol => sCol.Name != "nombre"))
                 {
-                    if (sCol.Name != "nombre")
-                        sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 }
             }
             else
             {
-                foreach (DataGridViewColumn sCol in dgv_listaProductos.Columns)
+                foreach (DataGridViewColumn sCol in dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Where(sCol => sCol.Visible))
                 {
-                    if (sCol.Visible)
-                    {
-                        sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    }
+                    sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
 
                 //dgv_listaProductos.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
