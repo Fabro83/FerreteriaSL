@@ -132,7 +132,7 @@ namespace FerreteriaSL.Empleados
             if (cb_estadisticaTipo.SelectedIndex == -1 || cb_estadisticaAnio.SelectedIndex == -1) return;
             string type = statisticsTypes[cb_estadisticaTipo.SelectedIndex];
             int year = (int)cb_estadisticaAnio.SelectedItem;
-            bool allYears = chk_estadisticaTodos.Checked && chk_estadisticaTodos.Enabled; // NOT USED YET
+            bool allYears = chk_estadisticaTodos.Checked && chk_estadisticaTodos.Enabled; // Not used yet, to be implemented with another statistics
             
             Bd dbCon = new Bd();
             var query = "SELECT Mes, Total FROM vista_estadisticaEmpleado_{0} WHERE empleado_id = {1} {2} ORDER BY y desc, m desc";
