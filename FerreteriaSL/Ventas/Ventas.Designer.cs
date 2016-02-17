@@ -46,6 +46,8 @@ namespace FerreteriaSL.Ventas
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.proveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.proveedor_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HasNewPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HasNewDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbl_totalMonto = new System.Windows.Forms.Label();
             this.lbl_total = new System.Windows.Forms.Label();
             this.btn_imprimirTicket = new System.Windows.Forms.Button();
@@ -72,7 +74,7 @@ namespace FerreteriaSL.Ventas
             this.btn_help = new System.Windows.Forms.Button();
             this.tt_help = new System.Windows.Forms.ToolTip(this.components);
             this.btn_exportar = new System.Windows.Forms.Button();
-            this.cg_busqueda = new ComboGrid();
+            this.cg_busqueda = new FerreteriaSL.Componentes.ComboGrid();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_productosIngresados)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_cantidad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_discountPercent)).BeginInit();
@@ -95,6 +97,7 @@ namespace FerreteriaSL.Ventas
             // dgv_productosIngresados
             // 
             this.dgv_productosIngresados.AllowUserToAddRows = false;
+            this.dgv_productosIngresados.AllowUserToResizeRows = false;
             this.dgv_productosIngresados.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgv_productosIngresados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_productosIngresados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -105,15 +108,19 @@ namespace FerreteriaSL.Ventas
             this.precio_subtotal,
             this.id,
             this.proveedor,
-            this.proveedor_id});
+            this.proveedor_id,
+            this.HasNewPrice,
+            this.HasNewDescription});
             this.dgv_productosIngresados.GridColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.dgv_productosIngresados.Location = new System.Drawing.Point(13, 70);
+            this.dgv_productosIngresados.Location = new System.Drawing.Point(12, 70);
             this.dgv_productosIngresados.Name = "dgv_productosIngresados";
             this.dgv_productosIngresados.ReadOnly = true;
             this.dgv_productosIngresados.RowHeadersVisible = false;
             this.dgv_productosIngresados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv_productosIngresados.Size = new System.Drawing.Size(977, 277);
             this.dgv_productosIngresados.TabIndex = 4;
+            this.dgv_productosIngresados.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgv_productosIngresados_CellFormatting);
+            this.dgv_productosIngresados.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_productosIngresados_CellMouseDown);
             this.dgv_productosIngresados.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgv_productosIngresados_RowsAdded);
             this.dgv_productosIngresados.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgv_productosIngresados_RowsRemoved);
             this.dgv_productosIngresados.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgv_productosIngresados_KeyDown);
@@ -183,6 +190,24 @@ namespace FerreteriaSL.Ventas
             this.proveedor_id.Name = "proveedor_id";
             this.proveedor_id.ReadOnly = true;
             this.proveedor_id.Visible = false;
+            // 
+            // HasNewPrice
+            // 
+            this.HasNewPrice.HeaderText = "HasNewPrice";
+            this.HasNewPrice.Name = "HasNewPrice";
+            this.HasNewPrice.ReadOnly = true;
+            this.HasNewPrice.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.HasNewPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.HasNewPrice.Visible = false;
+            // 
+            // HasNewDescription
+            // 
+            this.HasNewDescription.HeaderText = "HasNewDescription";
+            this.HasNewDescription.Name = "HasNewDescription";
+            this.HasNewDescription.ReadOnly = true;
+            this.HasNewDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.HasNewDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.HasNewDescription.Visible = false;
             // 
             // lbl_totalMonto
             // 
@@ -528,7 +553,8 @@ namespace FerreteriaSL.Ventas
             this.cg_busqueda.SearchPhrase = "";
             this.cg_busqueda.Size = new System.Drawing.Size(581, 21);
             this.cg_busqueda.TabIndex = 22;
-            this.cg_busqueda.SelectionMade += new SelectionMadeHandler(this.comboGrid1_SelectionMade);
+            this.cg_busqueda.SelectionMade += new FerreteriaSL.Componentes.SelectionMadeHandler(this.comboGrid1_SelectionMade);
+            this.cg_busqueda.EstimateScanned += new FerreteriaSL.Componentes.EstimateScannedHandler(this.comboGrid1_EstimateScanned);
             this.cg_busqueda.Leave += new System.EventHandler(this.cg_busqueda_Leave);
             // 
             // Ventas
@@ -580,7 +606,6 @@ namespace FerreteriaSL.Ventas
             this.PerformLayout();
 
         }
-
         #endregion
 
         private Button btn_cerrar;
@@ -603,14 +628,6 @@ namespace FerreteriaSL.Ventas
         private NumericUpDown nud_discountPercent;
         private Label lbl_percentSymbol;
         private Button btn_search;
-        private DataGridViewTextBoxColumn codigo;
-        private DataGridViewTextBoxColumn descripcion;
-        private DataGridViewTextBoxColumn cantidad;
-        private DataGridViewTextBoxColumn precio_unitario;
-        private DataGridViewTextBoxColumn precio_subtotal;
-        private DataGridViewTextBoxColumn id;
-        private DataGridViewTextBoxColumn proveedor;
-        private DataGridViewTextBoxColumn proveedor_id;
         private TableLayoutPanel tableLayoutPanel1;
         private Label lbl_iva;
         private Label lbl_ivaValue;
@@ -620,5 +637,15 @@ namespace FerreteriaSL.Ventas
         private ToolTip tt_help;
         public DataGridView dgv_productosIngresados;
         private Button btn_exportar;
+        private DataGridViewTextBoxColumn codigo;
+        private DataGridViewTextBoxColumn descripcion;
+        private DataGridViewTextBoxColumn cantidad;
+        private DataGridViewTextBoxColumn precio_unitario;
+        private DataGridViewTextBoxColumn precio_subtotal;
+        private DataGridViewTextBoxColumn id;
+        private DataGridViewTextBoxColumn proveedor;
+        private DataGridViewTextBoxColumn proveedor_id;
+        private DataGridViewTextBoxColumn HasNewPrice;
+        private DataGridViewTextBoxColumn HasNewDescription;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace FerreteriaSL.Ventas
     {
         int _currentProduct;
         double _quantity = 1;
+        private Modelos.Presupuesto presupuesto;
 
         public Ventas()
         {
@@ -36,6 +38,93 @@ namespace FerreteriaSL.Ventas
             _currentProduct = idProducto;
             nud_cantidad.Enabled = true;
             nud_cantidad.Focus();
+        }
+
+        private void comboGrid1_EstimateScanned(object sender, string barcode)
+        {
+            presupuesto = new Modelos.Presupuesto(barcode);
+            LoadEstimate();          
+        }
+
+        void CMS_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Text == "Actualizar Todo" || e.ClickedItem.Text == "Actualizar Descripcion")
+            {
+                foreach (var itemId in from DataGridViewRow selectedRow in dgv_productosIngresados.SelectedRows select int.Parse(selectedRow.Cells["id"].Value.ToString()))
+                {
+                    presupuesto.Productos.Single(s => s.Id == itemId).UpdateDescription();
+                }
+            }
+            if (e.ClickedItem.Text == "Actualizar Todo" || e.ClickedItem.Text == "Actualizar Precio")
+            {
+                foreach (var itemId in from DataGridViewRow selectedRow in dgv_productosIngresados.SelectedRows select int.Parse(selectedRow.Cells["id"].Value.ToString()))
+                {
+                    presupuesto.Productos.Single(s => s.Id == itemId).UpdatePrice();
+                }
+            }
+            LoadEstimate();
+        }
+
+        private void LoadEstimate()
+        {
+            dgv_productosIngresados.Rows.Clear();
+            foreach (var producto in presupuesto.Productos)
+            {
+                dgv_productosIngresados.Rows.Add(
+                    producto.Codigo,
+                    producto.Descripcion,
+                    producto.Cantidad,
+                    producto.PrecioUnitario,
+                    Convert.ToDouble(Math.Round(producto.PrecioUnitario * producto.Cantidad,2)),
+                    producto.Id,
+                    "",
+                    "",
+                    producto.HasNewPrice().ToString(),
+                    producto.HasNewDescription().ToString()
+                );
+            }
+
+            if (presupuesto.HasNewDescriptions() || presupuesto.HasNewPrices())
+            {
+                ContextMenuStrip cms = new ContextMenuStrip();
+                cms.Items.Add("Actualizar Todo");
+                cms.Items.Add("Actualizar Descripcion");
+                cms.Items.Add("Actualizar Precio");
+
+                cms.ItemClicked += CMS_ItemClicked;
+
+                dgv_productosIngresados.ContextMenuStrip = cms;
+            }
+            else
+            {
+                dgv_productosIngresados.ContextMenuStrip = null;
+            }
+
+        }
+
+        private void dgv_productosIngresados_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgv_productosIngresados["HasNewDescription", e.RowIndex].Value == null &&
+                dgv_productosIngresados["HasNewPrice", e.RowIndex].Value == null) return;
+
+            if (dgv_productosIngresados.Columns[e.ColumnIndex].HeaderText == "DESCRIPCION" &&
+                Boolean.Parse(dgv_productosIngresados["HasNewDescription", e.RowIndex].Value.ToString()))
+            {
+                e.CellStyle.ForeColor = Color.DarkOrange;
+                var cell = dgv_productosIngresados[e.ColumnIndex, e.RowIndex];
+                var formattingId = int.Parse(dgv_productosIngresados["id", e.RowIndex].Value.ToString());
+                cell.ToolTipText = "Nueva Descripcion: " + presupuesto.Productos.Single(s => s.Id == formattingId).DescripcionNueva;
+            }
+
+            if (dgv_productosIngresados.Columns[e.ColumnIndex].HeaderText == "PRECIO UNITARIO" &&
+                Boolean.Parse(dgv_productosIngresados["HasNewPrice", e.RowIndex].Value.ToString()))
+            {
+                e.CellStyle.ForeColor = Color.Red;
+                var cell = dgv_productosIngresados[e.ColumnIndex, e.RowIndex];
+                var formattingId = int.Parse(dgv_productosIngresados["id", e.RowIndex].Value.ToString());
+                cell.ToolTipText = "Nuevo Precio: " + presupuesto.Productos.Single(s => s.Id == formattingId).PrecioNuevo;                
+            }
+               
         }
 
         private void AddItemToCart()
@@ -434,52 +523,19 @@ namespace FerreteriaSL.Ventas
             var presupuestoImprimirWindow = new Presupuesto();
             if (presupuestoImprimirWindow.ShowDialog() != DialogResult.OK) return;
 
-            Dictionary<string, object> fieldsDictionary = new Dictionary<string, object>
-            {
-                {"nombre", "Señor/a: "+presupuestoImprimirWindow.txb_nombre.Text},
-                {"domicilio", "Domicilio: " + presupuestoImprimirWindow.txb_domicilio.Text},
-                {"fecha", presupuestoImprimirWindow.dtp_fecha.Text},
-                {"codigo_barra","fre3of9x,30,Regular,0&&"+"*000000001*".ToUpper()}
-            };
+            Modelos.Presupuesto nuevoPresupuesto = new Modelos.Presupuesto
+            (
+                presupuestoImprimirWindow.txb_nombre.Text,
+                presupuestoImprimirWindow.txb_domicilio.Text,
+                presupuestoImprimirWindow.dtp_fecha.Value,
+                DgvHelper.ToDataTable(dgv_productosIngresados)
+            );
 
-            List<Dictionary<string, object>> gridList = new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>()
-                {
-                    {"cantidad", "Arial,10,Bold,0&&" + "Cantidad"},
-                    {"descripcion", "Arial,10,Bold,0&&" + "Descripción"},
-                    {"precio_unitario", "Arial,10,Bold,0&&" + "Precio Unitario"},
-                    {"precio_subtotal", "Arial,10,Bold,0&&" + "Importe"}
-                }
-            };
-
-
-            foreach (DataGridViewRow dataRow in dgv_productosIngresados.Rows)
-            {
-                Dictionary<string, object> gridRowDictionary = new Dictionary<string, object>();
-                
-                for (int i = 0; i < dgv_productosIngresados.Columns.Count; i++)
-                {
-                    string columnName = dgv_productosIngresados.Columns[i].Name;
-                    gridRowDictionary.Add(columnName,
-                        columnName.Contains("precio")
-                            ? string.Format("${0:N2}", float.Parse(dataRow.Cells[i].Value.ToString()))
-                            : dataRow.Cells[i].Value);
-                }
-
-                gridList.Add(gridRowDictionary);
-            }
-
-            gridList.Add(new Dictionary<string, object>()
-            {
-                {"cantidad",""},
-                {"descripcion",""},
-                {"precio_unitario","Arial,14,Bold,20&&"+"Total:"},
-                {"precio_subtotal","Arial,14,Bold,20&&"+string.Format("${0:N2}",float.Parse(lbl_totalMonto.Text))}
-            });
-
-            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, 2);
-            objImpresion.StartPrinting();
+            if (presupuestoImprimirWindow.chb_guardar.Checked)
+                nuevoPresupuesto.Save().Print();
+            else
+                nuevoPresupuesto.Print();
+            
             //dgv_productosIngresados.Rows.Clear();
             
         }
@@ -522,16 +578,29 @@ namespace FerreteriaSL.Ventas
 
                 hojaTrabajo.Columns.AutoFit();
 
-
-
-                for (int i = 0; i < grd.Rows.Count; i++)
+                int excRowIndex = 3;
+                foreach (DataGridViewRow row in grd.Rows.Cast<DataGridViewRow>().Where(row => row.Visible))
                 {
-                    for (int j = 0; j < grd.Columns.Count - 3; j++)
+                    var excCurrentCell = 1;
+                    excRowIndex++;
+                    foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().Where(cell => cell.Visible))
                     {
-                        hojaTrabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
-
+                        hojaTrabajo.Cells[excRowIndex, excCurrentCell] = cell.Value.ToString();
+                        excCurrentCell++;
                     }
                 }
+                
+                
+
+
+                //for (int i = 0; i < grd.Rows.Count; i++)
+                //{
+                //    for (int j = 0; j < grd.Columns.Count - 3; j++)
+                //    {
+                //        hojaTrabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
+
+                //    }
+                //}
 
 
                 //hoja_trabajo.Cells[grd.RowCount + 6, 5] = "TOTAL sin IVA";
@@ -546,14 +615,24 @@ namespace FerreteriaSL.Ventas
                 {
                     librosTrabajo.SaveAs(fichero.FileName,
                     XlFileFormat.xlWorkbookNormal);
-                    librosTrabajo.Close(true);
+                    librosTrabajo.Close();
                     aplicacion.Quit();
                 }
-                catch { MessageBox.Show("Error al escribir el archivo"); }
+                catch (Exception e) { MessageBox.Show("Error al escribir el archivo.\n\n"+e.Message); }
+
                 MessageBox.Show("Presupuesto exportado");
             }
 
         }
+
+        private void dgv_productosIngresados_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right || dgv_productosIngresados.SelectedRows.Contains(dgv_productosIngresados.Rows[e.RowIndex])) return;
+            dgv_productosIngresados.CurrentCell = dgv_productosIngresados.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            dgv_productosIngresados.Rows[e.RowIndex].Selected = true;
+        }
+
+
 
         
     }

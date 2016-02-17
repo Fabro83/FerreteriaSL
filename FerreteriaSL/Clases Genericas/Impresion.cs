@@ -5,11 +5,16 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Drawing.Text;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FerreteriaSL.Clases_Base_de_Datos;
+using Microsoft.Office.Interop.Excel;
 using Net.SourceForge.Koogra.Excel.ValueTypes;
+using Net.SourceForge.Koogra.Storage;
+using DataTable = System.Data.DataTable;
+using Font = System.Drawing.Font;
 
 namespace FerreteriaSL.Clases_Genericas
 {
@@ -70,7 +75,7 @@ namespace FerreteriaSL.Clases_Genericas
                         var fontFamily = customFontParts[0];
                         var fontSize = float.Parse(customFontParts[1]);
                         var fontStyle = (FontStyle)Enum.Parse(typeof(FontStyle), customFontParts[2], true);
-                        var customFont = fontFamily == "fre3of9x" ? CodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
+                        var customFont = fontFamily == "fre3of9x" ? BarcodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
                         
                         customVerticalMargin = float.Parse(customFontParts[3]);
                         fieldParameters.Height = fieldParameters.Height * 2;
@@ -105,7 +110,7 @@ namespace FerreteriaSL.Clases_Genericas
                             var fontFamily = customFontParts[0];
                             var fontSize = float.Parse(customFontParts[1]);
                             var fontStyle = (FontStyle) Enum.Parse(typeof (FontStyle), customFontParts[2], true);
-                            var customFont = fontFamily == "fre3of9x" ? CodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
+                            var customFont = fontFamily == "fre3of9x" ? BarcodeFont(fontSize) : new Font(fontFamily, fontSize, fontStyle);
                                                    
                             customVerticalMargin = float.Parse(customFontParts[3]);
                             fieldParameters.Height = fieldParameters.Height * 2;
@@ -128,10 +133,10 @@ namespace FerreteriaSL.Clases_Genericas
 
         }
 
-        private Font CodeFont(float fontSize)
+        private Font BarcodeFont(float fontSize)
         {
             PrivateFontCollection pfc = new PrivateFontCollection();
-            pfc.AddFontFile(@"C:\Users\TestingVM\Desktop\Ferreteria Source\Fonts\fre3of9x.ttf");
+            pfc.AddFontFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Fonts\code128.ttf"));
             return new Font(pfc.Families[0],fontSize);
         }
 

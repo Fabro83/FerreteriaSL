@@ -1,15 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
+using Microsoft.Office.Interop.Excel;
+using DataTable = System.Data.DataTable;
 
 namespace FerreteriaSL.Componentes
 {
     public delegate void SelectionMadeHandler(object sender, int idProducto);
+
+    public delegate void EstimateScannedHandler(object sender, string barcode);
 
     public partial class ComboGrid : UserControl
     {
@@ -17,6 +20,7 @@ namespace FerreteriaSL.Componentes
         int _heightFix = 26;
         string _lastStringToSearch = "";
         public event SelectionMadeHandler SelectionMade;
+        public event EstimateScannedHandler EstimateScanned;
         BackgroundWorker _bgwDelaySearch;
 
         public string SearchPhrase 
@@ -87,10 +91,7 @@ namespace FerreteriaSL.Componentes
             {
                 return;
             }
-            else
-            {
-                _lastStringToSearch = stringToSearch;
-            }
+            _lastStringToSearch = stringToSearch;
             string query = String.Format("SELECT Proveedor, Descripcion,Precio,id FROM vista_tablaproductosventas WHERE {0} OR Codigo LIKE '%{1}%' LIMIT 0,10", stringToSearch, tb_cuadroBusqueda.Text.Trim());
             DataTable res = dbCon.Read(query);
             if (res.Rows.Count >= 10)
@@ -110,19 +111,9 @@ namespace FerreteriaSL.Componentes
             dgv_vistaResultados.Columns["Proveedor"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dgv_vistaResultados.Columns["Precio"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dgv_vistaResultados.Columns["Precio"].DefaultCellStyle.Format = "$0.00";
-            if (dgv_vistaResultados.Rows.Count > 0)
-            {
-                int trueHeight = dgv_vistaResultados.Rows[0].Height * dgv_vistaResultados.Rows.Count - 1;
-                if (trueHeight > dgv_vistaResultados.Rows[0].Height * 10)
-                {
-                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, dgv_vistaResultados.Rows[0].Height * 10 + _heightFix);
-                }
-                else
-                {
-                    dgv_vistaResultados.Size = new Size(dgv_vistaResultados.Size.Width, trueHeight + _heightFix);
-                }
-
-            }
+            if (dgv_vistaResultados.Rows.Count <= 0) return;
+            int trueHeight = dgv_vistaResultados.Rows[0].Height * dgv_vistaResultados.Rows.Count - 1;
+            dgv_vistaResultados.Size = trueHeight > dgv_vistaResultados.Rows[0].Height * 10 ? new Size(dgv_vistaResultados.Size.Width, dgv_vistaResultados.Rows[0].Height * 10 + _heightFix) : new Size(dgv_vistaResultados.Size.Width, trueHeight + _heightFix);
         }
 
         private string BuildCondition()
@@ -148,14 +139,7 @@ namespace FerreteriaSL.Componentes
             
             int trueHeight = dgv_vistaResultados.Rows[0].Height * dgv_vistaResultados.Rows.Count - 1;
 
-            if (trueHeight > dgv_vistaResultados.Rows[0].Height * 10)
-            {
-                Size = new Size(Width, _textBoxHeight + dgv_vistaResultados.Rows[0].Height * 10 + _heightFix);
-            }
-            else
-            {
-                Size = new Size(Width, _textBoxHeight + trueHeight + _heightFix);
-            }
+            Size = trueHeight > dgv_vistaResultados.Rows[0].Height * 10 ? new Size(Width, _textBoxHeight + dgv_vistaResultados.Rows[0].Height * 10 + _heightFix) : new Size(Width, _textBoxHeight + trueHeight + _heightFix);
                 
         }
 
@@ -182,6 +166,12 @@ namespace FerreteriaSL.Componentes
                     {
                         ItemSelected();
                     }
+                    else if (tb_cuadroBusqueda.Text.StartsWith("PRES"))
+                    {
+                        OnEstimateScanned(tb_cuadroBusqueda.Text);
+                        tb_cuadroBusqueda.Text = "";
+                        dgv_vistaResultados.DataSource = null;
+                    }
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     break;
@@ -192,8 +182,6 @@ namespace FerreteriaSL.Componentes
                         tb_cuadroBusqueda.Text = "";
                     }
                     e.Handled = true;
-                    break;
-                default:
                     break;
             }       
         }
@@ -228,5 +216,10 @@ namespace FerreteriaSL.Componentes
             dgv_vistaResultados.DataSource = null;
         }
 
+        protected virtual void OnEstimateScanned(string barcode)
+        {
+            var handler = EstimateScanned;
+            if (handler != null) handler(this, barcode);
+        }
     }
 }
