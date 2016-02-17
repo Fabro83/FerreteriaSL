@@ -451,24 +451,20 @@ namespace FerreteriaSL.Productos
 
         private void dgv_listaProductos_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+            if (e.Button != MouseButtons.Right || e.RowIndex == -1) return;
+            if (dgv_listaProductos.SelectedRows.Count > 1 && dgv_listaProductos.SelectedRows.Contains(dgv_listaProductos.Rows[e.RowIndex]))
             {
-                if (dgv_listaProductos.SelectedRows.Count > 1 && dgv_listaProductos.SelectedRows.Contains(dgv_listaProductos.Rows[e.RowIndex]))
+                cms_menuProductos.Show(dgv_listaProductos, dgv_listaProductos.PointToClient(Cursor.Position));
+            }
+            else
+            {
+                for (int cell = 0; cell < dgv_listaProductos.Rows[0].Cells.Count; cell++)
                 {
-                    cms_menuProductos.Show(dgv_listaProductos, dgv_listaProductos.PointToClient(Cursor.Position));
+                    if (!dgv_listaProductos.Columns[cell].Visible) continue;
+                    dgv_listaProductos.CurrentCell = dgv_listaProductos.Rows[e.RowIndex].Cells[cell];
+                    break;
                 }
-                else
-                {
-                    for (int cell = 0; cell < dgv_listaProductos.Rows[0].Cells.Count; cell++)
-                    {
-                        if (dgv_listaProductos.Columns[cell].Visible)
-                        {
-                            dgv_listaProductos.CurrentCell = dgv_listaProductos.Rows[e.RowIndex].Cells[cell];
-                            break;
-                        }
-                    }
-                    cms_menuProductos.Show(dgv_listaProductos, dgv_listaProductos.PointToClient(Cursor.Position));
-                }
+                cms_menuProductos.Show(dgv_listaProductos, dgv_listaProductos.PointToClient(Cursor.Position));
             }
         }
 
