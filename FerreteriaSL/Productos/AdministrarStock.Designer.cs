@@ -239,7 +239,7 @@ namespace FerreteriaSL.Productos
             this.lbl_pages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_pages.AutoEllipsis = true;
             this.lbl_pages.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_pages.Location = new System.Drawing.Point(1115, 353);
+            this.lbl_pages.Location = new System.Drawing.Point(1078, 354);
             this.lbl_pages.Name = "lbl_pages";
             this.lbl_pages.Size = new System.Drawing.Size(85, 21);
             this.lbl_pages.TabIndex = 20;
@@ -265,7 +265,7 @@ namespace FerreteriaSL.Productos
             this.btn_prevPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_prevPage.FlatAppearance.BorderSize = 0;
             this.btn_prevPage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_prevPage.Location = new System.Drawing.Point(1088, 353);
+            this.btn_prevPage.Location = new System.Drawing.Point(1051, 354);
             this.btn_prevPage.Name = "btn_prevPage";
             this.btn_prevPage.Size = new System.Drawing.Size(21, 21);
             this.btn_prevPage.TabIndex = 19;
@@ -311,7 +311,7 @@ namespace FerreteriaSL.Productos
             this.btn_nextPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_nextPage.FlatAppearance.BorderSize = 0;
             this.btn_nextPage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_nextPage.Location = new System.Drawing.Point(1206, 353);
+            this.btn_nextPage.Location = new System.Drawing.Point(1169, 354);
             this.btn_nextPage.Name = "btn_nextPage";
             this.btn_nextPage.Size = new System.Drawing.Size(21, 21);
             this.btn_nextPage.TabIndex = 18;
@@ -685,7 +685,7 @@ namespace FerreteriaSL.Productos
             this.dgv_listaProductos.Name = "dgv_listaProductos";
             this.dgv_listaProductos.RowHeadersVisible = false;
             this.dgv_listaProductos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_listaProductos.Size = new System.Drawing.Size(1214, 256);
+            this.dgv_listaProductos.Size = new System.Drawing.Size(1177, 256);
             this.dgv_listaProductos.TabIndex = 0;
             this.dgv_listaProductos.DataSourceChanged += new System.EventHandler(this.dgv_listaProductos_DataSourceChanged);
             this.dgv_listaProductos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgv_listaProductos_CellFormatting);
@@ -853,7 +853,7 @@ namespace FerreteriaSL.Productos
             this.tp_agregarProductos.Location = new System.Drawing.Point(4, 22);
             this.tp_agregarProductos.Name = "tp_agregarProductos";
             this.tp_agregarProductos.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_agregarProductos.Size = new System.Drawing.Size(1201, 394);
+            this.tp_agregarProductos.Size = new System.Drawing.Size(1201, 403);
             this.tp_agregarProductos.TabIndex = 2;
             this.tp_agregarProductos.Text = "Agregar Producto";
             this.tp_agregarProductos.Enter += new System.EventHandler(this.tp_agregarProductos_Enter);
@@ -1072,7 +1072,7 @@ namespace FerreteriaSL.Productos
             this.tp_importarProductos.Location = new System.Drawing.Point(4, 22);
             this.tp_importarProductos.Name = "tp_importarProductos";
             this.tp_importarProductos.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_importarProductos.Size = new System.Drawing.Size(1201, 394);
+            this.tp_importarProductos.Size = new System.Drawing.Size(1201, 403);
             this.tp_importarProductos.TabIndex = 5;
             this.tp_importarProductos.Text = "Importar desde Excel";
             this.tp_importarProductos.Enter += new System.EventHandler(this.tp_importarProductos_Enter);

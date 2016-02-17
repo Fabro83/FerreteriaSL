@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
@@ -815,39 +816,38 @@ namespace FerreteriaSL.Productos
 
         private void tb_filtroNombre_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Right)
+            switch (e.KeyData)
             {
-                btn_nextPage.PerformClick();
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.Left)
-            {
-                btn_prevPage.PerformClick();
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.Up)
-            {
-                try
-                {
-                    dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex - 1];
-                }
-                catch
-                {
-                    // ignored
-                }
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.Down)
-            {
-                try
-                {
-                    dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex + 1];
-                }
-                catch
-                {
-                    // ignored
-                }
-                e.Handled = true;
+                case Keys.Right:
+                    btn_nextPage.PerformClick();
+                    e.Handled = true;
+                    break;
+                case Keys.Left:
+                    btn_prevPage.PerformClick();
+                    e.Handled = true;
+                    break;
+                case Keys.Up:
+                    try
+                    {
+                        dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex - 1];
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    e.Handled = true;
+                    break;
+                case Keys.Down:
+                    try
+                    {
+                        dgv_listaProductos.CurrentCell = dgv_listaProductos[dgv_listaProductos.CurrentCell.ColumnIndex, dgv_listaProductos.CurrentCell.RowIndex + 1];
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    e.Handled = true;
+                    break;
             }
         }
 
@@ -872,14 +872,12 @@ namespace FerreteriaSL.Productos
         private void btn_seleccionarArchivo_Click(object sender, EventArgs e)
         {
             ImportWindow iw = new ImportWindow();
-            if (iw.ShowDialog(this) == DialogResult.OK)
-            {
-                DataTable parcialTable = iw.ImportedExcel;
-                parcialTable.Columns.Add("Precio a Importar",typeof(double));
-                dgv_listadoExcel.DataSource = parcialTable;
-                lbl_importedFileName.Text = iw.FileName.Replace("\\","");
-                CanTransfer();
-            }
+            if (iw.ShowDialog(this) != DialogResult.OK) return;
+            DataTable parcialTable = iw.ImportedExcel;
+            parcialTable.Columns.Add("Precio a Importar",typeof(double));
+            dgv_listadoExcel.DataSource = parcialTable;
+            lbl_importedFileName.Text = iw.FileName.Replace("\\","");
+            CanTransfer();
         }
 
         private void tp_importarProductos_Enter(object sender, EventArgs e)
@@ -903,23 +901,20 @@ namespace FerreteriaSL.Productos
 
         private void dgv_listadoExcel_DataSourceChanged(object sender, EventArgs e)
         {
-            if (dgv_listadoExcel.DataSource != null)
+            if (dgv_listadoExcel.DataSource == null) return;
+            foreach (DataGridViewColumn sCol in dgv_listadoExcel.Columns.Cast<DataGridViewColumn>().Where(sCol => sCol.Name != "Descripción"))
             {
-                foreach (DataGridViewColumn sCol in dgv_listadoExcel.Columns)
-                {
-                    if (sCol.Name != "Descripción")
-                        sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                }
-
-                dgv_listadoExcel.Columns["Codigo"].ReadOnly = true;
-
-                int articleCount = dgv_listadoExcel.Rows.Count;
-
-                lbl_impArticleCount.Text = articleCount > 0 ? articleCount + " articulos a importar." : "No hay articulos a importar";
-
-                dgv_listadoExcel.Columns["Precio"].DefaultCellStyle.Format = "$0.00";
-                import_applyPercentage();
+                sCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             }
+
+            dgv_listadoExcel.Columns["Codigo"].ReadOnly = true;
+
+            int articleCount = dgv_listadoExcel.Rows.Count;
+
+            lbl_impArticleCount.Text = articleCount > 0 ? articleCount + " articulos a importar." : "No hay articulos a importar";
+
+            dgv_listadoExcel.Columns["Precio"].DefaultCellStyle.Format = "$0.00";
+            import_applyPercentage();
         }
 
         private void dgv_listadoExcel_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -960,34 +955,34 @@ namespace FerreteriaSL.Productos
 
         private void btn_transferir_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "¿Está seguro que desea continuar?", "Transferir a Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (
+                MessageBox.Show(this, "¿Está seguro que desea continuar?", "Transferir a Base de Datos",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            _bgwTransferToDb = new BackgroundWorker
             {
-                _bgwTransferToDb = new BackgroundWorker
-                {
-                    WorkerReportsProgress = true,
-                    WorkerSupportsCancellation = true
-                };
-                _bgwTransferToDb.DoWork += bgw_transferToDB_DoWork;
-                _bgwTransferToDb.ProgressChanged += bgw_transferToDB_ProgressChanged;
-                _bgwTransferToDb.RunWorkerCompleted += bgw_transferToDB_RunWorkerCompleted;
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            _bgwTransferToDb.DoWork += bgw_transferToDB_DoWork;
+            _bgwTransferToDb.ProgressChanged += bgw_transferToDB_ProgressChanged;
+            _bgwTransferToDb.RunWorkerCompleted += bgw_transferToDB_RunWorkerCompleted;
 
-                DataTable productsToImport = dgv_listadoExcel.DataSource as DataTable;
-                int idProveedor = int.Parse((cb_listaProveedores.SelectedItem as DataRowView)["id"].ToString());
+            DataTable productsToImport = dgv_listadoExcel.DataSource as DataTable;
+            int idProveedor = int.Parse((cb_listaProveedores.SelectedItem as DataRowView)["id"].ToString());
 
-                object[] args = new object[] { productsToImport, idProveedor };
+            object[] args = { productsToImport, idProveedor };
 
-                btn_cancelarTransferencia.Enabled = true;
-                btn_transferir.Enabled = false;
-                dgv_listadoExcel.Enabled = false;
-                cb_listaProveedores.Enabled = false;
-                nud_importPercentage.Enabled = false;
+            btn_cancelarTransferencia.Enabled = true;
+            btn_transferir.Enabled = false;
+            dgv_listadoExcel.Enabled = false;
+            cb_listaProveedores.Enabled = false;
+            nud_importPercentage.Enabled = false;
 
-                pb_transferProgress.Maximum = 100;
-                pb_transferProgress.Minimum = 0;
-                pb_transferProgress.Style = ProgressBarStyle.Continuous;
+            pb_transferProgress.Maximum = 100;
+            pb_transferProgress.Minimum = 0;
+            pb_transferProgress.Style = ProgressBarStyle.Continuous;
 
-                _bgwTransferToDb.RunWorkerAsync(args);
-            }
+            _bgwTransferToDb.RunWorkerAsync(args);
         }
 
         void bgw_transferToDB_DoWork(object sender, DoWorkEventArgs e)
@@ -1006,42 +1001,39 @@ namespace FerreteriaSL.Productos
                     e.Cancel = true;
                     break;
                 }
-                else
-                {
-                    string codigo = sRow[0].ToString().Trim();
-                    string nombre = sRow[1].ToString().Replace("\"", "\\\"").Replace("'", "").Trim();
-                    double precio = Convert.ToDouble(sRow[3].ToString().Trim());
-                    string query = String.Format("Call sp_importFromExcel('{0}','{1}',{2},{3})", codigo,nombre,precio.ToString("0.00",CultureInfo.InvariantCulture),idProveedor);
-                    //while (result == -1)
-                    //{
-                    //    try
-                    //    {
-                    //        //afldbg.log(this, "Trying to connecto to database", "green");
-                            var result = int.Parse(dbCon.Read(query).Rows[0][0].ToString());
-                    //    }
-                    //    catch
-                    //    {
-                    //        //afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
-                    //        bgw_transferToDB.ReportProgress(0, 1);
-                    //        Thread.Sleep(3000);
-                    //        //afldbg.log(this, "3 seconds passed, retrying...", "red");
-                    //        if (bgw_transferToDB.CancellationPending)
-                    //        {
-                    //            //afldbg.log(this, "Transfer Cancelled", "orange");
-                    //            e.Cancel = true;
-                    //            return;
-                    //        }
-                    //    }
+                string codigo = sRow[0].ToString().Trim();
+                string nombre = sRow[1].ToString().Replace("\"", "\\\"").Replace("'", "").Trim();
+                double precio = Convert.ToDouble(sRow[3].ToString().Trim());
+                string query = String.Format("Call sp_importFromExcel('{0}','{1}',{2},{3})", codigo,nombre,precio.ToString("0.00",CultureInfo.InvariantCulture),idProveedor);
+                //while (result == -1)
+                //{
+                //    try
+                //    {
+                //        //afldbg.log(this, "Trying to connecto to database", "green");
+                var result = int.Parse(dbCon.Read(query).Rows[0][0].ToString());
+                //    }
+                //    catch
+                //    {
+                //        //afldbg.log(this, "Connection failed! Retrying in 3 seconds...", "red");
+                //        bgw_transferToDB.ReportProgress(0, 1);
+                //        Thread.Sleep(3000);
+                //        //afldbg.log(this, "3 seconds passed, retrying...", "red");
+                //        if (bgw_transferToDB.CancellationPending)
+                //        {
+                //            //afldbg.log(this, "Transfer Cancelled", "orange");
+                //            e.Cancel = true;
+                //            return;
+                //        }
+                //    }
                         
-                    //}                   
-                    if (result == 1)
-                        updated++;
-                    else
-                        inserted++;
-                    TransferExcelToDataBaseProgressInfo userState = new TransferExcelToDataBaseProgressInfo(updated,inserted,productsToImport.Rows.Count, DateTime.Now - startTime);
-                    _bgwTransferToDb.ReportProgress(0, userState);
-                    e.Result = userState;
-                }
+                //}                   
+                if (result == 1)
+                    updated++;
+                else
+                    inserted++;
+                TransferExcelToDataBaseProgressInfo userState = new TransferExcelToDataBaseProgressInfo(updated,inserted,productsToImport.Rows.Count, DateTime.Now - startTime);
+                _bgwTransferToDb.ReportProgress(0, userState);
+                e.Result = userState;
             }
         }
 
@@ -1107,54 +1099,111 @@ namespace FerreteriaSL.Productos
         private void Exportar()
         {
             Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
-            string pathstring = (Application.StartupPath + "\\template.xls");
-            string excelpath = @pathstring;
+            //string pathstring = (Application.StartupPath + "\\template_p.xls");
+            //string excelpath = @pathstring;
 
 
             SaveFileDialog fichero = new SaveFileDialog {Filter = @"Excel (*.xls)|*.xls"};
-            if (fichero.ShowDialog() == DialogResult.OK)
+            if (fichero.ShowDialog() != DialogResult.OK) return;
+            //var aplicacion = new Microsoft.Office.Interop.Excel.Application();
+            //libros_trabajo = aplicacion.Workbooks.Add();
+
+            ////////////////////////////////
+            var librosTrabajo = excelapp.Workbooks.Add();//excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
+            ///////////////////////////////
+
+            var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
+
+            var dgvRowCount = dgv_listaProductos.Rows.Cast<DataGridViewRow>().Count(r => r.Visible);
+            var dgvColumnCount = dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Count(c => c.Visible);
+
+            int colCount = 1;
+            foreach (DataGridViewColumn col in dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Where(col => col.Visible))
             {
-                var aplicacion = new Microsoft.Office.Interop.Excel.Application();
-                //libros_trabajo = aplicacion.Workbooks.Add();
+                hojaTrabajo.Cells[3, colCount] = col.HeaderText;
 
-                ////////////////////////////////
-                var librosTrabajo = excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
-                ///////////////////////////////
+                var cellStyle = ((Range) hojaTrabajo.Cells[3, colCount]);
+                cellStyle.Interior.Color = ColorTranslator.ToOle(Color.Bisque);
+                cellStyle.Font.Bold = true;
+                cellStyle.Font.Size = 13;
 
-                var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
-
-
-                //hoja_trabajo.Cells[1, 3] = " Presupuesto                                        ";
-                hojaTrabajo.Cells[1, 3] = DateTime.Now.Date.ToString("dd/MM/yyyy");
-                hojaTrabajo.Cells[3, 1] = "Codigo              ";
-                hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
-                hojaTrabajo.Cells[3, 3] = "Precio";
-
-
-
-                hojaTrabajo.Columns.AutoFit();
-
-
-                for (int i = 0; i < TablaFiltrada.Rows.Count; i++)
-                {
-                    //for (int j = 0; j < tabla_filtrada.Columns.Count; j++)
-                    //{
-                    hojaTrabajo.Cells[i + 4, 0 + 1] = TablaFiltrada.Rows[i][3].ToString();
-                    hojaTrabajo.Cells[i + 4, 0 + 2] = TablaFiltrada.Rows[i][4].ToString();
-                    hojaTrabajo.Cells[i + 4, 0 + 3] = TablaFiltrada.Rows[i][8].ToString();
-                    // }
-                }
-                try
-                {
-                    librosTrabajo.SaveAs(fichero.FileName,
-                    XlFileFormat.xlWorkbookNormal);
-                    librosTrabajo.Close(true);
-                    aplicacion.Quit();
-                }
-                catch { MessageBox.Show(@"Error al escribir el archivo"); }
-                MessageBox.Show(@"Lista exportada");
-
+                colCount++;
             }
+
+
+            int rowCount = 4;
+            foreach (DataGridViewRow row in dgv_listaProductos.Rows.Cast<DataGridViewRow>().Where(row => row.Visible))
+            {
+                int cellCount = 1;             
+                foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().Where(cell => cell.Visible))
+                {
+                    var value = cell.Value;
+                    if (cell.OwningColumn.HeaderText.Contains("Precio"))
+                    {
+                        value = "$ " + value;
+                    }
+                    else if (cell.OwningColumn.HeaderText.Contains("%"))
+                    {
+                        value = value + "%";
+                    }
+                    hojaTrabajo.Cells[rowCount, cellCount] = value.ToString();
+                    cellCount++;
+                }
+                rowCount++;             
+            }
+
+            
+
+            hojaTrabajo.Cells[1, 1] = " Ferreteria San Lorenzo";
+            var titleRange = hojaTrabajo.Range[hojaTrabajo.Cells[1, 1], hojaTrabajo.Cells[1,dgvColumnCount]];
+            titleRange.Cells.Merge();
+            titleRange.Cells.Font.Size = 26;
+            titleRange.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            titleRange.Cells.Interior.Color = ColorTranslator.ToOle(Color.Black);
+            titleRange.Cells.Font.Color = ColorTranslator.ToOle(Color.Red);
+
+            hojaTrabajo.Cells[2, 1] = "Listado de Articulos - " + DateTime.Now.Date.ToString("dd/MM/yyyy",CultureInfo.InvariantCulture);
+            var subtitleRange = hojaTrabajo.Range[hojaTrabajo.Cells[2, 1], hojaTrabajo.Cells[2, dgvColumnCount]];
+            subtitleRange.Cells.Merge();
+            subtitleRange.Cells.Font.Size = 16;
+            subtitleRange.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            subtitleRange.Cells.Interior.Color = ColorTranslator.ToOle(Color.DarkCyan);
+
+
+
+            hojaTrabajo.Range[hojaTrabajo.Cells[1,1],hojaTrabajo.Cells[dgvRowCount + 3,dgvColumnCount]].Cells.Borders.LineStyle = XlLineStyle.xlContinuous;
+
+            //hojaTrabajo.Cells[3, 1] = "Codigo              ";
+            //hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
+            //hojaTrabajo.Cells[3, 3] = "Precio";
+
+
+
+            hojaTrabajo.Columns.AutoFit();
+
+
+            //for (int i = 0; i < TablaFiltrada.Rows.Count; i++)
+            //{
+            //    //for (int j = 0; j < tabla_filtrada.Columns.Count; j++)
+            //    //{
+            //    hojaTrabajo.Cells[i + 4, 0 + 1] = TablaFiltrada.Rows[i][3].ToString();
+            //    hojaTrabajo.Cells[i + 4, 0 + 2] = TablaFiltrada.Rows[i][4].ToString();
+            //    hojaTrabajo.Cells[i + 4, 0 + 3] = TablaFiltrada.Rows[i][8].ToString();
+            //    // }
+            //}
+            try
+            {
+                librosTrabajo.SaveAs(fichero.FileName, XlFileFormat.xlWorkbookDefault);
+                librosTrabajo.Close();
+                //aplicacion.Quit();
+                excelapp.Quit();
+                Marshal.FinalReleaseComObject(excelapp);
+                MessageBox.Show(@"Lista exportada");
+            }
+            catch
+            {
+                MessageBox.Show(@"Error al escribir el archivo");
+            }          
         }
 
         #endregion
