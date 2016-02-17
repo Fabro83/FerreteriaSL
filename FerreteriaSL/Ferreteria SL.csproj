@@ -60,6 +60,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="barcode">
+      <HintPath>..\Dependencias\barcode.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -92,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="afldbg.cs" />
+    <Compile Include="Clases Genericas\DGVHelper.cs" />
     <Compile Include="Clases Genericas\Impresion.cs" />
     <Compile Include="Componentes\ComboGrid.cs">
       <SubType>UserControl</SubType>
@@ -99,18 +103,19 @@
     <Compile Include="Componentes\ComboGrid.designer.cs">
       <DependentUpon>ComboGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="ubicacion\ABM_Articulos.cs">
+    <Compile Include="Modelos\Presupuesto.cs" />
+    <Compile Include="Ubicacion\ABM_Articulos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ubicacion\ABM_Articulos.Designer.cs" />
-    <Compile Include="ubicacion\Nombre_Seccion.cs">
+    <Compile Include="Ubicacion\ABM_Articulos.Designer.cs" />
+    <Compile Include="Ubicacion\Nombre_Seccion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ubicacion\Nombre_Seccion.Designer.cs" />
-    <Compile Include="ubicacion\Ubicacion.cs">
+    <Compile Include="Ubicacion\Nombre_Seccion.Designer.cs" />
+    <Compile Include="Ubicacion\Ubicacion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ubicacion\Ubicacion.Designer.cs" />
+    <Compile Include="Ubicacion\Ubicacion.Designer.cs" />
     <Compile Include="Ventas\FacturaA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,9 +316,9 @@
     <EmbeddedResource Include="Empleados\RegistrarPago.resx">
       <DependentUpon>RegistrarPago.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ubicacion\ABM_Articulos.resx" />
-    <EmbeddedResource Include="ubicacion\Nombre_Seccion.resx" />
-    <EmbeddedResource Include="ubicacion\Ubicacion.resx" />
+    <EmbeddedResource Include="Ubicacion\ABM_Articulos.resx" />
+    <EmbeddedResource Include="Ubicacion\Nombre_Seccion.resx" />
+    <EmbeddedResource Include="Ubicacion\Ubicacion.resx" />
     <EmbeddedResource Include="Ventas\FacturaA.resx">
       <DependentUpon>FacturaA.cs</DependentUpon>
     </EmbeddedResource>
@@ -400,6 +405,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <Content Include="Fonts\code128.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
