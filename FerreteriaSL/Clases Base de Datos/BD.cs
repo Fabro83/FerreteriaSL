@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using MySql.Data.MySqlClient;
@@ -86,6 +87,17 @@ namespace FerreteriaSL.Clases_Base_de_Datos
             int result = cmd.ExecuteNonQuery();
             Connection.Close();
             return result;
+        }
+
+        public int LastInsertId()
+        {
+            var lastInsertId = int.Parse(Read("SELECT last_insert_id() as 'id'").Rows[0]["id"].ToString());
+            return lastInsertId != 0 ? lastInsertId : -1;
+        }
+
+        public static string DoubleToString(double value)
+        {
+            return value.ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         bool OpenConnection()
