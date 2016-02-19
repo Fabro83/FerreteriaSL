@@ -1193,7 +1193,7 @@ namespace FerreteriaSL.Productos
             //}
             try
             {
-                librosTrabajo.SaveAs(fichero.FileName, XlFileFormat.xlWorkbookDefault);
+                librosTrabajo.SaveAs(fichero.FileName, XlFileFormat.xlWorkbookNormal);
                 librosTrabajo.Close();
                 //aplicacion.Quit();
                 excelapp.Quit();
