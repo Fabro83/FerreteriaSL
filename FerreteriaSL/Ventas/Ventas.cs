@@ -557,7 +557,6 @@ namespace FerreteriaSL.Ventas
             SaveFileDialog fichero = new SaveFileDialog {Filter = "Excel (*.xls)|*.xls"};
             if (fichero.ShowDialog() == DialogResult.OK)
             {
-                var aplicacion = new Microsoft.Office.Interop.Excel.Application();
                 //libros_trabajo = aplicacion.Workbooks.Add();
 
                 
@@ -616,7 +615,7 @@ namespace FerreteriaSL.Ventas
                     librosTrabajo.SaveAs(fichero.FileName,
                     XlFileFormat.xlWorkbookNormal);
                     librosTrabajo.Close();
-                    aplicacion.Quit();
+                    excelapp.Quit();
                 }
                 catch (Exception e) { MessageBox.Show("Error al escribir el archivo.\n\n"+e.Message); }
 
