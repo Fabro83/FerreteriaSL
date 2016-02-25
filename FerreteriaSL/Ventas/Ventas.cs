@@ -547,80 +547,87 @@ namespace FerreteriaSL.Ventas
 
         private void ExportarDataGridViewExcel()
         {
-            var grd = dgv_productosIngresados;
-            Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
+            SaveFileDialog fichero = new SaveFileDialog {Filter = @"Excel (*.xlsx)|*.xlsx"};
+            if (fichero.ShowDialog() != DialogResult.OK) return;
+
+            ExcelExporter.ExcelExporter winExcelExporter = new ExcelExporter.ExcelExporter(fichero.FileName, dgv_productosIngresados, "Presupuesto",true);
+            winExcelExporter.ShowDialog(this); 
+
+
+            //var grd = dgv_productosIngresados;
+            //Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
             
-            string pathstring = (Application.StartupPath + "\\template_p.xls");
-            string excelpath = @pathstring;
+            //string pathstring = (Application.StartupPath + "\\template_p.xls");
+            //string excelpath = @pathstring;
 
 
-            SaveFileDialog fichero = new SaveFileDialog {Filter = "Excel (*.xls)|*.xls"};
-            if (fichero.ShowDialog() == DialogResult.OK)
-            {
-                //libros_trabajo = aplicacion.Workbooks.Add();
+            //SaveFileDialog fichero = new SaveFileDialog {Filter = "Excel (*.xls)|*.xls"};
+            //if (fichero.ShowDialog() == DialogResult.OK)
+            //{
+            //    //libros_trabajo = aplicacion.Workbooks.Add();
 
                 
-                var librosTrabajo = excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
+            //    var librosTrabajo = excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
                 
 
-                var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
+            //    var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
 
 
-                //hoja_trabajo.Cells[1, 3] = " Presupuesto                                        ";
-                hojaTrabajo.Cells[1, 5] = DateTime.Now.Date.ToString("dd/MM/yyyy");
-                hojaTrabajo.Cells[3, 1] = "Codigo              ";
-                hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
-                hojaTrabajo.Cells[3, 3] = "Cantidad";
-                hojaTrabajo.Cells[3, 4] = "Precio unitario";
-                hojaTrabajo.Cells[3, 5] = "Precio Subtotal";
+            //    //hoja_trabajo.Cells[1, 3] = " Presupuesto                                        ";
+            //    hojaTrabajo.Cells[1, 5] = DateTime.Now.Date.ToString("dd/MM/yyyy");
+            //    hojaTrabajo.Cells[3, 1] = "Codigo              ";
+            //    hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
+            //    hojaTrabajo.Cells[3, 3] = "Cantidad";
+            //    hojaTrabajo.Cells[3, 4] = "Precio unitario";
+            //    hojaTrabajo.Cells[3, 5] = "Precio Subtotal";
 
 
-                hojaTrabajo.Columns.AutoFit();
+            //    hojaTrabajo.Columns.AutoFit();
 
-                int excRowIndex = 3;
-                foreach (DataGridViewRow row in grd.Rows.Cast<DataGridViewRow>().Where(row => row.Visible))
-                {
-                    var excCurrentCell = 1;
-                    excRowIndex++;
-                    foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().Where(cell => cell.Visible))
-                    {
-                        hojaTrabajo.Cells[excRowIndex, excCurrentCell] = cell.Value.ToString();
-                        excCurrentCell++;
-                    }
-                }
+            //    int excRowIndex = 3;
+            //    foreach (DataGridViewRow row in grd.Rows.Cast<DataGridViewRow>().Where(row => row.Visible))
+            //    {
+            //        var excCurrentCell = 1;
+            //        excRowIndex++;
+            //        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().Where(cell => cell.Visible))
+            //        {
+            //            hojaTrabajo.Cells[excRowIndex, excCurrentCell] = cell.Value.ToString();
+            //            excCurrentCell++;
+            //        }
+            //    }
                 
                 
 
 
-                //for (int i = 0; i < grd.Rows.Count; i++)
-                //{
-                //    for (int j = 0; j < grd.Columns.Count - 3; j++)
-                //    {
-                //        hojaTrabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
+            //    //for (int i = 0; i < grd.Rows.Count; i++)
+            //    //{
+            //    //    for (int j = 0; j < grd.Columns.Count - 3; j++)
+            //    //    {
+            //    //        hojaTrabajo.Cells[i + 4, j + 1] = grd.Rows[i].Cells[j].Value.ToString();
 
-                //    }
-                //}
-
-
-                //hoja_trabajo.Cells[grd.RowCount + 6, 5] = "TOTAL sin IVA";
-                //hoja_trabajo.Cells[grd.RowCount + 6, 6] = Math.Round((Convert.ToDouble(lbl_totalMonto.Text) / 1.21), 2).ToString();
-                //hoja_trabajo.Cells[grd.RowCount + 7, 5] = " IVA";
-                //hoja_trabajo.Cells[grd.RowCount + 7, 6] = lbl_ivaValue.Text;
-                hojaTrabajo.Cells[grd.RowCount + 8, 4] = "TOTAL";
-                hojaTrabajo.Cells[grd.RowCount + 8, 5] = lbl_totalMonto.Text;
+            //    //    }
+            //    //}
 
 
-                try
-                {
-                    librosTrabajo.SaveAs(fichero.FileName,
-                    XlFileFormat.xlWorkbookNormal);
-                    librosTrabajo.Close();
-                    excelapp.Quit();
-                }
-                catch (Exception e) { MessageBox.Show("Error al escribir el archivo.\n\n"+e.Message); }
+            //    //hoja_trabajo.Cells[grd.RowCount + 6, 5] = "TOTAL sin IVA";
+            //    //hoja_trabajo.Cells[grd.RowCount + 6, 6] = Math.Round((Convert.ToDouble(lbl_totalMonto.Text) / 1.21), 2).ToString();
+            //    //hoja_trabajo.Cells[grd.RowCount + 7, 5] = " IVA";
+            //    //hoja_trabajo.Cells[grd.RowCount + 7, 6] = lbl_ivaValue.Text;
+            //    hojaTrabajo.Cells[grd.RowCount + 8, 4] = "TOTAL";
+            //    hojaTrabajo.Cells[grd.RowCount + 8, 5] = lbl_totalMonto.Text;
 
-                MessageBox.Show("Presupuesto exportado");
-            }
+
+            //    try
+            //    {
+            //        librosTrabajo.SaveAs(fichero.FileName,
+            //        XlFileFormat.xlWorkbookNormal);
+            //        librosTrabajo.Close();
+            //        excelapp.Quit();
+            //    }
+            //    catch (Exception e) { MessageBox.Show("Error al escribir el archivo.\n\n"+e.Message); }
+
+            //    MessageBox.Show("Presupuesto exportado");
+            //}
 
         }
 

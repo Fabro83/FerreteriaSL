@@ -63,6 +63,9 @@
     <Reference Include="barcode">
       <HintPath>..\Dependencias\barcode.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\Dependencias\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -102,6 +105,12 @@
     </Compile>
     <Compile Include="Componentes\ComboGrid.designer.cs">
       <DependentUpon>ComboGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExcelExporter\ExcelExporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExcelExporter\ExcelExporter.Designer.cs">
+      <DependentUpon>ExcelExporter.cs</DependentUpon>
     </Compile>
     <Compile Include="Modelos\Presupuesto.cs" />
     <Compile Include="Ubicacion\ABM_Articulos.cs">
@@ -315,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Empleados\RegistrarPago.resx">
       <DependentUpon>RegistrarPago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExcelExporter\ExcelExporter.resx">
+      <DependentUpon>ExcelExporter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ubicacion\ABM_Articulos.resx" />
     <EmbeddedResource Include="Ubicacion\Nombre_Seccion.resx" />

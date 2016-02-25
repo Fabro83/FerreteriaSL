@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -11,6 +12,9 @@ using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
 using FerreteriaSL.ubicacion;
 using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.Utilities;
+using OfficeOpenXml.Style;
 using Application = System.Windows.Forms.Application;
 using DataTable = System.Data.DataTable;
 using GroupBox = System.Windows.Forms.GroupBox;
@@ -1097,113 +1101,12 @@ namespace FerreteriaSL.Productos
 
 
         private void Exportar()
-        {
-            Microsoft.Office.Interop.Excel.Application excelapp = new ApplicationClass();
-            //string pathstring = (Application.StartupPath + "\\template_p.xls");
-            //string excelpath = @pathstring;
-
-
-            SaveFileDialog fichero = new SaveFileDialog {Filter = @"Excel (*.xls)|*.xls"};
+        {       
+            SaveFileDialog fichero = new SaveFileDialog {Filter = @"Excel (*.xlsx)|*.xlsx"};
             if (fichero.ShowDialog() != DialogResult.OK) return;
-            //var aplicacion = new Microsoft.Office.Interop.Excel.Application();
-            //libros_trabajo = aplicacion.Workbooks.Add();
 
-            ////////////////////////////////
-            var librosTrabajo = excelapp.Workbooks.Add();//excelapp.Workbooks.Open(excelpath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true);
-            ///////////////////////////////
-
-            var hojaTrabajo = (Worksheet)librosTrabajo.Worksheets.Item[1];
-
-            var dgvRowCount = dgv_listaProductos.Rows.Cast<DataGridViewRow>().Count(r => r.Visible);
-            var dgvColumnCount = dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Count(c => c.Visible);
-
-            int colCount = 1;
-            foreach (DataGridViewColumn col in dgv_listaProductos.Columns.Cast<DataGridViewColumn>().Where(col => col.Visible))
-            {
-                hojaTrabajo.Cells[3, colCount] = col.HeaderText;
-
-                var cellStyle = ((Range) hojaTrabajo.Cells[3, colCount]);
-                cellStyle.Interior.Color = ColorTranslator.ToOle(Color.Bisque);
-                cellStyle.Font.Bold = true;
-                cellStyle.Font.Size = 13;
-
-                colCount++;
-            }
-
-
-            int rowCount = 4;
-            foreach (DataGridViewRow row in dgv_listaProductos.Rows.Cast<DataGridViewRow>().Where(row => row.Visible))
-            {
-                int cellCount = 1;             
-                foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().Where(cell => cell.Visible))
-                {
-                    var value = cell.Value;
-                    if (cell.OwningColumn.HeaderText.Contains("Precio"))
-                    {
-                        value = "$ " + value;
-                    }
-                    else if (cell.OwningColumn.HeaderText.Contains("%"))
-                    {
-                        value = value + "%";
-                    }
-                    hojaTrabajo.Cells[rowCount, cellCount] = value.ToString();
-                    cellCount++;
-                }
-                rowCount++;             
-            }
-
-            
-
-            hojaTrabajo.Cells[1, 1] = " Ferreteria San Lorenzo";
-            var titleRange = hojaTrabajo.Range[hojaTrabajo.Cells[1, 1], hojaTrabajo.Cells[1,dgvColumnCount]];
-            titleRange.Cells.Merge();
-            titleRange.Cells.Font.Size = 26;
-            titleRange.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            titleRange.Cells.Interior.Color = ColorTranslator.ToOle(Color.Black);
-            titleRange.Cells.Font.Color = ColorTranslator.ToOle(Color.Red);
-
-            hojaTrabajo.Cells[2, 1] = "Listado de Articulos - " + DateTime.Now.Date.ToString("dd/MM/yyyy",CultureInfo.InvariantCulture);
-            var subtitleRange = hojaTrabajo.Range[hojaTrabajo.Cells[2, 1], hojaTrabajo.Cells[2, dgvColumnCount]];
-            subtitleRange.Cells.Merge();
-            subtitleRange.Cells.Font.Size = 16;
-            subtitleRange.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            subtitleRange.Cells.Interior.Color = ColorTranslator.ToOle(Color.DarkCyan);
-
-
-
-            hojaTrabajo.Range[hojaTrabajo.Cells[1,1],hojaTrabajo.Cells[dgvRowCount + 3,dgvColumnCount]].Cells.Borders.LineStyle = XlLineStyle.xlContinuous;
-
-            //hojaTrabajo.Cells[3, 1] = "Codigo              ";
-            //hojaTrabajo.Cells[3, 2] = "Descripcion                             ";
-            //hojaTrabajo.Cells[3, 3] = "Precio";
-
-
-
-            hojaTrabajo.Columns.AutoFit();
-
-
-            //for (int i = 0; i < TablaFiltrada.Rows.Count; i++)
-            //{
-            //    //for (int j = 0; j < tabla_filtrada.Columns.Count; j++)
-            //    //{
-            //    hojaTrabajo.Cells[i + 4, 0 + 1] = TablaFiltrada.Rows[i][3].ToString();
-            //    hojaTrabajo.Cells[i + 4, 0 + 2] = TablaFiltrada.Rows[i][4].ToString();
-            //    hojaTrabajo.Cells[i + 4, 0 + 3] = TablaFiltrada.Rows[i][8].ToString();
-            //    // }
-            //}
-            try
-            {
-                librosTrabajo.SaveAs(fichero.FileName, XlFileFormat.xlWorkbookNormal);
-                librosTrabajo.Close();
-                //aplicacion.Quit();
-                excelapp.Quit();
-                Marshal.FinalReleaseComObject(excelapp);
-                MessageBox.Show(@"Lista exportada");
-            }
-            catch
-            {
-                MessageBox.Show(@"Error al escribir el archivo");
-            }          
+            ExcelExporter.ExcelExporter winExcelExporter = new ExcelExporter.ExcelExporter(fichero.FileName, dgv_listaProductos, "Listado de Articulos");
+            winExcelExporter.ShowDialog(this);   
         }
 
         #endregion
