@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text;
+using Microsoft.Office.Interop.Excel;
 using Net.SourceForge.Koogra;
+using OfficeOpenXml;
+using DataTable = System.Data.DataTable;
 
 namespace FerreteriaSL.Productos
 {
@@ -15,7 +20,8 @@ namespace FerreteriaSL.Productos
 
     class KoograExcelImporter : IExcelReader
     {
-        IWorkbook _excelWorkBook;
+        IWorkbook _xlsWorkbook;
+        ExcelWorkbook _xlsxWorkbook;
         BackgroundWorker _bgwCargarArchivo;
         BackgroundWorker _bgwCargarHoja;
         BackgroundWorker _bgwCargarVistaPrevia;
@@ -72,7 +78,7 @@ namespace FerreteriaSL.Productos
             string path = e.Argument.ToString();
             try
             {
-                _excelWorkBook = path.Contains("xlsx") ? WorkbookFactory.GetExcel2007Reader(path) : WorkbookFactory.GetExcelBIFFReader(path);                  
+                _xlsWorkbook = path.Contains("xlsx") ? WorkbookFactory.GetExcel2007Reader(path) : WorkbookFactory.GetExcelBIFFReader(path);                  
             }
             catch (Exception)
             {
@@ -85,7 +91,7 @@ namespace FerreteriaSL.Productos
         {
             if (e.Cancelled)
             {
-                OnStatusChange("No se pudo cargar el archivo.", 0, -1);
+                OnStatusChange("No se pudo cargar el archivo. Intente guardar el archivo como 'Libro de Excel 97-2003'(.xls).", 0, -1);
             }
             else
             {
@@ -113,7 +119,7 @@ namespace FerreteriaSL.Productos
 
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new[] { new DataColumn("Codigo"), new DataColumn("Descripción"), new DataColumn("Precio", typeof(double)) });
-            IWorksheet ws = _excelWorkBook.Worksheets.GetWorksheetByIndex(targetSheet);
+            IWorksheet ws = _xlsWorkbook.Worksheets.GetWorksheetByIndex(targetSheet);
             
             for (uint r = ws.FirstRow; r <= ws.LastRow; r++)
             {
@@ -139,19 +145,38 @@ namespace FerreteriaSL.Productos
                     continue;
                 }
 
-                if (rawPrecio != null && double.TryParse(rawPrecio.ToString().Replace(".", ","), out precio) &&
-                    descripcion != String.Empty && codigo != String.Empty)
-                {
-                    DataRow dtRow = dt.NewRow();
-                    dtRow[0] = codigo;
-                    dtRow[1] = descripcion;
-                    dtRow[2] = precio;
-                    dt.Rows.Add(dtRow);
-                }
+                if (rawPrecio == null || !double.TryParse(rawPrecio.ToString().Replace(".", ","), out precio) ||
+                    descripcion == String.Empty || codigo == String.Empty) continue;
+                DataRow dtRow = dt.NewRow();
+                dtRow[0] = codigo;
+                dtRow[1] = descripcion;
+                dtRow[2] = precio;
+                dt.Rows.Add(dtRow);
             }
 
             e.Result = dt;
         }
+        // QUIZAS
+        //void LoadXLSX(int selectedWorksheet)
+        //{
+        //    ExcelWorksheet objExcelWorksheet = _xlsxWorkbook.Worksheets[selectedWorksheet];
+        //    DataTable excelDataTable = new DataTable();
+
+        //    BuildColumnsNames(objExcelWorksheet.Dimension.End.Column).ToList().ForEach(f => excelDataTable.Columns.Add(f));
+
+        //    for (int row = 1; row <= objExcelWorksheet.Dimension.End.Row; row++)
+        //    {
+        //        var newRow = excelDataTable.NewRow();
+        //        foreach (var col in BuildColumnsNames(objExcelWorksheet.Dimension.End.Column))
+        //        {
+        //            newRow[col] = objExcelWorksheet.Cells[col + row].Value;
+        //        }
+        //        excelDataTable.Rows.Add(newRow);
+        //    }
+            
+            
+
+        //}
 
         void bgw_cargarHoja_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -174,17 +199,17 @@ namespace FerreteriaSL.Productos
 
         public object[] GetSheetNames()
         {
-            string[] sheetNames = new string[_excelWorkBook.Worksheets.Count];
-            for (int i = 0; i < _excelWorkBook.Worksheets.Count; i++)
+            object[] sheetNames = new object[_xlsWorkbook.Worksheets.Count];
+            for (int i = 0; i < _xlsWorkbook.Worksheets.Count; i++)
             {
-                sheetNames[i] = _excelWorkBook.Worksheets.GetWorksheetByIndex(i).Name;
+                sheetNames[i] = _xlsWorkbook.Worksheets.GetWorksheetByIndex(i).Name;
             }
             return sheetNames;
         }
 
         public int GetNumberOfUsedColumns(int sheetIndex)
         {
-            IWorksheet ws = _excelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex);
+            IWorksheet ws = _xlsWorkbook.Worksheets.GetWorksheetByIndex(sheetIndex);
             return Convert.ToInt32(ws.LastCol);
         }
 
@@ -193,22 +218,22 @@ namespace FerreteriaSL.Productos
             _bgwCargarVistaPrevia = new BackgroundWorker();
             _bgwCargarVistaPrevia.DoWork += bgw_cargarVistaPrevia_DoWork;
             _bgwCargarVistaPrevia.RunWorkerCompleted += bgw_cargarVistaPrevia_RunWorkerCompleted;
-            OnStatusChange("Cargando hoja \"" + _excelWorkBook.Worksheets.GetWorksheetByIndex(sheetIndex).Name + "\"...", 0, 3);
+            OnStatusChange("Cargando hoja \"" + _xlsWorkbook.Worksheets.GetWorksheetByIndex(sheetIndex).Name + "\"...", 0, 3);
             _bgwCargarVistaPrevia.RunWorkerAsync(sheetIndex);
         }
 
         void bgw_cargarVistaPrevia_DoWork(object sender, DoWorkEventArgs e)
         {
-             IWorksheet wSheet = _excelWorkBook.Worksheets.GetWorksheetByIndex(Convert.ToInt32(e.Argument));
+            IWorksheet wSheet = _xlsWorkbook.Worksheets.GetWorksheetByIndex(Convert.ToInt32(e.Argument));
 
             uint maxRows = wSheet.LastRow <= 30 ? wSheet.LastRow : 30;
-            uint maxColumns = wSheet.LastCol + 1 <= 10 ? wSheet.LastCol + 1 : 10;
+            uint maxColumns = wSheet.LastCol + 1;//<= 10 ? wSheet.LastCol + 1 : 50;
 
-            string[] columnNames = BuildColumnsNames(Convert.ToInt32(maxColumns));
+            IEnumerable<string> columnNames = BuildColumnsNames(Convert.ToInt32(maxColumns));
 
             DataTable previewTable = new DataTable();
 
-            foreach(string sCol in columnNames)
+            foreach (string sCol in columnNames)
             {
                 previewTable.Columns.Add(sCol);
             }
@@ -224,14 +249,14 @@ namespace FerreteriaSL.Productos
                     {
                         newRow[Convert.ToInt32(c)] = sRow.GetCell(c).Value;
                     }
-                    catch (NullReferenceException) 
+                    catch (NullReferenceException)
                     {
                         newRow[Convert.ToInt32(c)] = String.Empty;
                     }
                     if (newRow[Convert.ToInt32(c)] != null && newRow[Convert.ToInt32(c)].ToString() != String.Empty && newRow[Convert.ToInt32(c)] != DBNull.Value)
                         newRowHasValues = true;
                 }
-                if(newRowHasValues)
+                if (newRowHasValues)
                     previewTable.Rows.Add(newRow);
             }
 
@@ -245,7 +270,7 @@ namespace FerreteriaSL.Productos
             OnPreviewLoaded(e.Result as DataTable);
         }
 
-        string[] BuildColumnsNames(int columnCount)
+        static IEnumerable<string> BuildColumnsNames(int columnCount)
         {
             string[] baseColumns = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
             List<string> columnName = new List<string>();

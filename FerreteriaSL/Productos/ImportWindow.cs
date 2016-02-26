@@ -25,14 +25,12 @@ namespace FerreteriaSL.Productos
         {
             OpenFileDialog ofd = new OpenFileDialog {Filter = "Archivos Excel|*.xls;*.xlsx"};
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                _kei = new KoograExcelImporter();
-                _kei.StatusChanged += KEI_StatusChanged;
-                _kei.ExcelFileLoaded += KEI_ExcelFileLoaded;
-                FileName = ofd.FileName.Substring(ofd.FileName.LastIndexOf("\\"));
-                _kei.LoadExcelFile(ofd.FileName);
-            }      
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+            _kei = new KoograExcelImporter();
+            _kei.StatusChanged += KEI_StatusChanged;
+            _kei.ExcelFileLoaded += KEI_ExcelFileLoaded;
+            FileName = ofd.FileName.Substring(ofd.FileName.LastIndexOf("\\"));
+            _kei.LoadExcelFile(ofd.FileName);
         }
 
         void KEI_ExcelFileLoaded()
@@ -58,22 +56,25 @@ namespace FerreteriaSL.Productos
             Color textColor = Color.Black;
             if (type == -1)
                 textColor = Color.DarkRed;
-            if (type == 1)
+            switch (type)
             {
-                tspb_progressInfo.Visible = true;
-                tspb_progressInfo.Maximum = 100;
-                tspb_progressInfo.Minimum = 0;
-                tspb_progressInfo.Style = ProgressBarStyle.Blocks;
-                tspb_progressInfo.Value = percentage;
-            }
-            else if (type == 3)
-            {
-                tspb_progressInfo.Visible = true;
-                tspb_progressInfo.Style = ProgressBarStyle.Marquee;
-            }
-            else
-            {
-                tspb_progressInfo.Visible = false;
+                case 1:
+                    tspb_progressInfo.Visible = true;
+                    tspb_progressInfo.Maximum = 100;
+                    tspb_progressInfo.Minimum = 0;
+                    tspb_progressInfo.Style = ProgressBarStyle.Blocks;
+                    tspb_progressInfo.Value = percentage;
+                    dgv_sheetPreview.Enabled = btn_import.Enabled = false;
+                    break;
+                case 3:
+                    tspb_progressInfo.Visible = true;
+                    tspb_progressInfo.Style = ProgressBarStyle.Marquee;
+                    dgv_sheetPreview.Enabled = false;
+                    break;
+                default:
+                    tspb_progressInfo.Visible = false;
+                    dgv_sheetPreview.Enabled = btn_import.Enabled = true;
+                    break;
             }
             tssl_statusInfo.ForeColor = textColor;
             tssl_statusInfo.Text = status;

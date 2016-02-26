@@ -3,22 +3,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
 using FerreteriaSL.ubicacion;
-using Microsoft.Office.Interop.Excel;
-using OfficeOpenXml;
-using OfficeOpenXml.FormulaParsing.Utilities;
-using OfficeOpenXml.Style;
-using Application = System.Windows.Forms.Application;
-using DataTable = System.Data.DataTable;
-using GroupBox = System.Windows.Forms.GroupBox;
-using TextBox = System.Windows.Forms.TextBox;
 
 namespace FerreteriaSL.Productos
 {
