@@ -93,23 +93,17 @@ namespace FerreteriaSL
         private void tsmi_ventas_Click(object sender, EventArgs e)
         {
             FormCollection fc = Application.OpenForms;
-            foreach (Form frm in fc)
+            foreach (Ventas.Ventas frm in fc.OfType<Ventas.Ventas>())
             {
-                if (frm is Ventas.Ventas)
-                {
-                    frm.Focus();
-                    return;
-                }
+                frm.Focus();
+                return;
             }
             OpenChild(new Ventas.Ventas());
         }
 
         private void tsmi_cambiarUsuario_Click(object sender, EventArgs e)
         {
-            foreach (Form sForm in Application.OpenForms.Cast<Form>().Where(sForm => !(sForm is MainWindow)))
-            {
-                sForm.Close();
-            }
+            Application.OpenForms.Cast<Form>().Where(sForm => !(sForm is MainWindow)).ToList().ForEach(f => f.Close());
             Usuario.LogOut();
         }
 
