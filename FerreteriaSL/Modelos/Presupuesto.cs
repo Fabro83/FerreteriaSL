@@ -129,7 +129,7 @@ namespace FerreteriaSL.Modelos
             }
         }
 
-        public void Print()
+        public void Print(short copies)
         {
             Dictionary<string, object> fieldsDictionary = new Dictionary<string, object>
             {
@@ -160,7 +160,7 @@ namespace FerreteriaSL.Modelos
                 {"precio_subtotal","Arial,14,Bold,20&&"+string.Format("${0:N2}",GetTotalAmount())}
             });
 
-            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, PresupuestoPrintId);
+            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, PresupuestoPrintId, copies);
             objImpresion.StartPrinting();
         }
 

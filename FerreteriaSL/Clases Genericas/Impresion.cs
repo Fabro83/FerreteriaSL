@@ -26,7 +26,7 @@ namespace FerreteriaSL.Clases_Genericas
         private int _totalPages,_currentPage;
         private readonly ModelPage _pageModel;
 
-        public Impresion(Dictionary<string, object> printingFields,List<Dictionary<string,object>> printingGrid ,int documentType)
+        public Impresion(Dictionary<string, object> printingFields,List<Dictionary<string,object>> printingGrid ,int documentType, short copies = 1)
         {
             _printingFieldsDictionary = printingFields;
             _pageModel = new ModelPage(documentType);
@@ -35,6 +35,7 @@ namespace FerreteriaSL.Clases_Genericas
                                       _printDocument.DefaultPageSettings.PaperSize.Height);
             _pageModel.TranslateRectangles(pageSize);
             _totalPages = CalculatePages();
+            _printDocument.PrinterSettings.Copies = copies;
             _printDocument.PrintPage += OnPrint;
         }
 

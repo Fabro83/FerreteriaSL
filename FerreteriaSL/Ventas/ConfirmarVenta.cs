@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Genericas;
-using Microsoft.Reporting.WinForms;
 
 namespace FerreteriaSL.Ventas
 {
@@ -97,7 +94,7 @@ namespace FerreteriaSL.Ventas
                 gridList.Add(gridRowDictionary);
             }
 
-            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, 1);
+            Impresion objImpresion = new Impresion(fieldsDictionary, gridList, 1, Int16.Parse(facturaA.nud_copias.Value.ToString()));
             objImpresion.StartPrinting();
         }
 

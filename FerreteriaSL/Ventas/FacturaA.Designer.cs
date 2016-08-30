@@ -49,12 +49,15 @@ namespace FerreteriaSL.Ventas
             this.lbl_domicilio = new System.Windows.Forms.Label();
             this.lbl_condiciones = new System.Windows.Forms.Label();
             this.lbl_nombre = new System.Windows.Forms.Label();
+            this.nud_copias = new System.Windows.Forms.NumericUpDown();
+            this.lbl_copias = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_copias)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_print
             // 
             this.btn_print.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_print.Location = new System.Drawing.Point(222, 123);
+            this.btn_print.Location = new System.Drawing.Point(222, 153);
             this.btn_print.Name = "btn_print";
             this.btn_print.Size = new System.Drawing.Size(75, 23);
             this.btn_print.TabIndex = 0;
@@ -64,7 +67,7 @@ namespace FerreteriaSL.Ventas
             // btn_cancel
             // 
             this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_cancel.Location = new System.Drawing.Point(303, 123);
+            this.btn_cancel.Location = new System.Drawing.Point(303, 153);
             this.btn_cancel.Name = "btn_cancel";
             this.btn_cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_cancel.TabIndex = 1;
@@ -203,13 +206,41 @@ namespace FerreteriaSL.Ventas
             this.lbl_nombre.TabIndex = 17;
             this.lbl_nombre.Text = "Señor/es:";
             // 
+            // nud_copias
+            // 
+            this.nud_copias.Location = new System.Drawing.Point(322, 121);
+            this.nud_copias.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nud_copias.Name = "nud_copias";
+            this.nud_copias.Size = new System.Drawing.Size(48, 20);
+            this.nud_copias.TabIndex = 19;
+            this.nud_copias.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lbl_copias
+            // 
+            this.lbl_copias.AutoSize = true;
+            this.lbl_copias.Location = new System.Drawing.Point(231, 125);
+            this.lbl_copias.Name = "lbl_copias";
+            this.lbl_copias.Size = new System.Drawing.Size(86, 13);
+            this.lbl_copias.TabIndex = 18;
+            this.lbl_copias.Text = "Copias a Imprimir";
+            // 
             // FacturaA
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.ClientSize = new System.Drawing.Size(601, 167);
+            this.ClientSize = new System.Drawing.Size(601, 189);
             this.ControlBox = false;
+            this.Controls.Add(this.nud_copias);
+            this.Controls.Add(this.lbl_copias);
             this.Controls.Add(this.lbl_nombre);
             this.Controls.Add(this.lbl_condiciones);
             this.Controls.Add(this.lbl_domicilio);
@@ -231,6 +262,7 @@ namespace FerreteriaSL.Ventas
             this.Name = "FacturaA";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Datos de Factura";
+            ((System.ComponentModel.ISupportInitialize)(this.nud_copias)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,5 +288,7 @@ namespace FerreteriaSL.Ventas
         public TextBox txb_impuestos;
         public TextBox txb_subtotal2;
         public TextBox txb_iva;
+        public NumericUpDown nud_copias;
+        private Label lbl_copias;
     }
 }
