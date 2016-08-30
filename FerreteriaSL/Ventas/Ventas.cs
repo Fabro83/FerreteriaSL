@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -8,10 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
-using Microsoft.Office.Interop.Excel;
-using Application = System.Windows.Forms.Application;
-using Button = System.Windows.Forms.Button;
-using DataTable = System.Data.DataTable;
 
 namespace FerreteriaSL.Ventas
 {
@@ -19,7 +14,7 @@ namespace FerreteriaSL.Ventas
     {
         int _currentProduct;
         double _quantity = 1;
-        private Modelos.Presupuesto presupuesto;
+        private Modelos.Presupuesto _presupuesto;
 
         public Ventas()
         {
@@ -42,7 +37,7 @@ namespace FerreteriaSL.Ventas
 
         private void comboGrid1_EstimateScanned(object sender, string barcode)
         {
-            presupuesto = new Modelos.Presupuesto(barcode);
+            _presupuesto = new Modelos.Presupuesto(barcode);
             LoadEstimate();          
         }
 
@@ -52,14 +47,14 @@ namespace FerreteriaSL.Ventas
             {
                 foreach (var itemId in from DataGridViewRow selectedRow in dgv_productosIngresados.SelectedRows select int.Parse(selectedRow.Cells["id"].Value.ToString()))
                 {
-                    presupuesto.Productos.Single(s => s.Id == itemId).UpdateDescription();
+                    _presupuesto.Productos.Single(s => s.Id == itemId).UpdateDescription();
                 }
             }
             if (e.ClickedItem.Text == "Actualizar Todo" || e.ClickedItem.Text == "Actualizar Precio")
             {
                 foreach (var itemId in from DataGridViewRow selectedRow in dgv_productosIngresados.SelectedRows select int.Parse(selectedRow.Cells["id"].Value.ToString()))
                 {
-                    presupuesto.Productos.Single(s => s.Id == itemId).UpdatePrice();
+                    _presupuesto.Productos.Single(s => s.Id == itemId).UpdatePrice();
                 }
             }
             LoadEstimate();
@@ -68,7 +63,7 @@ namespace FerreteriaSL.Ventas
         private void LoadEstimate()
         {
             dgv_productosIngresados.Rows.Clear();
-            foreach (var producto in presupuesto.Productos)
+            foreach (var producto in _presupuesto.Productos)
             {
                 dgv_productosIngresados.Rows.Add(
                     producto.Codigo,
@@ -84,7 +79,7 @@ namespace FerreteriaSL.Ventas
                 );
             }
 
-            if (presupuesto.HasNewDescriptions() || presupuesto.HasNewPrices())
+            if (_presupuesto.HasNewDescriptions() || _presupuesto.HasNewPrices())
             {
                 ContextMenuStrip cms = new ContextMenuStrip();
                 cms.Items.Add("Actualizar Todo");
@@ -113,7 +108,7 @@ namespace FerreteriaSL.Ventas
                 e.CellStyle.ForeColor = Color.DarkOrange;
                 var cell = dgv_productosIngresados[e.ColumnIndex, e.RowIndex];
                 var formattingId = int.Parse(dgv_productosIngresados["id", e.RowIndex].Value.ToString());
-                cell.ToolTipText = "Nueva Descripcion: " + presupuesto.Productos.Single(s => s.Id == formattingId).DescripcionNueva;
+                cell.ToolTipText = "Nueva Descripcion: " + _presupuesto.Productos.Single(s => s.Id == formattingId).DescripcionNueva;
             }
 
             if (dgv_productosIngresados.Columns[e.ColumnIndex].HeaderText == "PRECIO UNITARIO" &&
@@ -122,7 +117,7 @@ namespace FerreteriaSL.Ventas
                 e.CellStyle.ForeColor = Color.Red;
                 var cell = dgv_productosIngresados[e.ColumnIndex, e.RowIndex];
                 var formattingId = int.Parse(dgv_productosIngresados["id", e.RowIndex].Value.ToString());
-                cell.ToolTipText = "Nuevo Precio: " + presupuesto.Productos.Single(s => s.Id == formattingId).PrecioNuevo;                
+                cell.ToolTipText = "Nuevo Precio: " + _presupuesto.Productos.Single(s => s.Id == formattingId).PrecioNuevo;                
             }
                
         }
@@ -133,29 +128,29 @@ namespace FerreteriaSL.Ventas
             Bd bdCon = new Bd();
             DataRow result = bdCon.Read("SELECT Proveedor,Codigo, Descripcion, Precio,ProveedorID FROM vista_tablaproductosventas WHERE id = " + _currentProduct).Rows[0];
 
-            string codigo = result["Codigo"].ToString();
-            string descripcion = result["Descripcion"].ToString();
-            double precio = double.Parse(result["precio"].ToString());
-            string proveedor = result["Proveedor"].ToString();
+            string addedItemCode = result["Codigo"].ToString();
+            string addedItemDescription = result["Descripcion"].ToString();
+            double addedItemPrice = double.Parse(result["precio"].ToString());
+            string addedItemProvider = result["Proveedor"].ToString();
             int proveedorId = int.Parse(result["ProveedorID"].ToString());
 
             int alreadyExist = -1;
 
             foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
             {
-                alreadyExist = singleRow.Cells["descripcion"].Value.ToString() == descripcion ? singleRow.Index : -1;              
+                alreadyExist = singleRow.Cells["descripcion"].Value.ToString() == addedItemDescription ? singleRow.Index : -1;              
             }
 
             if (alreadyExist != -1)
             {
-                double cantidad = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
+                double addedItemQuantity = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
                 dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value = int.Parse(dgv_productosIngresados.Rows[alreadyExist].Cells["cantidad"].Value.ToString()) + _quantity;
-                dgv_productosIngresados.Rows[alreadyExist].Cells["precio_subtotal"].Value = precio * cantidad;
+                dgv_productosIngresados.Rows[alreadyExist].Cells["precio_subtotal"].Value = addedItemPrice * addedItemQuantity;
                 CalculateTotal();
             }
             else
             {
-                dgv_productosIngresados.Rows.Add(codigo, descripcion, _quantity, precio, Convert.ToDouble(Math.Round(precio * _quantity, 2)),_currentProduct,proveedor,proveedorId);
+                dgv_productosIngresados.Rows.Add(addedItemCode, addedItemDescription, _quantity, addedItemPrice, Convert.ToDouble(Math.Round(addedItemPrice * _quantity, 2)),_currentProduct,addedItemProvider,proveedorId);
             }           
             cg_busqueda.ClearTextBox();
         }
@@ -262,14 +257,15 @@ namespace FerreteriaSL.Ventas
 
             DialogResult cfdr = cf.ShowDialog(this);
 
-            if (cfdr == DialogResult.OK)
+            switch (cfdr)
             {
-                DoSell();
-            }
-            else if (cfdr == DialogResult.No)
-            {
-                FormaDePago fdP = new FormaDePago();
-                fdP.ShowDialog();
+                case DialogResult.OK:
+                    DoSell();
+                    break;
+                case DialogResult.No:
+                    FormaDePago fdP = new FormaDePago();
+                    fdP.ShowDialog();
+                    break;
             }
         }
 
@@ -285,7 +281,7 @@ namespace FerreteriaSL.Ventas
 
             double totalAmount = dgv_productosIngresados.Rows.Cast<DataGridViewRow>().Sum(singleRow => Convert.ToDouble(singleRow.Cells["precio_subtotal"].Value));
 
-            int clienteId = 0; // IMPLEMENTAR CLIENTE    
+            int clienteId = 0; // TODO: IMPLEMENTAR CLIENTE    
             ultimoTalonario += 1;
             double discountPercentage = Convert.ToDouble(nud_discountPercent.Value);
             double discountAmount = (totalAmount * discountPercentage) / 100;
@@ -300,11 +296,11 @@ namespace FerreteriaSL.Ventas
 
             foreach (DataGridViewRow singleRow in dgv_productosIngresados.Rows)
             {               
-                string cantidad = singleRow.Cells["cantidad"].Value.ToString().Replace(",",".");
-                string provider = singleRow.Cells["proveedor"].Value.ToString();
+                string productQuantity = singleRow.Cells["cantidad"].Value.ToString().Replace(",",".");
+                string productProvider = singleRow.Cells["proveedor"].Value.ToString();
                 string productoId = singleRow.Cells["id"].Value.ToString();
 
-                query = String.Format("INSERT INTO venta_producto (ventas_caja_id,cantidad,proveedor,producto_id) VALUES ({0},{1},'{2}',{3})",ventasCajaId,cantidad,provider,productoId);
+                query = String.Format("INSERT INTO venta_producto (ventas_caja_id,cantidad,proveedor,producto_id) VALUES ({0},{1},'{2}',{3})",ventasCajaId,productQuantity,productProvider,productoId);
                 dbCon.Write(query);
             }
 
@@ -381,23 +377,20 @@ namespace FerreteriaSL.Ventas
             bp.Show(this);
         }
 
-        public void AddItemToCartFromSearchWindow(int productoId,double cantidad)
+        public void AddItemToCartFromSearchWindow(int addedItemId,double addedItemQuantity)
         {
-            _currentProduct = productoId;
-            _quantity = cantidad;
+            _currentProduct = addedItemId;
+            _quantity = addedItemQuantity;
             AddItemToCart();
         }
 
         private void Ventas_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (Form frm in Application.OpenForms)
+            foreach (BusquedaProducto frm in Application.OpenForms.OfType<BusquedaProducto>())
             {
-                if (frm is BusquedaProducto)
-                {
-                    frm.Show();
-                    frm.Focus();
-                    e.Cancel = true;
-                }
+                frm.Show();
+                frm.Focus();
+                e.Cancel = true;
             }
         }
 
@@ -447,38 +440,36 @@ namespace FerreteriaSL.Ventas
 
         private void dgv_productosIngresados_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == 107) // + (Signo Mas) en teclado numérico.
+            switch (e.KeyValue)
             {
-                btn_incrementar.PerformClick();
+                case 107:
+                    btn_incrementar.PerformClick();
+                    break;
+                case 109:
+                    btn_disminuir.PerformClick();
+                    break;
+                case 106:
+                    foreach (DataGridViewRow singleRow in dgv_productosIngresados.SelectedRows)
+                    {
+                        double newValue = double.Parse(singleRow.Cells["cantidad"].Value.ToString()) + 0.1;
+                        double precioUnitario = double.Parse(singleRow.Cells["precio_unitario"].Value.ToString());
+                        singleRow.Cells["cantidad"].Value = newValue;
+                        singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
+                    }
+                    CalculateTotal();
+                    break;
+                case 111:
+                    foreach (DataGridViewRow singleRow in dgv_productosIngresados.SelectedRows)
+                    {
+                        double newValue = double.Parse(singleRow.Cells["cantidad"].Value.ToString());
+                        newValue = newValue > 0.1 ? newValue - 0.1 : newValue;
+                        double precioUnitario = double.Parse(singleRow.Cells["precio_unitario"].Value.ToString());
+                        singleRow.Cells["cantidad"].Value = newValue;
+                        singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
+                    }
+                    CalculateTotal();
+                    break;
             }
-            else if (e.KeyValue == 109) // - (Signo Menos) en teclado numérico.
-            {
-                btn_disminuir.PerformClick();
-            }
-            else if (e.KeyValue == 106) // * (Asterisco) en teclado numérico.
-            {
-                foreach (DataGridViewRow singleRow in dgv_productosIngresados.SelectedRows)
-                {
-                    double newValue = double.Parse(singleRow.Cells["cantidad"].Value.ToString()) + 0.1;
-                    double precioUnitario = double.Parse(singleRow.Cells["precio_unitario"].Value.ToString());
-                    singleRow.Cells["cantidad"].Value = newValue;
-                    singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
-                }
-                CalculateTotal();
-            }
-            else if (e.KeyValue == 111) // / (Barra invertida | división) en teclado numérico.
-            {
-                foreach (DataGridViewRow singleRow in dgv_productosIngresados.SelectedRows)
-                {
-                    double newValue = double.Parse(singleRow.Cells["cantidad"].Value.ToString());
-                    newValue = newValue > 0.1 ? newValue - 0.1 : newValue;
-                    double precioUnitario = double.Parse(singleRow.Cells["precio_unitario"].Value.ToString());
-                    singleRow.Cells["cantidad"].Value = newValue;
-                    singleRow.Cells["precio_subtotal"].Value = precioUnitario * newValue;
-                }
-                CalculateTotal();
-            }
-                
         }
 
         private void Ventas_KeyDown(object sender, KeyEventArgs e)
@@ -529,12 +520,13 @@ namespace FerreteriaSL.Ventas
                 presupuestoImprimirWindow.txb_domicilio.Text,
                 presupuestoImprimirWindow.dtp_fecha.Value,
                 DgvHelper.ToDataTable(dgv_productosIngresados)
+
             );
 
             if (presupuestoImprimirWindow.chb_guardar.Checked)
-                nuevoPresupuesto.Save().Print();
+                nuevoPresupuesto.Save().Print(Int16.Parse(presupuestoImprimirWindow.nud_copias.Value.ToString()));
             else
-                nuevoPresupuesto.Print();
+                nuevoPresupuesto.Print(Int16.Parse(presupuestoImprimirWindow.nud_copias.Value.ToString()));
             
             //dgv_productosIngresados.Rows.Clear();
             
