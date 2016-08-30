@@ -118,7 +118,7 @@ namespace FerreteriaSL.Modelos
             {
                 Productos.Add(new PresupuestoProducto
                 {
-                    Cantidad = int.Parse(item["CANTIDAD"].ToString()),
+                    Cantidad = double.Parse(item["CANTIDAD"].ToString()),
                     Descripcion = item["DESCRIPCION"].ToString(),
                     DescripcionNueva = items.Columns.Contains("DESCRIPCION_NUEVA") ? item["DESCRIPCION_NUEVA"].ToString() : null,
                     PrecioUnitario = double.Parse(item["PRECIO UNITARIO"].ToString()),
