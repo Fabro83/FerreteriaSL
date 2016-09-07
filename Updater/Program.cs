@@ -1,21 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
-namespace FerreteriaSL
+namespace Updater
 {
     static class Program
     {
-        public static string WorkingServer = "";
         /// <summary>
-        /// Punto de entrada principal para la aplicación.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());         
+            Application.Run(new Updater(args));
         }
-        // Fork test Test
     }
 }

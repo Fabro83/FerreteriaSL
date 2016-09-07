@@ -47,8 +47,14 @@ namespace FerreteriaSL
             this.tsmi_mantenimientoSecciones = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_cambiarUsuario = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_ventas = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_updateAvailable = new System.Windows.Forms.ToolStripMenuItem();
             this.ss_mainStatusBar = new System.Windows.Forms.StatusStrip();
+            this.tssl_updateInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tspb_updateProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.tssl_updatePercentage = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssl_doUpdateLink = new System.Windows.Forms.ToolStripStatusLabel();
             this.ms_mainMenu.SuspendLayout();
+            this.ss_mainStatusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // ms_mainMenu
@@ -57,7 +63,8 @@ namespace FerreteriaSL
             this.tsmi_archivo,
             this.tsmi_mantenimiento,
             this.tsmi_cambiarUsuario,
-            this.tsmi_ventas});
+            this.tsmi_ventas,
+            this.tsmi_updateAvailable});
             this.ms_mainMenu.Location = new System.Drawing.Point(0, 0);
             this.ms_mainMenu.Name = "ms_mainMenu";
             this.ms_mainMenu.Size = new System.Drawing.Size(895, 24);
@@ -77,7 +84,7 @@ namespace FerreteriaSL
             // 
             this.tsmi_archivoSalir.Image = ((System.Drawing.Image)(resources.GetObject("tsmi_archivoSalir.Image")));
             this.tsmi_archivoSalir.Name = "tsmi_archivoSalir";
-            this.tsmi_archivoSalir.Size = new System.Drawing.Size(152, 22);
+            this.tsmi_archivoSalir.Size = new System.Drawing.Size(96, 22);
             this.tsmi_archivoSalir.Text = "Salir";
             this.tsmi_archivoSalir.Click += new System.EventHandler(this.tsmi_archivoSalir_Click);
             // 
@@ -192,13 +199,58 @@ namespace FerreteriaSL
             this.tsmi_ventas.Text = "Ventas";
             this.tsmi_ventas.Click += new System.EventHandler(this.tsmi_ventas_Click);
             // 
+            // tsmi_updateAvailable
+            // 
+            this.tsmi_updateAvailable.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsmi_updateAvailable.Image = ((System.Drawing.Image)(resources.GetObject("tsmi_updateAvailable.Image")));
+            this.tsmi_updateAvailable.Name = "tsmi_updateAvailable";
+            this.tsmi_updateAvailable.Size = new System.Drawing.Size(199, 20);
+            this.tsmi_updateAvailable.Text = "Nueva actualización disponible";
+            this.tsmi_updateAvailable.Visible = false;
+            this.tsmi_updateAvailable.Click += new System.EventHandler(this.tsmi_updateAvailable_Click);
+            // 
             // ss_mainStatusBar
             // 
+            this.ss_mainStatusBar.BackColor = System.Drawing.SystemColors.Control;
+            this.ss_mainStatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tssl_updateInfo,
+            this.tspb_updateProgress,
+            this.tssl_updatePercentage,
+            this.tssl_doUpdateLink});
             this.ss_mainStatusBar.Location = new System.Drawing.Point(0, 561);
             this.ss_mainStatusBar.Name = "ss_mainStatusBar";
             this.ss_mainStatusBar.Size = new System.Drawing.Size(895, 22);
             this.ss_mainStatusBar.TabIndex = 3;
             this.ss_mainStatusBar.Text = "statusStrip1";
+            // 
+            // tssl_updateInfo
+            // 
+            this.tssl_updateInfo.Name = "tssl_updateInfo";
+            this.tssl_updateInfo.Size = new System.Drawing.Size(154, 17);
+            this.tssl_updateInfo.Text = "Descargando actualización: ";
+            this.tssl_updateInfo.Visible = false;
+            // 
+            // tspb_updateProgress
+            // 
+            this.tspb_updateProgress.Name = "tspb_updateProgress";
+            this.tspb_updateProgress.Size = new System.Drawing.Size(100, 16);
+            this.tspb_updateProgress.Visible = false;
+            // 
+            // tssl_updatePercentage
+            // 
+            this.tssl_updatePercentage.Name = "tssl_updatePercentage";
+            this.tssl_updatePercentage.Size = new System.Drawing.Size(23, 17);
+            this.tssl_updatePercentage.Text = "0%";
+            this.tssl_updatePercentage.Visible = false;
+            // 
+            // tssl_doUpdateLink
+            // 
+            this.tssl_doUpdateLink.IsLink = true;
+            this.tssl_doUpdateLink.Name = "tssl_doUpdateLink";
+            this.tssl_doUpdateLink.Size = new System.Drawing.Size(334, 17);
+            this.tssl_doUpdateLink.Text = "Descarga de actualización completada. Click aquí para instalar";
+            this.tssl_doUpdateLink.Visible = false;
+            this.tssl_doUpdateLink.Click += new System.EventHandler(this.tssl_doUpdateLink_Click);
             // 
             // MainWindow
             // 
@@ -221,6 +273,8 @@ namespace FerreteriaSL
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ms_mainMenu.ResumeLayout(false);
             this.ms_mainMenu.PerformLayout();
+            this.ss_mainStatusBar.ResumeLayout(false);
+            this.ss_mainStatusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,5 +298,10 @@ namespace FerreteriaSL
         private ToolStripMenuItem tsmi_mantenimientoEmpleados;
         private ToolStripMenuItem tsmi_mantenimientoCajaDiaria;
         private ToolStripMenuItem tsmi_mantenimientoSecciones;
+        public ToolStripMenuItem tsmi_updateAvailable;
+        private ToolStripStatusLabel tssl_updateInfo;
+        private ToolStripProgressBar tspb_updateProgress;
+        private ToolStripStatusLabel tssl_updatePercentage;
+        private ToolStripStatusLabel tssl_doUpdateLink;
     }
 }

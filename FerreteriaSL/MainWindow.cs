@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using FerreteriaSL.AutoUpdate;
 using FerreteriaSL.Caja_Diaria;
 using FerreteriaSL.Clases_Genericas;
 using FerreteriaSL.Productos;
@@ -11,12 +13,24 @@ namespace FerreteriaSL
 {
     public partial class MainWindow : Form
     {
+        readonly AutoUpdate.AutoUpdate _updater = new AutoUpdate.AutoUpdate();
+
         public MainWindow()
         {
             InitializeComponent();
             Shown += MainWindow_Shown;
             Usuario.UserChanged += UserHasChanged;
-            Usuario.UserLogedOut += Usuario_UserLogedOut;
+            Usuario.UserLogedOut += Usuario_UserLogedOut;          
+            _updater.NewUpdate += updater_NewUpdate;
+            _updater.ProgressChanged += UpdaterProgressChanged;
+            _updater.Check();
+            _updater.DownloadFinished += UpdaterDownloadFinished;
+        }
+
+
+        void updater_NewUpdate()
+        {
+            tsmi_updateAvailable.Visible = true;
         }
 
         void Usuario_UserLogedOut(object sender, EventArgs e)
@@ -134,14 +148,39 @@ namespace FerreteriaSL
             OpenChild(new Ubicacion());
         }
 
-        private void testPrintToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private void tsmi_updateAvailable_Click(object sender, EventArgs e)
         {
+            tssl_updateInfo.Visible = tspb_updateProgress.Visible = tssl_updatePercentage.Visible = true;
+            tsmi_updateAvailable.Visible = false;
+            _updater.DownloadNewVersion();
+        }
 
+        private void UpdaterProgressChanged(int percentage)
+        {
+            tspb_updateProgress.Value = percentage;
+            tssl_updatePercentage.Text = percentage + "%";
+        }
+
+        private void UpdaterDownloadFinished(Exception error)
+        {
+            tspb_updateProgress.Visible = tssl_updatePercentage.Visible = false;
+            if (error != null)
+                tssl_updateInfo.Text = "Ocurrió un error al descargar la actualización. Intentelo de nuevo más tarde.";
+            else
+            {
+                tssl_updateInfo.Visible = false;
+                tssl_doUpdateLink.Visible = true;
+            }         
+        }
+
+        private void tssl_doUpdateLink_Click(object sender, EventArgs e)
+        {
+            _updater.DoUpdate();
         }
     }
 }
