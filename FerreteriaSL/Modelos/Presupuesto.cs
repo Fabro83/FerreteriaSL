@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FerreteriaSL.Clases_Base_de_Datos;
 using System.Data;
-using System.Globalization;
+using System.Linq;
+using BarCode;
+using FerreteriaSL.Clases_Base_de_Datos;
 using FerreteriaSL.Clases_Genericas;
 
 namespace FerreteriaSL.Modelos
@@ -59,9 +58,17 @@ namespace FerreteriaSL.Modelos
             query = String.Format(query, Nombre, Domicilio, Fecha.ToString("yyyy-MM-dd"));
             Bd dbCon = new Bd();
             dbCon.Write(query);
-            Id = dbCon.LastInsertId();
+            SetInsertedId();      
             SaveProducts(dbCon);
             return this;
+        }
+
+        private void SetInsertedId()
+        {
+            Bd dbCon = new Bd();
+            var getIdQuery = "SELECT id FROM presupuesto WHERE nombre = '{0}' AND domicilio = '{1}' AND fecha = '{2}' ORDER BY id DESC";
+            getIdQuery = String.Format(getIdQuery, Nombre, Domicilio, Fecha.ToString("yyyy-MM-dd"));
+            Id = int.Parse(dbCon.Read(getIdQuery).Rows[0]["id"].ToString());           
         }
 
         private void SaveProducts(Bd dbCon)
@@ -102,7 +109,7 @@ namespace FerreteriaSL.Modelos
 
         public string GetBarcode()
         {
-            return  Id != -1 ? BarCode.BarcodeConverter128.StringToBarcode(BarcodePrefix + Id.ToString("D8")) : "";
+            return  Id != -1 ? BarcodeConverter128.StringToBarcode(BarcodePrefix + Id.ToString("D8")) : "";
         }
 
         public double GetTotalAmount()
